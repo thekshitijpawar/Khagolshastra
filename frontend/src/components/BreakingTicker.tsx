@@ -81,9 +81,6 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
                 </button>
               )}
             </div>
-            <span className="text-[11px] font-sans-editorial font-bold text-[#888884] whitespace-nowrap">
-              ({filteredArticles.length} STORIES)
-            </span>
           </div>
         </div>
 
@@ -161,7 +158,7 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
               onClick={() => setVisibleCount((prev) => prev + 12)}
               className="px-8 py-3 bg-[#111111] text-white hover:bg-[#333333] text-[11px] font-sans-editorial font-bold uppercase tracking-[0.14em] transition-colors shadow-xs"
             >
-              LOAD MORE HEADLINES ({filteredArticles.length - visibleCount} REMAINING)
+              LOAD MORE HEADLINES ↓
             </button>
           </div>
         )}

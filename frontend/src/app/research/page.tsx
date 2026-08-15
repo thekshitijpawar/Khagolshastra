@@ -118,20 +118,20 @@ export default function ResearchPage() {
 
             <div className="flex items-center gap-6 text-right">
               <div>
-                <div className="text-[28px] font-serif-editorial font-bold text-[#111111] leading-none">
-                  {totalPapers}
+                <div className="text-[20px] font-sans-editorial font-bold text-[#111111] leading-none uppercase tracking-wider">
+                  CONTINUOUS
                 </div>
                 <div className="text-[10px] font-sans-editorial uppercase tracking-widest text-[#777777] mt-1">
-                  Indexed Papers
+                  Research Feed
                 </div>
               </div>
               <div className="h-10 w-px bg-[#dcd8cb]" />
               <div>
-                <div className="text-[28px] font-serif-editorial font-bold text-[#111111] leading-none">
-                  4
+                <div className="text-[20px] font-sans-editorial font-bold text-[#111111] leading-none uppercase tracking-wider">
+                  PEER-REVIEWED
                 </div>
                 <div className="text-[10px] font-sans-editorial uppercase tracking-widest text-[#777777] mt-1">
-                  Academic Portals
+                  Preprint Portals
                 </div>
               </div>
             </div>
@@ -155,7 +155,7 @@ export default function ResearchPage() {
                     <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider mb-2">
                       <span className="text-[#999999]">{s.badge}</span>
                       <span className="bg-[#f0eee0] text-[#111111] px-1.5 py-0.5 border border-[#dcd8cb]">
-                        {s.paper_count || 0} PAPERS
+                        LIVE ARCHIVE
                       </span>
                     </div>
                     <h3 className="text-[15px] font-serif-editorial font-bold text-[#111111] leading-snug mb-1">

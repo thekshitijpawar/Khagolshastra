@@ -27,7 +27,7 @@ export default function SectionClient({ section, articles = [] }: SectionClientP
         <div className="flex items-center gap-2 mb-2">
           <span className="eyebrow text-[#ffc500] bg-[#111111] px-2 py-0.5">SECTION ARCHIVE</span>
           <span className="text-xs text-[#888]">•</span>
-          <span className="text-[11px] font-sans-editorial text-[#666] uppercase">{articles.length} Dispatches</span>
+          <span className="text-[11px] font-sans-editorial text-[#666] uppercase">OBSERVATORY WIRE ARCHIVE</span>
         </div>
         <h1 className="text-[34px] sm:text-[44px] font-serif-editorial font-normal leading-tight text-[#111111] mb-2">
           {section.title}

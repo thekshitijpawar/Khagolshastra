@@ -321,7 +321,7 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
             onClick={() => setShowArchive(!showArchive)}
             className="w-full py-2 bg-[#202020] hover:bg-[#282828] border border-[#333] text-[10px] font-sans-editorial font-bold uppercase tracking-widest text-[#cccccc] hover:text-[#ffc500] flex items-center justify-between px-3 transition-colors"
           >
-            <span>BROWSE ASTRONOMY CAST ARCHIVE ({allEpisodes.length} EPISODES)</span>
+            <span>BROWSE ASTRONOMY CAST ARCHIVE</span>
             <span>{showArchive ? '▲' : '▼'}</span>
           </button>
 
