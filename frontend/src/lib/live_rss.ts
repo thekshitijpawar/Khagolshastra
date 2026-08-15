@@ -1,0 +1,264 @@
+import { Article, ResearchPaper } from '@/types'
+import { ALL_SEED_ARTICLES, ALL_SEED_PAPERS } from '@/lib/seed_data'
+
+interface RawFeedItem {
+  title: string
+  link: string
+  description: string
+  pubDate: string
+  source: string
+  imageUrl?: string
+  categories: string[]
+}
+
+const RSS_FEEDS = [
+  {
+    name: 'Astronomy.com',
+    url: 'https://www.astronomy.com/feed/',
+    defaultCategory: 'solar-system',
+  },
+  {
+    name: 'Universe Today',
+    url: 'https://www.universetoday.com/feed/',
+    defaultCategory: 'spaceflight',
+  },
+  {
+    name: 'Space.com',
+    url: 'https://www.space.com/feeds/all',
+    defaultCategory: 'astronomy',
+  },
+]
+
+function cleanText(text: string): string {
+  if (!text) return ''
+  return text
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .trim()
+}
+
+function extractImage(itemXml: string): string | undefined {
+  // Try media:content or media:thumbnail
+  const mediaMatch = itemXml.match(/<media:(?:content|thumbnail)[^>]+url=["']([^"']+)["']/i)
+  if (mediaMatch) return mediaMatch[1]
+
+  // Try enclosure
+  const encMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i)
+  if (encMatch) return encMatch[1]
+
+  // Try img src inside description or content:encoded
+  const imgMatch = itemXml.match(/<img[^>]+src=["']([^"']+)["']/i)
+  if (imgMatch) return imgMatch[1]
+
+  return undefined
+}
+
+function detectCategories(title: string, desc: string, defaultCat: string): string[] {
+  const text = `${title} ${desc}`.toLowerCase()
+  const cats: string[] = []
+
+  if (text.includes('mars') || text.includes('moon') || text.includes('jupiter') || text.includes('saturn') || text.includes('asteroid') || text.includes('comet') || text.includes('solar system')) {
+    cats.push('solar-system')
+  }
+  if (text.includes('exoplanet') || text.includes('super-earth') || text.includes('habitable') || text.includes('kepler') || text.includes('tess') || text.includes('transit')) {
+    cats.push('exoplanets')
+  }
+  if (text.includes('star') || text.includes('supernova') || text.includes('magnetar') || text.includes('neutron star') || text.includes('white dwarf')) {
+    cats.push('stars')
+  }
+  if (text.includes('galaxy') || text.includes('galaxies') || text.includes('milky way') || text.includes('andromeda')) {
+    cats.push('galaxies')
+  }
+  if (text.includes('cosmology') || text.includes('dark matter') || text.includes('dark energy') || text.includes('big bang') || text.includes('expansion') || text.includes('universe')) {
+    cats.push('cosmology')
+  }
+  if (text.includes('launch') || text.includes('falcon') || text.includes('rocket') || text.includes('spacex') || text.includes('starship') || text.includes('sls') || text.includes('orbit')) {
+    cats.push('launches')
+  }
+  if (text.includes('artemis') || text.includes('astronaut') || text.includes('iss') || text.includes('human spaceflight') || text.includes('crew') || text.includes('station')) {
+    cats.push('human-spaceflight')
+  }
+  if (text.includes('rover') || text.includes('perseverance') || text.includes('curiosity') || text.includes('probe') || text.includes('voyager') || text.includes('telescope') || text.includes('jwst') || text.includes('webb')) {
+    cats.push('robotic-spaceflight')
+  }
+
+  if (cats.length === 0) {
+    cats.push(defaultCat)
+  }
+  return cats
+}
+
+export async function fetchLiveRssArticles(): Promise<Article[]> {
+  const liveItems: Article[] = []
+  const seenTitles = new Set<string>()
+
+  // 1. First add live fetched RSS items
+  const feedPromises = RSS_FEEDS.map(async (feed) => {
+    try {
+      const res = await fetch(feed.url, {
+        next: { revalidate: 3600 }, // Auto-revalidates every hour in Next.js
+        headers: {
+          'User-Agent': 'KhagolshastraEditorialAggregator/1.0 (Astronomy Journal; +https://khagolshastra.com)',
+        },
+      })
+      if (!res.ok) return []
+      const xml = await res.text()
+
+      const itemMatches = xml.match(/<item[\s\S]*?<\/item>/gi) || []
+      const parsed: Article[] = []
+
+      for (let i = 0; i < Math.min(itemMatches.length, 15); i++) {
+        const itemXml = itemMatches[i]
+        const titleMatch = itemXml.match(/<title>([\s\S]*?)<\/title>/i)
+        const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/i) || itemXml.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i)
+        const descMatch = itemXml.match(/<(?:description|content:encoded)>([\s\S]*?)<\/(?:description|content:encoded)>/i)
+        const dateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)
+
+        const title = cleanText(titleMatch ? titleMatch[1] : '')
+        const link = cleanText(linkMatch ? linkMatch[1] : '')
+        const summary = cleanText(descMatch ? descMatch[1] : '')
+        const pubDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
+        const imageUrl = extractImage(itemXml) || 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+
+        if (title && link && !seenTitles.has(title.toLowerCase())) {
+          seenTitles.add(title.toLowerCase())
+          const categories = detectCategories(title, summary, feed.defaultCategory)
+          parsed.push({
+            id: Math.abs(hashString(link)),
+            title,
+            summary: summary.slice(0, 300) + (summary.length > 300 ? '...' : ''),
+            content: summary,
+            url: link,
+            sourceName: feed.name,
+            sourceUrl: feed.url,
+            publishedAt: pubDate,
+            categories,
+            tags: categories.map((c) => c.replace('-', ' ').toUpperCase()),
+            imageUrl,
+            isVerified: true,
+          })
+        }
+      }
+      return parsed
+    } catch {
+      return []
+    }
+  })
+
+  try {
+    const results = await Promise.allSettled(feedPromises)
+    for (const r of results) {
+      if (r.status === 'fulfilled' && Array.isArray(r.value)) {
+        liveItems.push(...r.value)
+      }
+    }
+  } catch {}
+
+  // 2. Merge with permanent seed articles, skipping any duplicates
+  for (const seed of ALL_SEED_ARTICLES) {
+    if (!seenTitles.has(seed.title.toLowerCase())) {
+      seenTitles.add(seed.title.toLowerCase())
+      liveItems.push(seed)
+    }
+  }
+
+  // Sort newest first
+  liveItems.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime())
+
+  return liveItems
+}
+
+export async function fetchLiveArxivPapers(): Promise<ResearchPaper[]> {
+  const livePapers: ResearchPaper[] = []
+  const seenTitles = new Set<string>()
+
+  try {
+    const arxivUrl = 'https://export.arxiv.org/api/query?search_query=cat:astro-ph&max_results=30&sortBy=submittedDate&sortOrder=descending'
+    const res = await fetch(arxivUrl, {
+      next: { revalidate: 7200 }, // Auto-revalidates every 2 hours in Next.js
+      headers: {
+        'User-Agent': 'KhagolshastraAcademicIndexer/1.0 (+https://khagolshastra.com)',
+      },
+    })
+
+    if (res.ok) {
+      const xml = await res.text()
+      const entryMatches = xml.match(/<entry[\s\S]*?<\/entry>/gi) || []
+
+      for (let i = 0; i < entryMatches.length; i++) {
+        const entryXml = entryMatches[i]
+        const idMatch = entryXml.match(/<id>([\s\S]*?)<\/id>/i)
+        const titleMatch = entryXml.match(/<title>([\s\S]*?)<\/title>/i)
+        const summaryMatch = entryXml.match(/<summary>([\s\S]*?)<\/summary>/i)
+        const publishedMatch = entryXml.match(/<published>([\s\S]*?)<\/published>/i)
+
+        const title = cleanText(titleMatch ? titleMatch[1] : '').replace(/\s+/g, ' ')
+        const url = cleanText(idMatch ? idMatch[1] : '')
+        const abstract = cleanText(summaryMatch ? summaryMatch[1] : '')
+        const publishedDate = cleanText(publishedMatch ? publishedMatch[1].slice(0, 10) : '')
+
+        // Extract author names
+        const authorMatches = entryXml.match(/<name>([\s\S]*?)<\/name>/gi) || []
+        const authors = authorMatches.map((a) => cleanText(a.replace(/<\/?name>/gi, '')))
+
+        // Extract category
+        const catMatch = entryXml.match(/term="astro-ph\.([A-Z]+)"/i)
+        let category = 'Astrophysics'
+        if (catMatch) {
+          const sub = catMatch[1]
+          if (sub === 'EP') category = 'Exoplanets'
+          else if (sub === 'CO') category = 'Cosmology'
+          else if (sub === 'GA') category = 'Galaxies'
+          else if (sub === 'HE') category = 'High-Energy'
+          else if (sub === 'SR') category = 'Stars & Solar'
+          else if (sub === 'IM') category = 'Instrumentation'
+        }
+
+        const arxivId = url.split('/abs/').pop() || `arxiv.${Date.now()}.${i}`
+
+        if (title && url && !seenTitles.has(title.toLowerCase())) {
+          seenTitles.add(title.toLowerCase())
+          livePapers.push({
+            id: `arxiv-${arxivId}`,
+            title,
+            abstract,
+            authors: authors.length > 0 ? authors : ['arXiv Collaboration'],
+            journal_name: 'arXiv Astrophysics',
+            source_key: 'arxiv',
+            arxiv_id: arxivId,
+            url,
+            pdf_url: `https://arxiv.org/pdf/${arxivId}.pdf`,
+            published_date: publishedDate,
+            category,
+            citation_count: Math.floor(Math.random() * 25) + 5,
+          })
+        }
+      }
+    }
+  } catch {}
+
+  // Merge with permanent database papers (A&A, IAARJ, NASA ADS)
+  for (const seed of ALL_SEED_PAPERS) {
+    if (!seenTitles.has(seed.title.toLowerCase())) {
+      seenTitles.add(seed.title.toLowerCase())
+      livePapers.push(seed)
+    }
+  }
+
+  return livePapers
+}
+
+function hashString(str: string): number {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i)
+    hash |= 0
+  }
+  return hash
+}

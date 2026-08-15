@@ -1,0 +1,40 @@
+name: Automated Astronomy Content Sync
+
+on:
+  schedule:
+    # Runs every 6 hours automatically (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+
+      - name: Ingest latest dispatches and research papers
+        run: |
+          python backend/ingest_now.py
+          python export_seed.py
+
+      - name: Commit and push fresh content catalog
+        run: |
+          git config --global user.name "Khagolshastra Automated Ingest"
+          git config --global user.email "bot@khagolshastra.com"
+          git add frontend/src/lib/seed_data.ts backend/khagolshastra.db
+          if git diff --staged --quiet; then
+            echo "No new articles found in this cycle."
+          else
+            git commit -m "chore(feed): auto-ingest latest astronomy dispatches and research papers"
+            git push origin main
+          fi
