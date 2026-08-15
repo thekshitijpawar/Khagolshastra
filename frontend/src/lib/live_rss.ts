@@ -8,6 +8,11 @@ const RSS_FEEDS = [
     defaultCategory: 'solar-system',
   },
   {
+    name: 'Today in the History of Astronomy',
+    url: 'https://www.astronomy.com/today-in-the-history-of-astronomy/feed/',
+    defaultCategory: 'today-in-the-history-of-astronomy',
+  },
+  {
     name: 'Universe Today',
     url: 'https://www.universetoday.com/feed/',
     defaultCategory: 'galaxies',

@@ -394,23 +394,33 @@ export default function HomeClient({
         </div>
       </section>
 
-      {/* 8. SECTION 06: THIS WEEK IN ASTRONOMY & HISTORY */}
+      {/* 8. SECTION 06: TODAY IN THE HISTORY OF ASTRONOMY */}
       <section id="history-section" className="px-4 sm:px-6 lg:px-10 py-12 border-b border-[#111111] bg-[#fbfaf0]">
         <div className="max-w-[1340px] mx-auto">
           <div className="flex items-end justify-between border-b-2 border-[#111111] pb-3 mb-8">
             <div>
-              <span className="eyebrow text-[#111111] block mb-1">SECTION 06 • OBSERVING & ARCHIVAL RETROSPECTIVE</span>
+              <span className="eyebrow text-[#111111] block mb-1">SECTION 06 • ASTRONOMY.COM OFFICIAL HISTORICAL ARCHIVE</span>
               <h2 className="text-[26px] sm:text-[32px] font-serif-editorial font-normal leading-tight text-[#111111]">
-                This Week in Astronomy & Today in History
+                Today in the History of Astronomy
               </h2>
             </div>
-            <Link
-              href="/section/today-in-the-history-of-astronomy"
-              className="text-[11px] font-sans-editorial font-bold uppercase tracking-widest text-[#111111] hover:text-[#555] transition-colors pb-1 flex items-center gap-1"
-            >
-              <span>ARCHIVES</span>
-              <span>→</span>
-            </Link>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.astronomy.com/today-in-the-history-of-astronomy/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-sans-editorial font-bold uppercase tracking-widest text-[#111111] hover:text-[#ffc500] transition-colors pb-1 flex items-center gap-1 bg-[#111111] text-white hover:bg-[#333] px-3 py-1.5"
+              >
+                <span>ASTRONOMY.COM ARCHIVE ↗</span>
+              </a>
+              <Link
+                href="/section/today-in-the-history-of-astronomy"
+                className="text-[11px] font-sans-editorial font-bold uppercase tracking-widest text-[#111111] hover:text-[#555] transition-colors pb-1 flex items-center gap-1 hidden sm:flex"
+              >
+                <span>INTERNAL WIRE</span>
+                <span>→</span>
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -32,9 +32,21 @@ export default function SectionClient({ section, articles = [] }: SectionClientP
         <h1 className="text-[34px] sm:text-[44px] font-serif-editorial font-normal leading-tight text-[#111111] mb-2">
           {section.title}
         </h1>
-        <p className="text-[16px] font-serif-editorial text-[#555555] max-w-3xl leading-relaxed">
-          {section.description}
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p className="text-[16px] font-serif-editorial text-[#555555] max-w-3xl leading-relaxed">
+            {section.description}
+          </p>
+          {section.slug === 'today-in-the-history-of-astronomy' && (
+            <a
+              href="https://www.astronomy.com/today-in-the-history-of-astronomy/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-[#111111] text-white hover:bg-[#ffc500] hover:text-[#111] text-[11px] font-sans-editorial font-bold uppercase tracking-wider transition-colors shrink-0 inline-flex items-center gap-1.5 shadow-2xs"
+            >
+              <span>ASTRONOMY.COM OFFICIAL ARCHIVE ↗</span>
+            </a>
+          )}
+        </div>
       </div>
 
       {/* Grid of Articles */}
