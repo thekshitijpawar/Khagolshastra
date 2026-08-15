@@ -66,11 +66,7 @@ export default function HomeClient({
           {/* Top section eyebrow bar */}
           <div className="flex items-center justify-between border-b border-[#111111] pb-2 mb-6">
             <div className="flex items-center gap-3">
-              <span className="eyebrow text-[#111111]">EDITION VOL. XXIV</span>
-              <span className="text-[#888884]">•</span>
-              <span className="text-[11px] font-serif-editorial italic text-[#666666]">
-                Global Observatory Wire & Analysis
-              </span>
+              <span className="eyebrow text-[#111111]">EDITION NO. 1</span>
             </div>
             <div suppressHydrationWarning className="text-[10px] font-sans-editorial font-bold uppercase tracking-widest text-[#888884] hidden sm:block">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
