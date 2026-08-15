@@ -25,7 +25,6 @@ jobs:
       - name: Ingest latest dispatches and research papers
         run: |
           python backend/ingest_now.py
-          python export_seed.py
 
       - name: Commit and push fresh content catalog
         run: |
