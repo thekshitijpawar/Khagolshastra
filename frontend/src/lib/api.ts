@@ -1,6 +1,6 @@
 import { Article, ArticleListResponse, ResearchSearchResponse, Source, Category, ResearchPaper, ResearchSource } from '@/types'
 import { ALL_SEED_ARTICLES, ALL_SEED_PAPERS } from '@/lib/seed_data'
-import { fetchLiveRssArticles, fetchLiveArxivPapers, classifyArticleCategory } from '@/lib/live_rss'
+import { fetchLiveRssArticles, fetchLiveArxivPapers, classifyArticleCategory, isCommercialOrAdvertorial } from '@/lib/live_rss'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
@@ -74,6 +74,9 @@ export async function fetchArticles(filters: {
       }
     })
   }
+
+  // Strictly block any commercial advertisements, product reviews, and shopping guides
+  list = list.filter((a) => !isCommercialOrAdvertorial(a.title, a.summary || a.content || '', a.url))
 
   // Strict category isolation - ONLY return articles belonging to the requested section
   if (filters.category && filters.category.toLowerCase() !== 'all') {

@@ -52,6 +52,71 @@ function extractImage(itemXml: string): string | undefined {
   return undefined
 }
 
+/**
+ * Intelligent Commercial / Advertorial / Product Review / Affiliate Filter
+ * Strictly blocks any non-editorial promotional content from external feeds.
+ */
+export function isCommercialOrAdvertorial(title: string, desc: string = '', url: string = ''): boolean {
+  const text = `${title} ${desc} ${url}`.toLowerCase()
+
+  // 1. Direct review / evaluation phrases
+  if (
+    /\b(we think these|our expert thinks|we tested the|in our test|tested and reviewed|hands-on review|buyer'?s guide|buying guide|gift guide|gift ideas?|shopping guide|best deals?|deal alert|save \$\d+|\$\d+ off|deal of the day|lowest price|price drop)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 2. Optical equipment commercial shopping guides & reviews (binoculars, monoculars, retail telescopes, cameras)
+  if (
+    /\b(binoculars?|monoculars?|tripod|tripods|telescope deals?|celestron telescope|eyepieces?|camera lenses?|nikon binoculars?|best telescopes? for|best binoculars? for|portable celestron)\b/i.test(text) &&
+    /\b(review|best|deals?|discount|price|buy|portable|tested|magnification|budget|under \$|guide|save|sale|stargazers)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 3. Merch, Toys, Board Games, Collectibles, Cards, Costumes
+  if (
+    /\b(board games?|card games?|cards against humanity|tabletop game|lego set|lego sets|lego star wars|lego nasa|lego space|action figure|action figures|merch|merchandise|apparel|space suit costume|mattel|funko pop|diecast|video game review|playstation|xbox|nintendo)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 4. Deals, Coupons, Discounts, Prime Day, Black Friday sales
+  if (
+    /\b(prime day|black friday|cyber monday|coupon code|promo code|discount code|on sale for|now only \$\d+|massive discount|best price on)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 5. Entertainment, Sci-Fi Movies, TV recaps & streaming guides (not real astronomy/spaceflight)
+  if (
+    /\b(where to stream|where to watch|streaming guide|movie review|tv review|season \d+ recap|episode \d+ review|trailer breakdown|box office|star trek:? discovery recap|star wars:? acolyte recap|alien:? romulus review)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 6. Sponsored / Advertorial markers
+  if (
+    /\b(sponsored post|advertisement|promoted content|affiliate commission|partner content|commercial partner|paid feature|advertorial)\b/i.test(text)
+  ) {
+    return true
+  }
+
+  // 7. URL path filters for commerce/reviews/deals
+  if (
+    /\/deals\//i.test(url) ||
+    /\/reviews\//i.test(url) ||
+    /\/buying-guides\//i.test(url) ||
+    /\/gift-guides\//i.test(url) ||
+    /\/entertainment\//i.test(url) ||
+    /\/coupon/i.test(url)
+  ) {
+    return true
+  }
+
+  return false
+}
+
 export function classifyArticleCategory(title: string, desc: string, defaultCat: string = 'solar-system'): string {
   const text = `${title} ${desc}`.toLowerCase()
 
@@ -182,7 +247,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
       const itemMatches = xml.match(/<item[\s\S]*?<\/item>/gi) || []
       const parsed: Article[] = []
 
-      for (let i = 0; i < Math.min(itemMatches.length, 15); i++) {
+      for (let i = 0; i < Math.min(itemMatches.length, 25); i++) {
         const itemXml = itemMatches[i]
         const titleMatch = itemXml.match(/<title>([\s\S]*?)<\/title>/i)
         const linkMatch = itemXml.match(/<link>([\s\S]*?)<\/link>/i) || itemXml.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i)
@@ -194,6 +259,11 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
         const rawDesc = descMatch ? descMatch[1] : ''
         const pubDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
         const imageUrl = extractImage(itemXml) || 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+
+        // Check if article is a commercial advertisement, product review, or affiliate buying guide
+        if (isCommercialOrAdvertorial(title, rawDesc, link)) {
+          continue
+        }
 
         if (title && link && !seenTitles.has(title.toLowerCase())) {
           seenTitles.add(title.toLowerCase())
@@ -231,8 +301,12 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
     }
   } catch {}
 
-  // Merge with permanent seed articles, normalizing categories
+  // Merge with permanent seed articles, filtering out any commercial seed entries
   for (const seed of ALL_SEED_ARTICLES) {
+    if (isCommercialOrAdvertorial(seed.title, seed.summary || seed.content || '', seed.url)) {
+      continue
+    }
+
     if (!seenTitles.has(seed.title.toLowerCase())) {
       seenTitles.add(seed.title.toLowerCase())
       const exactCategory = classifyArticleCategory(
