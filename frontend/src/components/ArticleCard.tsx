@@ -27,15 +27,25 @@ export default function ArticleCard({
     : ''
 
   const primaryCategory = getArticlePrimaryCategory(article)
-  const sourceName =
-    article.sourceName ||
-    (article.url?.includes('astronomy.com')
-      ? 'Astronomy.com'
-      : article.url?.includes('universetoday.com')
-      ? 'Universe Today'
-      : article.url?.includes('space.com')
-      ? 'Space.com'
-      : 'Khagolshastra Observatory Wire')
+  const formattedCategory =
+    primaryCategory === 'today-in-the-history-of-astronomy'
+      ? 'History of Astronomy'
+      : primaryCategory.replace(/-/g, ' ')
+
+  let displaySourceName = article.sourceName || ''
+  if (
+    !displaySourceName ||
+    displaySourceName.toLowerCase().includes('history') ||
+    article.url?.includes('astronomy.com')
+  ) {
+    displaySourceName = 'Astronomy.com'
+  } else if (article.url?.includes('universetoday.com')) {
+    displaySourceName = 'Universe Today'
+  } else if (article.url?.includes('space.com')) {
+    displaySourceName = 'Space.com'
+  } else if (!displaySourceName) {
+    displaySourceName = 'Observatory Wire'
+  }
 
   // Calculate estimated reading time
   const wordCount = (article.content || article.summary || article.title || '').split(/\s+/).length
@@ -64,7 +74,7 @@ export default function ArticleCard({
     const rawSummary = sanitize(article.summary) || ''
     const title = article.title
     const cat = primaryCategory.toLowerCase()
-    const source = sourceName
+    const source = displaySourceName
 
     const combinedRaw = `${rawSummary} ${rawContent}`.trim()
     const sentences = combinedRaw
@@ -160,12 +170,12 @@ export default function ArticleCard({
         className="group cursor-pointer flex flex-col animate-in"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        {/* Top Meta Bar */}
-        <div className="flex items-center gap-3 mb-2">
-          <span className="eyebrow text-[#111111]">{primaryCategory.replace('-', ' ')}</span>
+        {/* Top Meta Bar - Clean, subtle, with zero duplicate words */}
+        <div className="flex items-center gap-2.5 mb-2">
+          <span className="eyebrow text-[#111111]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
           <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
-            {sourceName}
+            {displaySourceName}
           </span>
           <span className="text-[#888884] text-xs">•</span>
           <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold uppercase tracking-wider px-1.5 py-0.5">
@@ -200,7 +210,7 @@ export default function ArticleCard({
           />
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2 text-white text-[9.5px] font-sans-editorial tracking-wider flex items-center justify-between">
             <span>Observatory Field Capture</span>
-            <span className="text-[#ffc500]">VIA {sourceName.toUpperCase()}</span>
+            <span className="text-[#ffc500]">VIA {displaySourceName.toUpperCase()}</span>
           </div>
         </div>
 
@@ -260,9 +270,9 @@ export default function ArticleCard({
         </div>
 
         <div className="flex items-center gap-2 mb-1">
-          <span className="eyebrow text-[#111111] text-[9.5px]">{primaryCategory.replace('-', ' ')}</span>
+          <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
-          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{sourceName}</span>
+          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
         <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
@@ -299,9 +309,9 @@ export default function ArticleCard({
         </div>
 
         <div className="flex items-center gap-2 mb-1">
-          <span className="eyebrow text-[#111111] text-[9.5px]">{primaryCategory.replace('-', ' ')}</span>
+          <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
-          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{sourceName}</span>
+          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
         <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
@@ -336,7 +346,7 @@ export default function ArticleCard({
             loading="lazy"
           />
           <div className="absolute top-2 left-2 bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
-            {primaryCategory.replace('-', ' ')}
+            {formattedCategory}
           </div>
         </div>
 
@@ -344,7 +354,7 @@ export default function ArticleCard({
           suppressHydrationWarning
           className="flex items-center justify-between text-[10px] font-sans-editorial text-[#888884] mb-2 uppercase tracking-wider"
         >
-          <span>{sourceName}</span>
+          <span>{displaySourceName}</span>
           <span>{dateStr}</span>
         </div>
 
@@ -375,9 +385,9 @@ export default function ArticleCard({
       >
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1 text-[10px] font-sans-editorial tracking-wider uppercase">
-            <span className="font-bold text-[#111111]">{primaryCategory.replace('-', ' ')}</span>
+            <span className="font-bold text-[#111111]">{formattedCategory}</span>
             <span className="text-[#999999]">•</span>
-            <span className="text-[#666666]">{sourceName}</span>
+            <span className="text-[#666666]">{displaySourceName}</span>
           </div>
           <h4 className="text-[14px] font-serif-editorial text-[#111111] group-hover:text-[#666666] leading-snug line-clamp-2">
             {article.title}

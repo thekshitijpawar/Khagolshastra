@@ -8,7 +8,7 @@ const RSS_FEEDS = [
     defaultCategory: 'solar-system',
   },
   {
-    name: 'Today in the History of Astronomy',
+    name: 'Astronomy.com',
     url: 'https://www.astronomy.com/today-in-the-history-of-astronomy/feed/',
     defaultCategory: 'today-in-the-history-of-astronomy',
   },
