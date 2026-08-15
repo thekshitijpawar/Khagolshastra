@@ -167,7 +167,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer flex flex-col animate-in"
+        className="group cursor-pointer flex flex-col bg-white border border-[#dcd8cb] p-5 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform animate-in shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         {/* Top Meta Bar */}
@@ -183,8 +183,8 @@ export default function ArticleCard({
           </span>
         </div>
 
-        {/* Grand Headline */}
-        <h2 className="text-[26px] sm:text-[30px] lg:text-[34px] font-normal font-serif-editorial text-[#111111] leading-[1.12] tracking-[-0.01em] group-hover:text-[#444444] transition-colors mb-2.5">
+        {/* Grand Headline (stays solid black) */}
+        <h2 className="text-[26px] sm:text-[30px] lg:text-[34px] font-normal font-serif-editorial text-[#111111] leading-[1.12] tracking-[-0.01em] mb-2.5">
           {article.title}
         </h2>
 
@@ -244,7 +244,7 @@ export default function ArticleCard({
         </div>
 
         {/* Footer Action Link */}
-        <div className="pt-2 border-t border-[#dcd8cb] flex items-center justify-between text-[10.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors">
+        <div className="pt-2 border-t border-[#dcd8cb] flex items-center justify-between text-[10.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors mt-auto">
           <span>READ COMPLETE INVESTIGATION REPORT</span>
           <span>→</span>
         </div>
@@ -257,7 +257,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] transition-all shadow-2xs"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-2.5">
@@ -275,7 +275,7 @@ export default function ArticleCard({
           <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
-        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
+        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] mb-1.5 line-clamp-2">
           {article.title}
         </h3>
 
@@ -296,7 +296,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] transition-all shadow-2xs"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-2.5">
@@ -314,7 +314,7 @@ export default function ArticleCard({
           <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
-        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
+        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] mb-1.5 line-clamp-2">
           ‘{article.title}’
         </h3>
 
@@ -335,7 +335,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer bg-[#fdfcf4] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] transition-all shadow-2xs animate-in"
+        className="group cursor-pointer bg-[#fdfcf4] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform shadow-2xs animate-in"
         style={{ animationDelay: `${index * 40}ms` }}
       >
         <div className="relative overflow-hidden bg-[#eae8dc] border border-[#e2ded2] aspect-[16/10] mb-3">
@@ -358,7 +358,7 @@ export default function ArticleCard({
           <span>{dateStr}</span>
         </div>
 
-        <h3 className="text-[18px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2">
+        <h3 className="text-[18px] font-normal font-serif-editorial text-[#111111] leading-[1.22] mb-2">
           {article.title}
         </h3>
 
@@ -381,7 +381,7 @@ export default function ArticleCard({
     return (
       <div
         onClick={onClick}
-        className="group cursor-pointer py-3 border-b border-[#dcd8cb] last:border-b-0 hover:bg-[#f7f6ec] px-2 transition-colors flex items-start justify-between gap-3 animate-in"
+        className="group cursor-pointer py-3 border-b border-[#dcd8cb] last:border-b-0 hover:bg-[#f7f6ec] hover:-translate-y-0.5 hover:shadow-xs px-2 transition-all duration-200 ease-out transform flex items-start justify-between gap-3 animate-in"
       >
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1 text-[10px] font-sans-editorial tracking-wider uppercase">
@@ -389,7 +389,7 @@ export default function ArticleCard({
             <span className="text-[#999999]">•</span>
             <span className="text-[#666666]">{displaySourceName}</span>
           </div>
-          <h4 className="text-[14px] font-serif-editorial text-[#111111] group-hover:text-[#666666] leading-snug line-clamp-2">
+          <h4 className="text-[14px] font-serif-editorial text-[#111111] leading-snug line-clamp-2">
             {article.title}
           </h4>
         </div>
@@ -407,7 +407,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer bg-[#ffffff] border border-[#111111] p-4 flex flex-col shadow-2xs hover:bg-[#fbfbf8] transition-colors"
+        className="group cursor-pointer bg-[#ffffff] border border-[#111111] p-4 flex flex-col shadow-2xs hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out transform"
       >
         <div className="flex items-center justify-between mb-2">
           <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
@@ -424,7 +424,7 @@ export default function ArticleCard({
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         </div>
-        <h3 className="text-[17px] font-serif-editorial font-bold text-[#111111] leading-tight mb-2 group-hover:text-[#555]">
+        <h3 className="text-[17px] font-serif-editorial font-bold text-[#111111] leading-tight mb-2">
           {article.title}
         </h3>
         <p className="text-[12.5px] font-serif-editorial text-[#555] mb-3">
@@ -442,7 +442,7 @@ export default function ArticleCard({
   return (
     <article
       onClick={onClick}
-      className="group cursor-pointer bg-[#f7f6ec] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] transition-all"
+      className="group cursor-pointer bg-[#f7f6ec] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform shadow-2xs"
     >
       <div className="flex items-center gap-2 mb-2 text-[10px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider">
         <span className="text-[#111]">🏛 HISTORICAL MILESTONE</span>
@@ -456,7 +456,7 @@ export default function ArticleCard({
           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
         />
       </div>
-      <h3 className="text-[16px] font-serif-editorial text-[#111111] font-bold leading-snug group-hover:text-[#555] mb-2">
+      <h3 className="text-[16px] font-serif-editorial text-[#111111] font-bold leading-snug mb-2">
         {article.title}
       </h3>
       <p className="text-[12.5px] font-serif-editorial text-[#555555] mb-3">

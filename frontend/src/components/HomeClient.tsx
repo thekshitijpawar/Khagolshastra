@@ -151,7 +151,7 @@ export default function HomeClient({
 
               {column1SubArticle && (
                 <div
-                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] transition-all cursor-pointer group mt-auto"
+                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform cursor-pointer group mt-auto"
                   onClick={() => setSelectedArticle(column1SubArticle)}
                 >
                   <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -162,7 +162,7 @@ export default function HomeClient({
                       {column1SubArticle.sourceName || 'Astronomy Wire'}
                     </span>
                   </div>
-                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug group-hover:text-[#555555] transition-colors mb-1 line-clamp-2">
+                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug mb-1 line-clamp-2">
                     ‘{column1SubArticle.title}’
                   </h4>
                   <p className="text-[12px] font-serif-editorial text-[#555555] leading-snug line-clamp-2 mb-2.5">
@@ -198,7 +198,7 @@ export default function HomeClient({
 
               {column2SubArticle && (
                 <div
-                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] transition-all cursor-pointer group mt-auto"
+                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform cursor-pointer group mt-auto"
                   onClick={() => setSelectedArticle(column2SubArticle)}
                 >
                   <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -209,7 +209,7 @@ export default function HomeClient({
                       {column2SubArticle.sourceName || 'Astronomy Wire'}
                     </span>
                   </div>
-                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug group-hover:text-[#555555] transition-colors mb-1 line-clamp-2">
+                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug mb-1 line-clamp-2">
                     ‘{column2SubArticle.title}’
                   </h4>
                   <p className="text-[12px] font-serif-editorial text-[#555555] leading-snug line-clamp-2 mb-2.5">
@@ -300,7 +300,7 @@ export default function HomeClient({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Featured Exoplanet Lead Card - Full comprehensive editorial content completely filling negative space */}
             {exoplanetArticles[0] && (
-              <div className="lg:col-span-6 bg-white border border-[#111111] p-6 flex flex-col justify-between shadow-2xs">
+              <div className="lg:col-span-6 bg-white border border-[#111111] p-6 flex flex-col justify-between shadow-2xs hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform">
                 <div>
                   <div className="relative overflow-hidden aspect-[16/10] mb-4 bg-[#eae8dc] border border-[#dcd8cb]">
                     <img
@@ -318,7 +318,7 @@ export default function HomeClient({
                   </div>
                   <h3
                     onClick={() => setSelectedArticle(exoplanetArticles[0])}
-                    className="text-[24px] sm:text-[26px] font-serif-editorial text-[#111111] font-normal leading-[1.2] hover:text-[#555] cursor-pointer transition-colors mb-3.5"
+                    className="text-[24px] sm:text-[26px] font-serif-editorial text-[#111111] font-normal leading-[1.2] cursor-pointer mb-3.5"
                   >
                     {exoplanetArticles[0].title}
                   </h3>
@@ -411,7 +411,7 @@ export default function HomeClient({
               <div
                 key={art.id || idx}
                 onClick={() => setSelectedArticle(art)}
-                className="group cursor-pointer border border-[#dcd8cb] bg-white p-5 hover:border-[#111111] transition-all flex flex-col justify-between shadow-2xs"
+                className="group cursor-pointer border border-[#dcd8cb] bg-white p-5 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform flex flex-col justify-between shadow-2xs"
               >
                 <div>
                   <div className="relative overflow-hidden aspect-[16/10] mb-4 bg-[#eae8dc]">
@@ -423,7 +423,7 @@ export default function HomeClient({
                     />
                   </div>
                   <span className="eyebrow text-[#111111] block mb-2">{art.categories?.[0]?.replace('-', ' ') || 'STELLAR'}</span>
-                  <h3 className="text-[20px] font-serif-editorial font-normal text-[#111111] leading-snug group-hover:text-[#555] transition-colors mb-2.5">
+                  <h3 className="text-[20px] font-serif-editorial font-normal text-[#111111] leading-snug mb-2.5">
                     {art.title}
                   </h3>
                   <p className="text-[13px] font-serif-editorial text-[#555555] leading-relaxed line-clamp-3 mb-4">
@@ -467,7 +467,7 @@ export default function HomeClient({
               <div
                 key={art.id || idx}
                 onClick={() => setSelectedArticle(art)}
-                className="group cursor-pointer bg-[#1c1c1c] border border-[#2d2d2d] p-4 hover:border-[#ffc500] transition-all flex flex-col justify-between"
+                className="group cursor-pointer bg-[#1c1c1c] border border-[#2d2d2d] p-4 hover:border-[#ffc500] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(255,197,0,0.12)] transition-all duration-300 ease-out transform flex flex-col justify-between"
               >
                 <div>
                   <div className="relative overflow-hidden aspect-[16/10] mb-3 bg-[#242424]">
@@ -481,7 +481,7 @@ export default function HomeClient({
                   <div className="text-[9px] font-sans-editorial font-bold uppercase tracking-widest text-[#ffc500] mb-1.5">
                     {art.categories?.[0]?.replace('-', ' ') || 'COSMIC DAWN'}
                   </div>
-                  <h3 className="text-[16px] font-serif-editorial text-white font-normal leading-snug group-hover:text-[#ffc500] transition-colors mb-2 line-clamp-3">
+                  <h3 className="text-[16px] font-serif-editorial text-white font-normal leading-snug mb-2 line-clamp-3">
                     {art.title}
                   </h3>
                   <p className="text-[12px] font-serif-editorial text-[#aaaaaa] leading-relaxed line-clamp-2 mb-3">
@@ -609,13 +609,13 @@ export default function HomeClient({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* A&A Paper Card */}
-            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] p-5 flex flex-col justify-between transition-all group shadow-2xs">
+            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] p-5 flex flex-col justify-between transition-all duration-300 ease-out transform group shadow-2xs">
               <div>
                 <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#d97706] mb-2">
                   <span>A&amp;A (EDP SCIENCES)</span>
                   <span className="bg-[#fef3c7] px-1.5 py-0.5 border border-[#f59e0b]">PEER-REVIEWED</span>
                 </div>
-                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug group-hover:text-[#555] transition-colors mb-2">
+                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug mb-2">
                   Chemical structure of the solar neighbourhood with DESI DR1
                 </h3>
                 <p className="text-[12px] font-serif-editorial text-[#666666] line-clamp-3 leading-relaxed mb-3">
@@ -631,13 +631,13 @@ export default function HomeClient({
             </div>
 
             {/* IAARJ Paper Card */}
-            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] p-5 flex flex-col justify-between transition-all group shadow-2xs">
+            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] p-5 flex flex-col justify-between transition-all duration-300 ease-out transform group shadow-2xs">
               <div>
                 <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#2563eb] mb-2">
                   <span>IAARJ JOURNAL</span>
                   <span className="bg-[#dbeafe] px-1.5 py-0.5 border border-[#93c5fd]">OPEN ACCESS</span>
                 </div>
-                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug group-hover:text-[#555] transition-colors mb-2">
+                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug mb-2">
                   Orbital Perturbations and Resonance in Sub-Neptune Systems
                 </h3>
                 <p className="text-[12px] font-serif-editorial text-[#666666] line-clamp-3 leading-relaxed mb-3">
@@ -653,13 +653,13 @@ export default function HomeClient({
             </div>
 
             {/* arXiv astro-ph Paper Card */}
-            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] p-5 flex flex-col justify-between transition-all group shadow-2xs">
+            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] p-5 flex flex-col justify-between transition-all duration-300 ease-out transform group shadow-2xs">
               <div>
                 <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#059669] mb-2">
                   <span>ARXIV ASTRO-PH</span>
                   <span className="bg-[#d1fae5] px-1.5 py-0.5 border border-[#6ee7b7]">PREPRINT</span>
                 </div>
-                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug group-hover:text-[#555] transition-colors mb-2">
+                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug mb-2">
                   JWST Transmission Spectroscopy of Habitable-Zone Exoplanets
                 </h3>
                 <p className="text-[12px] font-serif-editorial text-[#666666] line-clamp-3 leading-relaxed mb-3">
@@ -675,13 +675,13 @@ export default function HomeClient({
             </div>
 
             {/* NASA ADS Paper Card */}
-            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] p-5 flex flex-col justify-between transition-all group shadow-2xs">
+            <div className="bg-white border border-[#dcd8cb] hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] p-5 flex flex-col justify-between transition-all duration-300 ease-out transform group shadow-2xs">
               <div>
                 <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#7c3aed] mb-2">
                   <span>NASA ADS / APJ</span>
                   <span className="bg-[#ede9fe] px-1.5 py-0.5 border border-[#c4b5fd]">DIGITAL LIBRARY</span>
                 </div>
-                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug group-hover:text-[#555] transition-colors mb-2">
+                <h3 className="text-[16px] font-serif-editorial font-bold text-[#111111] leading-snug mb-2">
                   Constraining Dark Energy Equations of State with Supernovae
                 </h3>
                 <p className="text-[12px] font-serif-editorial text-[#666666] line-clamp-3 leading-relaxed mb-3">

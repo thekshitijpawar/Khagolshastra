@@ -196,9 +196,9 @@ export default function MonocleRadioBox({
             <div
               key={art.id || idx}
               onClick={() => onOpenArticle(art)}
-              className="group cursor-pointer border-b border-[#262626] pb-2.5 last:border-0 hover:bg-[#1a1a1a] p-1.5 rounded-xs transition-colors"
+              className="group cursor-pointer border-b border-[#262626] pb-2.5 last:border-0 hover:bg-[#222222] hover:-translate-y-0.5 hover:shadow-xs p-1.5 rounded-xs transition-all duration-200 ease-out transform"
             >
-              <div className="text-[12.5px] font-serif-editorial text-[#e0e0e0] group-hover:text-[#ffc500] leading-snug transition-colors line-clamp-2">
+              <div className="text-[12.5px] font-serif-editorial text-[#f0f0f0] group-hover:text-white leading-snug transition-colors line-clamp-2">
                 {art.title}
               </div>
               <div className="text-[10px] font-sans-editorial text-[#777777] mt-1 flex items-center justify-between">

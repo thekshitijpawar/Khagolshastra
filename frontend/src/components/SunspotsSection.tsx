@@ -146,10 +146,10 @@ export default function SunspotsSection() {
                   <button
                     key={feed.id}
                     onClick={() => setSelectedFeedId(feed.id)}
-                    className={`text-[10.5px] font-sans-editorial font-bold tracking-wider uppercase px-2.5 py-1.5 transition-all border ${
+                    className={`text-[10.5px] font-sans-editorial font-bold tracking-wider uppercase px-2.5 py-1.5 transition-all duration-200 ease-out transform border ${
                       active
-                        ? 'bg-[#111111] text-white border-[#111111] shadow-2xs'
-                        : 'bg-white text-[#555555] border-[#dcd8cb] hover:border-[#111111] hover:text-[#111111]'
+                        ? 'bg-[#111111] text-white border-[#111111] shadow-2xs -translate-y-0.5'
+                        : 'bg-white text-[#444444] border-[#dcd8cb] hover:border-[#111111] hover:text-[#111111] hover:-translate-y-0.5 hover:shadow-xs'
                     }`}
                   >
                     {feed.label}

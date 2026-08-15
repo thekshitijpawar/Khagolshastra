@@ -305,7 +305,7 @@ export default function ResearchPage() {
               {papers.map((paper, idx) => (
                 <article
                   key={paper.id || idx}
-                  className="bg-white border border-[#dcd8cb] hover:border-[#111111] p-6 transition-all group shadow-2xs hover:shadow-sm"
+                  className="bg-white border border-[#dcd8cb] hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] p-6 transition-all duration-300 ease-out transform group shadow-2xs"
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                     <div className="space-y-2.5 flex-1">
@@ -335,7 +335,7 @@ export default function ResearchPage() {
                       {/* Paper Title */}
                       <h2
                         onClick={() => setSelectedPaperModal(paper)}
-                        className="text-[20px] sm:text-[23px] font-serif-editorial font-normal text-[#111111] leading-tight hover:text-[#555555] cursor-pointer transition-colors"
+                        className="text-[20px] sm:text-[23px] font-serif-editorial font-normal text-[#111111] leading-tight cursor-pointer"
                       >
                         {paper.title}
                       </h2>

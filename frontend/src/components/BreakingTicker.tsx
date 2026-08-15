@@ -132,7 +132,7 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
                 <div
                   key={art.id || idx}
                   onClick={() => onOpenArticle(art)}
-                  className="group cursor-pointer bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] hover:shadow-xs transition-all flex flex-col"
+                  className="group cursor-pointer bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform flex flex-col shadow-2xs"
                 >
                   <div className="flex gap-3 mb-3">
                     <div className="flex-1">
@@ -142,7 +142,7 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
                         <span>{source}</span>
                       </div>
 
-                      <h3 className="text-[15px] font-serif-editorial text-[#111111] font-normal leading-[1.25] group-hover:text-[#555555] transition-colors line-clamp-3">
+                      <h3 className="text-[15px] font-serif-editorial text-[#111111] font-normal leading-[1.25] line-clamp-3">
                         {art.title}
                       </h3>
                     </div>
