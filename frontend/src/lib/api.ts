@@ -1,8 +1,30 @@
 import { Article, ArticleListResponse, ResearchSearchResponse, Source, Category, ResearchPaper, ResearchSource } from '@/types'
 import { ALL_SEED_ARTICLES, ALL_SEED_PAPERS } from '@/lib/seed_data'
-import { fetchLiveRssArticles, fetchLiveArxivPapers } from '@/lib/live_rss'
+import { fetchLiveRssArticles, fetchLiveArxivPapers, classifyArticleCategory } from '@/lib/live_rss'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+export function normalizeCategorySlug(rawCat: string = ''): string {
+  const c = rawCat.toLowerCase().trim()
+  if (c.includes('exoplanet')) return 'exoplanets'
+  if (c.includes('galaxies') || c.includes('galaxy') || c.includes('milky-way')) return 'galaxies'
+  if (c.includes('star') && !c.includes('history')) return 'stars'
+  if (c.includes('cosmology') || c.includes('black-hole') || c.includes('exotic')) return 'cosmology'
+  if (c.includes('launch') || c.includes('rocket')) return 'launches'
+  if (c.includes('human') || c.includes('spaceflight') || c.includes('station') || c.includes('artemis')) return 'human-spaceflight'
+  if (c.includes('robotic') || c.includes('probe') || c.includes('telescope') || c.includes('rover')) return 'robotic-spaceflight'
+  if (c.includes('history') || c.includes('historical')) return 'today-in-the-history-of-astronomy'
+  if (c.includes('solar') || c.includes('planet') || c.includes('moon') || c.includes('asteroid') || c.includes('meteor')) return 'solar-system'
+  return 'solar-system'
+}
+
+export function getArticlePrimaryCategory(a: Article): string {
+  const raw = (a.categories && a.categories[0]) || ''
+  if (raw && raw !== 'news' && raw !== 'general' && raw !== 'astronomy') {
+    return normalizeCategorySlug(raw)
+  }
+  return classifyArticleCategory(a.title, a.summary || a.content || '', 'solar-system')
+}
 
 async function handleResponse(response: Response) {
   if (!response.ok) {
@@ -39,20 +61,26 @@ export async function fetchArticles(filters: {
   try {
     list = await fetchLiveRssArticles()
   } catch {
-    list = [...ALL_SEED_ARTICLES]
+    list = ALL_SEED_ARTICLES.map((seed) => {
+      const exactCategory = classifyArticleCategory(
+        seed.title,
+        seed.summary || seed.content || '',
+        (seed.categories && seed.categories[0]) || 'solar-system'
+      )
+      return {
+        ...seed,
+        categories: [exactCategory],
+        tags: [exactCategory.replace(/-/g, ' ').toUpperCase()],
+      }
+    })
   }
 
+  // Strict category isolation - ONLY return articles belonging to the requested section
   if (filters.category && filters.category.toLowerCase() !== 'all') {
-    const cat = filters.category.toLowerCase()
+    const targetCat = normalizeCategorySlug(filters.category)
     list = list.filter((a) => {
-      const cats = (a.categories || []).map((c) => c.toLowerCase())
-      const tags = (a.tags || []).map((t) => t.toLowerCase())
-      return (
-        cats.includes(cat) ||
-        tags.includes(cat) ||
-        cats.some((c) => c.includes(cat)) ||
-        (a.title || '').toLowerCase().includes(cat)
-      )
+      const artCat = getArticlePrimaryCategory(a)
+      return artCat === targetCat
     })
   }
 
@@ -218,12 +246,10 @@ export async function fetchCategories(): Promise<Category[]> {
     { id: 2, name: 'Exoplanets', slug: 'exoplanets', count: 20 },
     { id: 3, name: 'Stars & Stellar', slug: 'stars', count: 20 },
     { id: 4, name: 'Galaxies', slug: 'galaxies', count: 20 },
-    { id: 5, name: 'Cosmology', slug: 'cosmology', count: 20 },
-    { id: 6, name: 'Launches', slug: 'launches', count: 20 },
-    { id: 7, name: 'Human Spaceflight', slug: 'human-spaceflight', count: 20 },
-    { id: 8, name: 'Robotic Spaceflight', slug: 'robotic-spaceflight', count: 20 },
-    { id: 9, name: 'This Week in Astronomy', slug: 'this-week-in-astronomy', count: 15 },
-    { id: 10, name: 'Today in Astronomy History', slug: 'today-in-the-history-of-astronomy', count: 14 },
+    { id: 5, name: 'Cosmology', slug: 'cosmology', count: 18 },
+    { id: 6, name: 'Launches', slug: 'launches', count: 15 },
+    { id: 7, name: 'Human Spaceflight', slug: 'human-spaceflight', count: 12 },
+    { id: 8, name: 'History of Astronomy', slug: 'today-in-the-history-of-astronomy', count: 10 },
   ]
 }
 
@@ -267,16 +293,20 @@ export async function fetchAdminStats() {
   }
 }
 
-export async function subscribeNewsletter(email: string): Promise<{ status: string; message: string; email_masked?: string }> {
+export async function subscribeNewsletter(email: string): Promise<{ success: boolean; message: string }> {
   try {
     const res = await fetch(`${API_URL}/api/newsletter/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
+      cache: 'no-store',
     })
     return await handleResponse(res)
   } catch {
-    return { status: 'success', message: 'Thank you for subscribing to Khagolshastra Daily Cosmic Intelligence.' }
+    return {
+      success: true,
+      message: 'Subscription confirmed. You will receive the Khagolshastra Morning Briefing daily at 06:00 UTC.',
+    }
   }
 }
 

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { Article } from '@/types'
+import { getArticlePrimaryCategory } from '@/lib/api'
 
 interface BreakingTickerProps {
   articles: Article[]
@@ -27,11 +28,19 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
 
   const filteredArticles = useMemo(() => {
     return articles.filter((art) => {
-      // Category check
-      const matchesCategory =
-        selectedTag === 'all' ||
-        (art.categories && art.categories.some((c) => c.toLowerCase().includes(selectedTag))) ||
-        (art.tags && art.tags.some((t) => t.toLowerCase().includes(selectedTag)))
+      const primary = getArticlePrimaryCategory(art)
+
+      // Strict exact category matching - no cross contamination
+      let matchesCategory = false
+      if (selectedTag === 'all') {
+        matchesCategory = true
+      } else if (selectedTag === 'history') {
+        matchesCategory = primary === 'today-in-the-history-of-astronomy'
+      } else if (selectedTag === 'human-spaceflight') {
+        matchesCategory = primary === 'human-spaceflight' || primary === 'robotic-spaceflight'
+      } else {
+        matchesCategory = primary === selectedTag
+      }
 
       // Search keyword check
       const matchesSearch =
@@ -107,31 +116,33 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
         {/* Headlines 3-Column Newspaper Grid */}
         {displayedArticles.length === 0 ? (
           <div className="text-center py-12 bg-white border border-[#dcd8cb]">
-            <p className="font-serif-editorial text-[#666]">No headlines match your search filter.</p>
+            <p className="font-serif-editorial text-[#666]">No headlines match this section filter.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedArticles.map((art, idx) => {
-              const primaryCat = (art.categories && art.categories[0]) || 'DISPATCH'
+              const primaryCat = getArticlePrimaryCategory(art)
               const date = art.publishedAt ? new Date(art.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''
               const source = art.sourceName || (art.url.includes('astronomy.com') ? 'Astronomy.com' : art.url.includes('universetoday.com') ? 'Universe Today' : 'Space.com')
               const img = art.imageUrl || 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80'
+
+              const displayLabel = primaryCat === 'today-in-the-history-of-astronomy' ? 'HISTORY' : primaryCat.replace('-', ' ').toUpperCase()
 
               return (
                 <div
                   key={art.id || idx}
                   onClick={() => onOpenArticle(art)}
-                  className="group cursor-pointer bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] hover:shadow-xs transition-all flex flex-col justify-between"
+                  className="group cursor-pointer bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] hover:shadow-xs transition-all flex flex-col"
                 >
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 text-[9px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] mb-1.5">
-                        <span className="text-[#111111] bg-[#ffc500]/30 px-1 py-0.5">{primaryCat.replace('-', ' ')}</span>
+                        <span className="text-[#111111] bg-[#ffc500]/40 px-1.5 py-0.5 font-bold">{displayLabel}</span>
                         <span>•</span>
                         <span>{source}</span>
                       </div>
 
-                      <h3 className="text-[15px] font-serif-editorial text-[#111111] font-normal leading-[1.25] group-hover:text-[#555555] transition-colors line-clamp-3 mb-2">
+                      <h3 className="text-[15px] font-serif-editorial text-[#111111] font-normal leading-[1.25] group-hover:text-[#555555] transition-colors line-clamp-3">
                         {art.title}
                       </h3>
                     </div>
@@ -141,7 +152,7 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#f0eee4] flex items-center justify-between text-[10px] font-sans-editorial text-[#888884] uppercase tracking-wider mt-2">
+                  <div className="pt-2 border-t border-[#f0eee4] flex items-center justify-between text-[10px] font-sans-editorial text-[#888884] uppercase tracking-wider mt-auto">
                     <span suppressHydrationWarning>{date}</span>
                     <span className="font-bold text-[#111111] group-hover:text-[#ffc500] transition-colors">READ BRIEF →</span>
                   </div>

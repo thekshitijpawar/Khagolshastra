@@ -1,6 +1,7 @@
 'use client'
 
 import { Article } from '@/types'
+import { getArticlePrimaryCategory } from '@/lib/api'
 
 interface ArticleCardProps {
   article: Article
@@ -25,7 +26,7 @@ export default function ArticleCard({
       })
     : ''
 
-  const primaryCategory = (article.categories && article.categories[0]) || 'ASTRONOMY'
+  const primaryCategory = getArticlePrimaryCategory(article)
   const sourceName =
     article.sourceName ||
     (article.url?.includes('astronomy.com')

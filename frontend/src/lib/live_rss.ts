@@ -10,12 +10,12 @@ const RSS_FEEDS = [
   {
     name: 'Universe Today',
     url: 'https://www.universetoday.com/feed/',
-    defaultCategory: 'spaceflight',
+    defaultCategory: 'galaxies',
   },
   {
     name: 'Space.com',
     url: 'https://www.space.com/feeds/all',
-    defaultCategory: 'astronomy',
+    defaultCategory: 'launches',
   },
 ]
 
@@ -47,39 +47,85 @@ function extractImage(itemXml: string): string | undefined {
   return undefined
 }
 
-function detectCategories(title: string, desc: string, defaultCat: string): string[] {
+export function classifyArticleCategory(title: string, desc: string, defaultCat: string = 'solar-system'): string {
   const text = `${title} ${desc}`.toLowerCase()
-  const cats: string[] = []
 
-  if (text.includes('mars') || text.includes('moon') || text.includes('jupiter') || text.includes('saturn') || text.includes('asteroid') || text.includes('comet') || text.includes('solar system')) {
-    cats.push('solar-system')
-  }
-  if (text.includes('exoplanet') || text.includes('super-earth') || text.includes('habitable') || text.includes('kepler') || text.includes('tess') || text.includes('transit')) {
-    cats.push('exoplanets')
-  }
-  if (text.includes('star') || text.includes('supernova') || text.includes('magnetar') || text.includes('neutron star') || text.includes('white dwarf')) {
-    cats.push('stars')
-  }
-  if (text.includes('galaxy') || text.includes('galaxies') || text.includes('milky way') || text.includes('andromeda')) {
-    cats.push('galaxies')
-  }
-  if (text.includes('cosmology') || text.includes('dark matter') || text.includes('dark energy') || text.includes('big bang') || text.includes('expansion') || text.includes('universe')) {
-    cats.push('cosmology')
-  }
-  if (text.includes('launch') || text.includes('falcon') || text.includes('rocket') || text.includes('spacex') || text.includes('starship') || text.includes('sls') || text.includes('orbit')) {
-    cats.push('launches')
-  }
-  if (text.includes('artemis') || text.includes('astronaut') || text.includes('iss') || text.includes('human spaceflight') || text.includes('crew') || text.includes('station')) {
-    cats.push('human-spaceflight')
-  }
-  if (text.includes('rover') || text.includes('perseverance') || text.includes('curiosity') || text.includes('probe') || text.includes('voyager') || text.includes('telescope') || text.includes('jwst') || text.includes('webb')) {
-    cats.push('robotic-spaceflight')
+  // 1. Exoplanetary Science (Exoplanets, alien worlds, habitable zones)
+  if (
+    /\b(exoplanet|exoplanets|super-earth|habitable zone|alien world|protoplanetary|transit light curve|tess|kepler|hot jupiter|radial velocity|transit method|trappist-1|planet-forming)\b/i.test(text)
+  ) {
+    return 'exoplanets'
   }
 
-  if (cats.length === 0) {
-    cats.push(defaultCat)
+  // 2. Galaxies & Extragalactic (Andromeda, Milky Way, Spiral/Elliptical galaxies, Galactic Halo)
+  if (
+    /\b(galaxy|galaxies|andromeda|milky way|spiral galaxy|elliptical galaxy|intergalactic|m31|m87|ngc\s*\d+|extragalactic|galactic halo|galactic disc|magellanic|stellar stream|cluster of galaxies)\b/i.test(text)
+  ) {
+    return 'galaxies'
   }
-  return cats
+
+  // 3. Cosmology & Black Holes (Dark matter, Dark energy, Big Bang, Quasars, General Relativity)
+  if (
+    /\b(dark matter|dark energy|big bang|cosmological|cosmology|expansion of the universe|cmb|early universe|gravitational wave|black hole|black holes|event horizon|quasar|quasars|general relativity|singularity)\b/i.test(text)
+  ) {
+    return 'cosmology'
+  }
+
+  // 4. Stars & Stellar Phenomena (Supernovae, magnetars, white dwarfs, neutron stars, stellar evolution, pulsars)
+  if (
+    /\b(stellar|supernova|supernovae|pulsar|pulsars|magnetar|magnetars|neutron star|white dwarf|red giant|betelgeuse|binary star|star formation|protostar|flare star|tarantula)\b/i.test(text) ||
+    /\bstars\b/i.test(text) ||
+    /\bstar\b/i.test(title)
+  ) {
+    return 'stars'
+  }
+
+  // 5. Rocket Launches & Commercial Spaceflight (SpaceX, Starship, Falcon 9, Rocket Lab, launch countdowns)
+  if (
+    /\b(starlink|falcon 9|falcon heavy|rocket launch|liftoff|orbital launch|spacex|rocket lab|arianespace|isro launch|pslv|gslv|sls|starship|booster|first stage|pad 39a|slc-40|vandenberg|spaceport)\b/i.test(text)
+  ) {
+    return 'launches'
+  }
+
+  // 6. Human Spaceflight & Space Stations (ISS, Artemis, Astronauts, Crew Dragon)
+  if (
+    /\b(astronaut|astronauts|cosmonaut|taikonaut|iss|international space station|spacewalk|crew dragon|artemis ii|artemis iii|artemis mission|starliner|lunar gateway|space station|human spaceflight|expedition \d+)\b/i.test(text)
+  ) {
+    return 'human-spaceflight'
+  }
+
+  // 7. Telescopes, Rovers & Robotic Probes (JWST, Hubble, Rovers, Probes)
+  if (
+    /\b(jwst|james webb|hubble|perseverance|curiosity rover|voyager|parker solar probe|new horizons|osiris-rex|dart mission|bepicolombo|juice mission|chandrayaan|solar orbiter|space telescope|space probe|lander|rover)\b/i.test(text)
+  ) {
+    return 'robotic-spaceflight'
+  }
+
+  // 8. History of Astronomy & Retrospectives
+  if (
+    /\b(anniversary|apollo 11|sputnik|yuri gagarin|neil armstrong|galileo|copernicus|newton|edwin hubble|historical milestone|years ago today|today in history|on this day in space|on this day in astronomy)\b/i.test(text)
+  ) {
+    return 'today-in-the-history-of-astronomy'
+  }
+
+  // 9. Solar System & Planetary Bodies (Mars, Moon, Jupiter, Saturn, Asteroids, Comets, Sun)
+  if (
+    /\b(mars|jupiter|saturn|venus|mercury|uranus|neptune|pluto|moon|lunar|asteroid|asteroids|meteor|meteorite|comet|comets|kuiper belt|oort cloud|solar system|solar flare|coronal mass ejection|sunspot|sunspots)\b/i.test(text) ||
+    /\bsun\b/i.test(title)
+  ) {
+    return 'solar-system'
+  }
+
+  const d = (defaultCat || '').toLowerCase()
+  if (d.includes('star')) return 'stars'
+  if (d.includes('galaxy') || d.includes('galaxies')) return 'galaxies'
+  if (d.includes('exo')) return 'exoplanets'
+  if (d.includes('cosmo')) return 'cosmology'
+  if (d.includes('launch')) return 'launches'
+  if (d.includes('human')) return 'human-spaceflight'
+  if (d.includes('robotic')) return 'robotic-spaceflight'
+  if (d.includes('history')) return 'today-in-the-history-of-astronomy'
+  return 'solar-system'
 }
 
 function buildComprehensiveSummary(title: string, rawSummary: string, category: string): string {
@@ -92,7 +138,6 @@ function buildComprehensiveSummary(title: string, rawSummary: string, category: 
     return cleaned.slice(0, 750) + (cleaned.length > 750 ? '…' : '')
   }
 
-  // If summary is brief or truncated, synthesize comprehensive editorial depth
   const contextMap: Record<string, string> = {
     'solar-system': 'Planetary scientists and mission controllers continue to analyze telemetry and observational spectroscopy to map geological formations, atmospheric dynamics, and potential volatiles across the solar system.',
     'exoplanets': 'Astronomers utilize space-based transit spectroscopy and high-contrast direct imaging to constrain atmospheric metallicity, thermal profiles, and biosignature potential in newly confirmed planetary candidates.',
@@ -102,6 +147,7 @@ function buildComprehensiveSummary(title: string, rawSummary: string, category: 
     'launches': 'Aerospace engineers and launch providers coordinate orbital trajectory calculations, stage separation telemetry, and payload integration protocols for critical orbital and deep-space missions.',
     'human-spaceflight': 'Flight crews and ground controllers oversee vital life support systems, extravehicular activities, and orbital research investigations in low Earth orbit and planned lunar architectures.',
     'robotic-spaceflight': 'Deep-space autonomous navigation algorithms and radiation-hardened scientific instruments enable robotic explorers to withstand extreme space environments and return unprecedented discovery datasets.',
+    'today-in-the-history-of-astronomy': 'Archival retrospective records document significant milestones in observational astronomy and space exploration history.',
   }
 
   const contextNote = contextMap[category] || 'Observatory researchers and mission specialists continue evaluating data from spaceborne and ground-based telescopes to interpret the implications of this celestial discovery.'
@@ -146,8 +192,8 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
 
         if (title && link && !seenTitles.has(title.toLowerCase())) {
           seenTitles.add(title.toLowerCase())
-          const categories = detectCategories(title, rawDesc, feed.defaultCategory)
-          const richSummary = buildComprehensiveSummary(title, rawDesc, categories[0])
+          const exactCategory = classifyArticleCategory(title, rawDesc, feed.defaultCategory)
+          const richSummary = buildComprehensiveSummary(title, rawDesc, exactCategory)
 
           parsed.push({
             id: Math.abs(hashString(link)),
@@ -158,8 +204,8 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
             sourceName: feed.name,
             sourceUrl: feed.url,
             publishedAt: pubDate,
-            categories,
-            tags: categories.map((c) => c.replace('-', ' ').toUpperCase()),
+            categories: [exactCategory],
+            tags: [exactCategory.replace(/-/g, ' ').toUpperCase()],
             imageUrl,
             isVerified: true,
           })
@@ -180,11 +226,20 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
     }
   } catch {}
 
-  // Merge with permanent seed articles
+  // Merge with permanent seed articles, normalizing categories
   for (const seed of ALL_SEED_ARTICLES) {
     if (!seenTitles.has(seed.title.toLowerCase())) {
       seenTitles.add(seed.title.toLowerCase())
-      liveItems.push(seed)
+      const exactCategory = classifyArticleCategory(
+        seed.title,
+        seed.summary || seed.content || '',
+        (seed.categories && seed.categories[0]) || 'solar-system'
+      )
+      liveItems.push({
+        ...seed,
+        categories: [exactCategory],
+        tags: [exactCategory.replace(/-/g, ' ').toUpperCase()],
+      })
     }
   }
 
