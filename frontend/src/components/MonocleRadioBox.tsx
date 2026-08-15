@@ -22,6 +22,20 @@ interface PodcastEpisode {
   hours_until_next_rotation?: number
 }
 
+interface IssTelemetry {
+  name: string
+  latitude: number
+  longitude: number
+  altitude_km: number
+  velocity_kmh: number
+  velocity_mach: number
+  visibility: string
+  region: string
+  crew_count: number
+  expedition: string
+  status: string
+}
+
 const DEFAULT_PODCAST: PodcastEpisode = {
   id: 'ac-1',
   ep_number: 1,
@@ -34,6 +48,20 @@ const DEFAULT_PODCAST: PodcastEpisode = {
   hours_until_next_rotation: 33,
 }
 
+const DEFAULT_ISS: IssTelemetry = {
+  name: 'International Space Station',
+  latitude: 28.524,
+  longitude: -80.651,
+  altitude_km: 418,
+  velocity_kmh: 27580,
+  velocity_mach: 23,
+  visibility: 'Daylight',
+  region: 'North America & Atlantic',
+  crew_count: 7,
+  expedition: 'Expedition 72',
+  status: 'NOMINAL ORBIT',
+}
+
 export default function MonocleRadioBox({
   onOpenRadio,
   onOpenArticle,
@@ -41,6 +69,7 @@ export default function MonocleRadioBox({
   launchArticles = [],
 }: MonocleRadioBoxProps) {
   const [podcast, setPodcast] = useState<PodcastEpisode>(DEFAULT_PODCAST)
+  const [iss, setIss] = useState<IssTelemetry>(DEFAULT_ISS)
 
   // Countdown timer for next simulated rocket launch
   const [timeLeft, setTimeLeft] = useState({
@@ -51,9 +80,12 @@ export default function MonocleRadioBox({
 
   const [mounted, setMounted] = useState(false)
 
+  // Fetch podcast and ISS live telemetry
   useEffect(() => {
     setMounted(true)
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+    
+    // Podcast fetch
     fetch(`${apiUrl}/api/podcast/current`, { cache: 'no-store' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
@@ -61,6 +93,22 @@ export default function MonocleRadioBox({
       })
       .catch(() => {})
 
+    // ISS Live Telemetry poll function
+    const fetchIss = () => {
+      fetch('/api/iss')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && typeof data.latitude === 'number') {
+            setIss(data)
+          }
+        })
+        .catch(() => {})
+    }
+
+    fetchIss()
+    const issInterval = setInterval(fetchIss, 4000)
+
+    // Launch countdown timer
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 }
@@ -69,7 +117,11 @@ export default function MonocleRadioBox({
         return { hours: 24, minutes: 0, seconds: 0 }
       })
     }, 1000)
-    return () => clearInterval(timer)
+
+    return () => {
+      clearInterval(timer)
+      clearInterval(issInterval)
+    }
   }, [])
 
   const topNews = breakingArticles.slice(0, 3)
@@ -77,9 +129,9 @@ export default function MonocleRadioBox({
 
   return (
     <div className="bg-[#141414] text-white p-5 sm:p-6 border border-[#111111] shadow-md flex flex-col justify-between h-full">
-      <div>
+      <div className="space-y-5">
         {/* Header Ribbon */}
-        <div className="flex items-center justify-between border-b border-[#2d2d2d] pb-3 mb-4">
+        <div className="flex items-center justify-between border-b border-[#2d2d2d] pb-3">
           <div className="text-[12px] font-sans-editorial font-bold uppercase tracking-[0.16em] text-white flex items-center gap-2">
             <span>KHAGOLSHASTRA RADIO</span>
           </div>
@@ -92,7 +144,7 @@ export default function MonocleRadioBox({
         {/* Astronomy Cast Program Block */}
         <div
           onClick={onOpenRadio}
-          className="bg-[#202020] hover:bg-[#282828] border border-[#333333] hover:border-[#ffc500] p-3.5 mb-4 flex items-center justify-between gap-3 cursor-pointer transition-colors"
+          className="bg-[#202020] hover:bg-[#282828] border border-[#333333] hover:border-[#ffc500] p-3.5 flex items-center justify-between gap-3 cursor-pointer transition-colors"
         >
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-[#0f4c81] border border-[#ffc500]/40 flex flex-col items-center justify-center text-white shrink-0 p-1">
@@ -125,7 +177,7 @@ export default function MonocleRadioBox({
         {/* Listen Live Button */}
         <button
           onClick={onOpenRadio}
-          className="w-full bg-[#ffc500] hover:bg-[#f0ba00] text-[#111111] py-3 px-4 font-sans-editorial font-bold text-[12px] uppercase tracking-[0.14em] flex items-center justify-center gap-2 transition-all transform active:scale-95 shadow-sm mb-6"
+          className="w-full bg-[#ffc500] hover:bg-[#f0ba00] text-[#111111] py-2.5 px-4 font-sans-editorial font-bold text-[12px] uppercase tracking-[0.14em] flex items-center justify-center gap-2 transition-all transform active:scale-95 shadow-sm"
         >
           <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
@@ -134,23 +186,23 @@ export default function MonocleRadioBox({
         </button>
 
         {/* Top of the Hour Wire */}
-        <div className="mb-6 border-t border-[#2d2d2d] pt-4">
+        <div className="border-t border-[#2d2d2d] pt-3.5">
           <div className="text-[10px] font-sans-editorial font-bold tracking-[0.15em] uppercase text-[#ffc500] mb-2 flex items-center justify-between">
             <span>TOP OF THE HOUR</span>
             <span className="text-[#888888] font-normal">Headlines as they happen</span>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {topNews.map((art, idx) => (
               <div
                 key={art.id || idx}
                 onClick={() => onOpenArticle(art)}
-                className="group cursor-pointer border-b border-[#242424] pb-2.5 last:border-0"
+                className="group cursor-pointer border-b border-[#242424] pb-2 last:border-0"
               >
                 <div className="text-[12px] font-serif-editorial text-[#e0e0e0] group-hover:text-[#ffc500] leading-snug transition-colors line-clamp-2">
                   {art.title}
                 </div>
-                <div className="text-[10px] font-sans-editorial text-[#777777] mt-1 flex items-center gap-2">
+                <div className="text-[10px] font-sans-editorial text-[#777777] mt-0.5 flex items-center gap-2">
                   <span>{art.sourceName || 'Astronomy Dispatch'}</span>
                   <span>•</span>
                   <span suppressHydrationWarning>
@@ -164,8 +216,69 @@ export default function MonocleRadioBox({
           </div>
         </div>
 
+        {/* 🛰️ ISS LIVE ORBITAL TRACKER WIDGET */}
+        <div className="border-t border-[#2d2d2d] pt-3.5 bg-[#181818] p-3.5 border border-[#333333]">
+          <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold tracking-widest uppercase mb-2">
+            <div className="flex items-center gap-1.5 text-[#ffc500]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>🛰️ ISS LIVE ORBITAL TRACKER</span>
+            </div>
+            <span className="text-[#aaa] text-[9px] bg-[#242424] px-1.5 py-0.5 border border-[#3a3a3a]">
+              {iss.expedition}
+            </span>
+          </div>
+
+          {/* Current Ground Sector Pass */}
+          <div className="bg-[#111111] p-2.5 border border-[#282828] mb-2.5">
+            <div className="flex items-center justify-between text-[9px] font-sans-editorial uppercase text-[#888888] mb-1">
+              <span>CURRENT GROUND SECTOR PASS</span>
+              <span className={iss.visibility === 'Daylight' ? 'text-amber-300 font-bold' : 'text-indigo-300 font-bold'}>
+                {iss.visibility === 'Daylight' ? '☀️ DAYLIGHT' : '🌑 ECLIPSE'}
+              </span>
+            </div>
+            <div className="text-[13px] font-serif-editorial font-bold text-white flex items-center gap-1.5 truncate">
+              <span className="text-[#ffc500]">📍</span>
+              <span className="truncate">{iss.region}</span>
+            </div>
+          </div>
+
+          {/* Live Coordinates & Telemetry Grid */}
+          <div className="grid grid-cols-2 gap-2 text-center text-[10px] font-mono mb-2">
+            <div className="bg-[#111111] p-2 border border-[#282828]">
+              <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">LATITUDE</div>
+              <div className="text-[12px] font-bold text-white tracking-wider">
+                {iss.latitude > 0 ? `${iss.latitude}° N` : `${Math.abs(iss.latitude)}° S`}
+              </div>
+            </div>
+            <div className="bg-[#111111] p-2 border border-[#282828]">
+              <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">LONGITUDE</div>
+              <div className="text-[12px] font-bold text-white tracking-wider">
+                {iss.longitude > 0 ? `${iss.longitude}° E` : `${Math.abs(iss.longitude)}° W`}
+              </div>
+            </div>
+            <div className="bg-[#111111] p-2 border border-[#282828]">
+              <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">ALTITUDE</div>
+              <div className="text-[12px] font-bold text-[#ffc500]">
+                {iss.altitude_km} KM
+              </div>
+            </div>
+            <div className="bg-[#111111] p-2 border border-[#282828]">
+              <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">VELOCITY</div>
+              <div className="text-[12px] font-bold text-[#ffc500]">
+                {iss.velocity_kmh.toLocaleString()} KM/H
+              </div>
+            </div>
+          </div>
+
+          {/* Station Status Meta */}
+          <div className="flex items-center justify-between text-[9px] font-sans-editorial uppercase text-[#888888] pt-1">
+            <span>CREW: {iss.crew_count} ASTRONAUTS</span>
+            <span className="text-emerald-400 font-bold">● {iss.status}</span>
+          </div>
+        </div>
+
         {/* Rocket Launch Radar Box */}
-        <div className="border-t border-[#2d2d2d] pt-4 bg-[#1a1a1a] p-3.5 border border-[#333]">
+        <div className="bg-[#1a1a1a] p-3.5 border border-[#333]">
           <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold tracking-widest uppercase text-[#ffc500] mb-2">
             <span>🚀 ROCKET LAUNCH RADAR</span>
             <span className="text-white bg-[#333] px-1.5 py-0.5 text-[9px]">T-MINUS</span>
@@ -175,26 +288,26 @@ export default function MonocleRadioBox({
             {nextLaunch?.title || 'Falcon 9 • Starlink Group 12 Mission'}
           </div>
 
-          <div className="text-[11px] text-[#aaaaaa] font-sans-editorial mb-3 line-clamp-1">
+          <div className="text-[11px] text-[#aaaaaa] font-sans-editorial mb-2 line-clamp-1">
             Cape Canaveral Space Force Station, SLC-40
           </div>
 
           {/* Countdown Clock */}
-          <div className="grid grid-cols-3 gap-2 text-center bg-[#111111] p-2 border border-[#2a2a2a] mb-2 font-mono">
+          <div className="grid grid-cols-3 gap-2 text-center bg-[#111111] p-2 border border-[#2a2a2a] font-mono">
             <div>
-              <div className="text-[16px] font-bold text-[#ffc500]">
+              <div className="text-[15px] font-bold text-[#ffc500]">
                 {String(timeLeft.hours).padStart(2, '0')}
               </div>
               <div className="text-[8px] text-[#777] font-sans-editorial uppercase">HRS</div>
             </div>
             <div>
-              <div className="text-[16px] font-bold text-[#ffc500]">
+              <div className="text-[15px] font-bold text-[#ffc500]">
                 {String(timeLeft.minutes).padStart(2, '0')}
               </div>
               <div className="text-[8px] text-[#777] font-sans-editorial uppercase">MIN</div>
             </div>
             <div>
-              <div className="text-[16px] font-bold text-[#ffc500]">
+              <div className="text-[15px] font-bold text-[#ffc500]">
                 {String(timeLeft.seconds).padStart(2, '0')}
               </div>
               <div className="text-[8px] text-[#777] font-sans-editorial uppercase">SEC</div>
