@@ -219,6 +219,70 @@ export function isCommercialOrAdvertorial(title: string, desc: string = '', url:
   return false
 }
 
+/**
+ * Detect if two news articles are reporting on the exact same news topic/event
+ * across different syndicate feeds (e.g. Space.com vs Astronomy.com covering 'Wow! Signal').
+ */
+export function areArticlesDuplicateTopic(title1: string, title2: string): boolean {
+  if (!title1 || !title2) return false
+  const t1 = title1.toLowerCase().trim()
+  const t2 = title2.toLowerCase().trim()
+  if (t1 === t2) return true
+
+  const clean = (str: string) =>
+    str
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(
+        (w) =>
+          w.length > 2 &&
+          ![
+            'the',
+            'and',
+            'for',
+            'with',
+            'from',
+            'this',
+            'that',
+            'what',
+            'have',
+            'were',
+            'been',
+            'will',
+            'your',
+            'about',
+            'space',
+            'today',
+            'news',
+            'spacecom',
+            'astronomycom',
+          ].includes(w)
+      )
+
+  const words1 = clean(t1)
+  const words2 = clean(t2)
+  const set2 = new Set(words2)
+
+  let overlap = 0
+  for (const w of words1) {
+    if (set2.has(w)) overlap++
+  }
+
+  const minLen = Math.min(words1.length, words2.length)
+  if (minLen === 0) return false
+
+  // If specific signature phrases match (e.g. "wow signal", "aug 15 1977")
+  if (
+    (t1.includes('wow') && t2.includes('wow') && (t1.includes('signal') || t2.includes('signal'))) ||
+    (t1.includes('1977') && t2.includes('1977'))
+  ) {
+    return true
+  }
+
+  return overlap / minLen >= 0.45
+}
+
 export function classifyArticleCategory(title: string, desc: string, defaultCat: string = 'solar-system'): string {
   const text = `${title} ${desc}`.toLowerCase()
 
@@ -418,9 +482,26 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
 
   try {
     const results = await Promise.allSettled(feedPromises)
+    const rawFeedItems: Article[] = []
     for (const r of results) {
       if (r.status === 'fulfilled' && Array.isArray(r.value)) {
-        liveItems.push(...r.value)
+        rawFeedItems.push(...r.value)
+      }
+    }
+
+    // Sort by publication date first
+    rawFeedItems.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime())
+
+    // Deduplicate across feeds by semantic topic similarity
+    for (const item of rawFeedItems) {
+      const isDuplicate = liveItems.some(
+        (existing) =>
+          existing.title.toLowerCase() === item.title.toLowerCase() ||
+          areArticlesDuplicateTopic(existing.title, item.title)
+      )
+      if (!isDuplicate) {
+        liveItems.push(item)
+        seenTitles.add(item.title.toLowerCase())
       }
     }
   } catch {}
@@ -431,7 +512,11 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
       continue
     }
 
-    if (!seenTitles.has(seed.title.toLowerCase())) {
+    const isDuplicate =
+      seenTitles.has(seed.title.toLowerCase()) ||
+      liveItems.some((existing) => areArticlesDuplicateTopic(existing.title, seed.title))
+
+    if (!isDuplicate) {
       seenTitles.add(seed.title.toLowerCase())
       const exactCategory = classifyArticleCategory(
         seed.title,

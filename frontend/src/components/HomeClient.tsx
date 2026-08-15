@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Article } from '@/types'
 import { subscribeNewsletter } from '@/lib/api'
+import { areArticlesDuplicateTopic } from '@/lib/live_rss'
 import ArticleCard from '@/components/ArticleCard'
 import MonocleRadioBox from '@/components/MonocleRadioBox'
 import BreakingTicker from '@/components/BreakingTicker'
@@ -53,15 +54,71 @@ export default function HomeClient({
     }
   }
 
-  // Top hero articles:
-  // Column 1: Lead feature + 1 small observatory wire dispatch to fill the negative space
-  const leadArticle = allArticles[0] || solarArticles[0]
-  const column1SubArticle = allArticles[3] || cosmologyArticles[0]
+  // Top hero articles (Guaranteed distinct categories & subjects across all columns with NO topic repetition):
+  const usedHeroIds = new Set<number>()
 
-  // Column 2: 2 stacked secondary stories + 1 small editorial brief dispatch to fill the negative space
-  const secondArticle = allArticles[1] || exoplanetArticles[0]
-  const thirdArticle = allArticles[2] || starGalaxyArticles[0]
-  const column2SubArticle = allArticles[4] || historyArticles[0]
+  // 1. Lead Hero Article (Top discovery / breaking)
+  const leadArticle = allArticles[0] || solarArticles[0]
+  if (leadArticle) usedHeroIds.add(leadArticle.id)
+
+  const isHeroDuplicate = (art: Article) => {
+    if (!art) return true
+    if (usedHeroIds.has(art.id)) return true
+    if (leadArticle && areArticlesDuplicateTopic(art.title, leadArticle.title)) return true
+    return false
+  }
+
+  // 2. Column 2 Top Story (Pick first solar / exoplanet story not duplicate of lead):
+  const secondArticle =
+    solarArticles.find((a) => !isHeroDuplicate(a)) ||
+    exoplanetArticles.find((a) => !isHeroDuplicate(a)) ||
+    allArticles.find((a) => !isHeroDuplicate(a)) ||
+    allArticles[1]
+  if (secondArticle) usedHeroIds.add(secondArticle.id)
+
+  const isSecondDuplicate = (art: Article) => {
+    if (isHeroDuplicate(art)) return true
+    if (secondArticle && areArticlesDuplicateTopic(art.title, secondArticle.title)) return true
+    return false
+  }
+
+  // 3. Column 2 Middle Story (Pick first star/galaxy story distinct from lead & second):
+  const thirdArticle =
+    starGalaxyArticles.find((a) => !isSecondDuplicate(a)) ||
+    cosmologyArticles.find((a) => !isSecondDuplicate(a)) ||
+    exoplanetArticles.find((a) => !isSecondDuplicate(a)) ||
+    allArticles.find((a) => !isSecondDuplicate(a)) ||
+    allArticles[2]
+  if (thirdArticle) usedHeroIds.add(thirdArticle.id)
+
+  const isThirdDuplicate = (art: Article) => {
+    if (isSecondDuplicate(art)) return true
+    if (thirdArticle && areArticlesDuplicateTopic(art.title, thirdArticle.title)) return true
+    return false
+  }
+
+  // 4. Column 1 Bottom Observatory Wire (Pick distinct cosmology / astrophysics dispatch):
+  const column1SubArticle =
+    cosmologyArticles.find((a) => !isThirdDuplicate(a)) ||
+    launchArticles.find((a) => !isThirdDuplicate(a)) ||
+    allArticles.find((a) => !isThirdDuplicate(a)) ||
+    allArticles[3]
+  if (column1SubArticle) usedHeroIds.add(column1SubArticle.id)
+
+  const isFourthDuplicate = (art: Article) => {
+    if (isThirdDuplicate(art)) return true
+    if (column1SubArticle && areArticlesDuplicateTopic(art.title, column1SubArticle.title)) return true
+    return false
+  }
+
+  // 5. Column 2 Bottom Editorial Brief (Pick distinct spaceflight / history dispatch):
+  const column2SubArticle =
+    spaceflightArticles.find((a) => !isFourthDuplicate(a)) ||
+    historyArticles.find((a) => !isFourthDuplicate(a)) ||
+    solarArticles.find((a) => !isFourthDuplicate(a)) ||
+    allArticles.find((a) => !isFourthDuplicate(a)) ||
+    allArticles[4]
+  if (column2SubArticle) usedHeroIds.add(column2SubArticle.id)
 
   return (
     <div className="bg-[#fdfcf4] text-[#111111]">
