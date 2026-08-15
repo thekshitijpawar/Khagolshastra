@@ -123,8 +123,8 @@ export default function MonocleRadioBox({
     }
   }, [])
 
-  // 3 top of the hour breaking headlines to perfectly fit the column area
-  const topNews = breakingArticles.slice(0, 3)
+  // 5 top of the hour breaking headlines to perfectly match the column area
+  const topNews = breakingArticles.slice(0, 5)
   const nextLaunch = launchArticles[0]
 
   return (

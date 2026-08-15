@@ -68,7 +68,7 @@ export default function ArticleCard({
       .trim()
   }
 
-  // Balanced 2-paragraph generator for the Lead Story to perfectly fit the layout area
+  // Comprehensive 4-paragraph generator for the Lead Story to fill the column space completely
   const getLeadDetailedSummary = () => {
     const rawContent = sanitize(article.content) || ''
     const rawSummary = sanitize(article.summary) || ''
@@ -82,46 +82,54 @@ export default function ArticleCard({
       .map((s) => s.trim())
       .filter((s) => s.length > 20 && !s.toLowerCase().includes('click here') && !s.toLowerCase().includes('read more'))
 
-    const domainContext: Record<string, { technical: string; impact: string; future: string }> = {
+    const domainContext: Record<string, { technical: string; impact: string; future: string; analysis: string }> = {
       'solar-system': {
         technical: 'Planetary scientists and orbital dynamics teams are analyzing multi-spectral reflectance data to refine high-precision topography and volatile distribution models.',
         impact: 'These observations provide vital empirical constraints on solar radiation pressure, cratering histories, and interplanetary dust density across interplanetary space.',
         future: 'Subsequent ground-based radar tracking and deep-space probe flybys will perform spectroscopic cross-validation over the coming observation windows.',
+        analysis: 'High-resolution imaging and thermal inertia calculations indicate complex surface morphology shaped by solar wind sputtering and micrometeoroid bombardment over geological timescales.',
       },
       'exoplanets': {
         technical: 'Atmospheric characterization teams utilize transit transmission spectroscopy and phase curve analysis to measure molecular absorption signatures and cloud deck altitudes.',
         impact: 'Constraining atmospheric metallicity and carbon-to-oxygen ratios in planetary candidates offers crucial insights into planetary migration histories and formation discs.',
         future: 'Follow-up high-contrast direct imaging with spaceborne observatories will target secondary eclipses to map thermal emission gradients.',
+        analysis: 'By evaluating atmospheric escape rates and stellar irradiation levels, researchers can place stringent limits on photochemical hazes and secondary atmospheric retention.',
       },
       'stars': {
         technical: 'High-resolution stellar spectroscopy and asteroseismic pulsations allow astrophysicists to determine internal rotation profiles and precise core burning stages.',
         impact: 'Accurate measurements of stellar mass-loss rates and chemical abundances serve as critical anchor points for modern stellar evolutionary tracks.',
         future: 'Multi-epoch spectroscopic monitoring and interferometric angular diameter surveys will continue to track structural variations over extended baselines.',
+        analysis: 'Magnetohydrodynamic simulations constrained by these high-precision observations indicate turbulent convection zones driving localized magnetic field amplification.',
       },
       'galaxies': {
         technical: 'Deep-field integral field spectroscopy and submillimeter interferometry trace stellar kinematics, ionized gas velocity dispersions, and cold molecular gas reservoirs.',
         impact: 'Mapping active galactic nuclei feedback mechanisms and star formation suppression timescales provides empirical tests for cosmic structure assembly.',
         future: 'Next-generation space telescopes and wide-area radio arrays are coordinating panoramic deep surveys to characterize the faint outskirts of evolving galaxies.',
+        analysis: 'Gravitational potential modeling across galactic halos suggests tidal stripping and filamentary gas accretion continue to replenish interstellar star-forming clouds.',
       },
       'cosmology': {
         technical: 'Cosmological analysis pipelines combine weak gravitational lensing shear profiles and cosmic microwave background anisotropies to calibrate expansion rates.',
         impact: 'These high-precision cosmological parameters place rigorous bounds on neutrino mass sums, dark matter cross sections, and dynamic dark energy.',
         future: 'Large-scale galaxy redshift surveys and space-based cosmological observatories are preparing statistical releases to resolve cosmic expansion tensions.',
+        analysis: 'Cross-correlating angular power spectra across independent redshift slices provides vital consistency checks against standard Lambda-CDM cosmological models.',
       },
       'launches': {
         technical: 'Aerospace mission teams monitor real-time multi-stage propulsion chamber pressures and stage separation kinematics throughout the ascent profile.',
         impact: 'Achieving nominal orbital insertion parameters ensures orbital lifetime margins and collision avoidance compliance with active catalogs.',
         future: 'Ground telemetry stations and global tracking networks are actively acquiring initial payload telemetry to confirm subsystem health.',
+        analysis: 'Telemetry downlink arrays report optimal thermal dissipation and attitude control subsystem stability across initial orbital checkout orbits.',
       },
       'human-spaceflight': {
         technical: 'Flight operations controllers oversee closed-loop environmental control and life support systems during orbital and translunar phases.',
         impact: 'Long-duration spaceflight data is continuously gathered on crew physiological adaptation, cosmic radiation dosimetry, and spacecraft structural fatigue.',
         future: 'Mission architectures continue progressing through integrated systems test milestones and astronaut simulations.',
+        analysis: 'Habitation telemetry confirms stable partial pressure margins, closed-loop water recovery efficiency, and active thermal loop performance.',
       },
       'robotic-spaceflight': {
         technical: 'Autonomous deep-space navigation algorithms and radiation-hardened computing platforms execute instrument calibration sequences and low-latency data compression.',
         impact: 'The scientific yield from autonomous platforms expands our understanding of extreme extraterrestrial environments without continuous ground intervention.',
         future: 'Engineers are reviewing telemetry downlinks to optimize onboard instrument duty cycles and trajectory correction maneuvers.',
+        analysis: 'Optical navigation frames and celestial reference alignments confirm trajectory precision well within nominal deep-space cruise tolerances.',
       },
     }
 
@@ -129,28 +137,42 @@ export default function ArticleCard({
       technical: 'Observatory researchers and mission specialists are processing raw CCD photometry and spectral telemetry to extract calibrated signal-to-noise ratios.',
       impact: 'The resulting empirical datasets provide indispensable benchmarks for evaluating theoretical models and astrophysical simulations.',
       future: 'Collaborative observing networks across multiple continents are coordinating synchronized multi-wavelength campaigns.',
+      analysis: 'Peer-reviewed observational datasets provide indispensable constraints for ongoing astrophysical and cosmological research.',
     }
 
     const domain = domainContext[cat] || defaultDomain
 
     let para1 = ''
     let para2 = ''
+    let para3 = ''
+    let para4 = ''
 
-    if (sentences.length >= 2) {
+    if (sentences.length >= 4) {
       para1 = sentences.slice(0, 2).join(' ')
-      para2 = `${domain.technical} ${domain.impact}`
+      para2 = sentences.slice(2, 4).join(' ')
+      para3 = sentences.length > 4 ? sentences.slice(4).join(' ') : domain.technical
+      para4 = `${domain.impact} ${domain.future}`
+    } else if (sentences.length >= 2) {
+      para1 = sentences.slice(0, 2).join(' ')
+      para2 = domain.technical
+      para3 = domain.analysis
+      para4 = `${domain.impact} ${domain.future}`
     } else if (sentences.length === 1) {
       para1 = sentences[0]
       para2 = `Observational data recorded across international astronomy networks regarding ${title} highlights significant astrophysical phenomena. ${domain.technical}`
+      para3 = domain.analysis
+      para4 = `${domain.impact} ${domain.future}`
     } else {
       para1 = `A major astronomical investigation concerning ${title} has released comprehensive observational findings and scientific telemetry through ${source}.`
-      para2 = `${domain.technical} ${domain.impact}`
+      para2 = domain.technical
+      para3 = domain.analysis
+      para4 = `${domain.impact} ${domain.future}`
     }
 
-    return { para1, para2, domain }
+    return { para1, para2, para3, para4, domain }
   }
 
-  const getCleanSummary = (maxLen = 180) => {
+  const getCleanSummary = (maxLen = 220) => {
     const s = sanitize(article.summary)
     if (s.length >= 20) return s.length > maxLen ? s.slice(0, maxLen) + '…' : s
 
@@ -162,7 +184,7 @@ export default function ArticleCard({
 
   // Variant 1: Hero Lead Card (Column 1 of Monocle grid)
   if (variant === 'lead') {
-    const { para1, para2, domain } = getLeadDetailedSummary()
+    const { para1, para2, para3, para4, domain } = getLeadDetailedSummary()
 
     return (
       <article
@@ -170,8 +192,8 @@ export default function ArticleCard({
         className="group cursor-pointer flex flex-col animate-in"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        {/* Top Meta Bar - Clean, subtle, with zero duplicate words */}
-        <div className="flex items-center gap-2.5 mb-2">
+        {/* Top Meta Bar */}
+        <div className="flex items-center gap-2.5 mb-2.5">
           <span className="eyebrow text-[#111111]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
           <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
@@ -184,14 +206,14 @@ export default function ArticleCard({
         </div>
 
         {/* Grand Headline */}
-        <h2 className="text-[26px] sm:text-[30px] lg:text-[34px] font-normal font-serif-editorial text-[#111111] leading-[1.12] tracking-[-0.01em] group-hover:text-[#444444] transition-colors mb-2.5">
+        <h2 className="text-[28px] sm:text-[34px] lg:text-[38px] font-normal font-serif-editorial text-[#111111] leading-[1.1] tracking-[-0.01em] group-hover:text-[#444444] transition-colors mb-3">
           {article.title}
         </h2>
 
         {/* Reading Time & Date Badge */}
         <div
           suppressHydrationWarning
-          className="flex items-center gap-2 text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] pb-2.5 mb-3 border-b border-[#e2ded2]"
+          className="flex items-center gap-2 text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] pb-3 mb-4 border-b border-[#e2ded2]"
         >
           <span>📖 | {readMins} MIN READ</span>
           <span>•</span>
@@ -201,50 +223,62 @@ export default function ArticleCard({
         </div>
 
         {/* Photography with Caption */}
-        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-3.5">
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-4">
           <img
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
             loading="eager"
           />
-          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2 text-white text-[9.5px] font-sans-editorial tracking-wider flex items-center justify-between">
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2.5 text-white text-[10px] font-sans-editorial tracking-wider flex items-center justify-between">
             <span>Observatory Field Capture</span>
             <span className="text-[#ffc500]">VIA {displaySourceName.toUpperCase()}</span>
           </div>
         </div>
 
-        {/* Balanced 2-Paragraph Lead Editorial Text */}
-        <div className="space-y-2.5 font-serif-editorial text-[#2c2c2c] text-[13.5px] sm:text-[14px] leading-[1.55] mb-3.5">
-          <p className="first-letter:float-left first-letter:text-[32px] first-letter:leading-[0.8] first-letter:mr-2 first-letter:font-serif-editorial first-letter:font-bold first-letter:text-[#111111]">
+        {/* Dynamic 4-Paragraph Comprehensive Lead Editorial Suite */}
+        <div className="space-y-3 font-serif-editorial text-[#2c2c2c] text-[14px] sm:text-[14.5px] leading-[1.6] mb-4">
+          <p className="first-letter:float-left first-letter:text-[36px] first-letter:leading-[0.8] first-letter:mr-2.5 first-letter:font-serif-editorial first-letter:font-bold first-letter:text-[#111111]">
             {para1}
           </p>
 
           <p className="text-[#3a3a3a]">
             {para2}
           </p>
+
+          <p className="text-[#444444]">
+            {para3}
+          </p>
+
+          <p className="text-[#444444]">
+            {para4}
+          </p>
         </div>
 
-        {/* Key Insights Briefing Box */}
-        <div className="bg-[#f6f4ea] border-l-2 border-[#111111] p-3 mb-3">
-          <div className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] mb-1.5 border-b border-[#e2ded2] pb-1">
+        {/* Dynamic Observatory Briefing & Key Insights Dossier */}
+        <div className="bg-[#f6f4ea] border-l-2 border-[#111111] p-4 mb-3">
+          <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] mb-2 border-b border-[#e2ded2] pb-1.5">
             <span>🔭 OBSERVATORY BRIEFING & KEY INSIGHTS</span>
             <span className="text-[#0f4c81]">WIRE DOSSIER</span>
           </div>
-          <div className="space-y-1 text-[11.5px] font-serif-editorial text-[#444444] leading-[1.4]">
-            <div className="flex items-start gap-1.5">
+          <div className="space-y-1.5 text-[12px] font-serif-editorial text-[#444444] leading-[1.45]">
+            <div className="flex items-start gap-2">
               <span className="text-[#111111] font-bold">▪</span>
               <span><strong>Observational Significance:</strong> {domain.technical}</span>
             </div>
-            <div className="flex items-start gap-1.5">
+            <div className="flex items-start gap-2">
               <span className="text-[#111111] font-bold">▪</span>
               <span><strong>Scientific Impact:</strong> {domain.impact}</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-[#111111] font-bold">▪</span>
+              <span><strong>Forward Horizon:</strong> {domain.future}</span>
             </div>
           </div>
         </div>
 
         {/* Footer Action Link */}
-        <div className="pt-2 border-t border-[#dcd8cb] flex items-center justify-between text-[10.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors">
+        <div className="pt-2.5 border-t border-[#dcd8cb] flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors">
           <span>READ COMPLETE INVESTIGATION REPORT</span>
           <span>→</span>
         </div>
@@ -257,10 +291,10 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] transition-all shadow-2xs"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] transition-all shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-2.5">
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-3">
           <img
             src={imageUrl}
             alt={article.title}
@@ -269,21 +303,21 @@ export default function ArticleCard({
           />
         </div>
 
-        <div className="flex items-center gap-2 mb-1">
-          <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="eyebrow text-[#111111]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
-          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
+          <span className="text-[10px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
-        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
+        <h3 className="text-[18px] sm:text-[20px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-2">
           {article.title}
         </h3>
 
-        <p className="text-[12.5px] font-serif-editorial text-[#444444] leading-[1.45] mb-2.5 line-clamp-3">
-          {getCleanSummary(170)}
+        <p className="text-[13px] font-serif-editorial text-[#444444] leading-[1.5] mb-3">
+          {getCleanSummary(220)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2] mt-auto">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2.5 border-t border-[#e2ded2] mt-auto">
           <span>📖 | {readMins} MIN READ</span>
           <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ REPORT →</span>
         </div>
@@ -291,15 +325,15 @@ export default function ArticleCard({
     )
   }
 
-  // Variant 3: Quote Headline Card (Column 2 Bottom of Monocle grid)
+  // Variant 3: Quote Headline Card (Column 2 Middle & Bottom of Monocle grid)
   if (variant === 'quote') {
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] transition-all shadow-2xs"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] transition-all shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-2.5">
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-3">
           <img
             src={imageUrl}
             alt={article.title}
@@ -308,21 +342,21 @@ export default function ArticleCard({
           />
         </div>
 
-        <div className="flex items-center gap-2 mb-1">
-          <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="eyebrow text-[#111111]">{formattedCategory}</span>
           <span className="text-[#888884] text-xs">•</span>
-          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
+          <span className="text-[10px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
         </div>
 
-        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
+        <h3 className="text-[18px] sm:text-[20px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2">
           ‘{article.title}’
         </h3>
 
-        <p className="text-[12.5px] font-serif-editorial text-[#555555] leading-[1.45] mb-2.5 line-clamp-3">
-          {getCleanSummary(170)}
+        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.5] mb-3">
+          {getCleanSummary(220)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2] mt-auto">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2.5 border-t border-[#e2ded2] mt-auto">
           <span>📖 | {readMins} MIN READ</span>
           <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ DISPATCH →</span>
         </div>
