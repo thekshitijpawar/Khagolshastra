@@ -13,12 +13,14 @@ export default function Header() {
     { href: '/', label: 'MAGAZINE' },
     { href: '#radio-section', label: 'RADIO' },
     { href: '#launches-section', label: 'LAUNCHES' },
+    { href: '#sunspots-section', label: 'SUNSPOTS' },
     { href: '/research', label: 'RESEARCH' },
     { href: '/articles', label: 'ALL HEADLINES' },
   ]
 
   const sectionsNav = [
     { href: '/section/solar-system', label: 'SOLAR SYSTEM' },
+    { href: '#sunspots-section', label: 'SUNSPOTS' },
     { href: '/section/exoplanets', label: 'EXOPLANETS' },
     { href: '/section/stars', label: 'STARS' },
     { href: '/section/milky-way', label: 'MILKY WAY' },

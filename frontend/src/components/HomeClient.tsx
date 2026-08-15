@@ -10,6 +10,7 @@ import MonocleRadioBox from '@/components/MonocleRadioBox'
 import BreakingTicker from '@/components/BreakingTicker'
 import ArticleModal from '@/components/ArticleModal'
 import RadioPlayerModal from '@/components/RadioPlayerModal'
+import SunspotsSection from '@/components/SunspotsSection'
 
 interface HomeClientProps {
   allArticles: Article[]
@@ -273,6 +274,9 @@ export default function HomeClient({
           </div>
         </div>
       </section>
+
+      {/* 3.5. LIVE NASA SOHO SUNSPOTS OBSERVATORY */}
+      <SunspotsSection />
 
       {/* 4. SECTION 02: EXOPLANETS & ALIEN WORLDS */}
       <section id="exoplanets-section" className="px-4 sm:px-6 lg:px-10 py-12 border-b border-[#111111] bg-[#fbfaf0]">
