@@ -294,11 +294,11 @@ export default function ArticleCard({
           {article.title}
         </h3>
 
-        <p className="text-[13.5px] font-serif-editorial text-[#444444] leading-[1.45] mb-3">
-          {getCleanSummary(280)}
+        <p className="text-[13.5px] font-serif-editorial text-[#444444] leading-[1.5] mb-3">
+          {getCleanSummary(320)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2.5 border-t border-[#e2ded2] mt-auto">
           <span>📖 | {readMins} MIN READ</span>
           <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ REPORT →</span>
         </div>
@@ -306,7 +306,7 @@ export default function ArticleCard({
     )
   }
 
-  // Variant 3: Quote Headline Card (Column 2 Bottom of Monocle grid)
+  // Variant 3: Quote Headline Card (Column 2 Middle & Bottom of Monocle grid)
   if (variant === 'quote') {
     return (
       <article
@@ -333,11 +333,11 @@ export default function ArticleCard({
           ‘{article.title}’
         </h3>
 
-        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.4] mb-3">
-          {getCleanSummary(220)}
+        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.5] mb-3">
+          {getCleanSummary(300)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2.5 border-t border-[#e2ded2] mt-auto">
           <span>📖 | {readMins} MIN READ</span>
           <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ DISPATCH →</span>
         </div>
