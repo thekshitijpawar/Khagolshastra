@@ -291,7 +291,7 @@ export default function ArticleCard({
     )
   }
 
-  // Variant 3: Quote / Secondary Card with Authentic Image
+  // Variant 3: Quote / Secondary Stacked Card with Full Authentic Image
   if (variant === 'quote') {
     return (
       <article
@@ -299,32 +299,28 @@ export default function ArticleCard({
         className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-3.5 hover:border-[#111111] transition-all shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div className="flex gap-3.5 items-start mb-2">
-          <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] w-24 sm:w-28 aspect-[4/3] shrink-0">
-            <img
-              src={imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5 mb-1">
-              <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
-              <span className="text-[#888884] text-xs">•</span>
-              <span className="text-[9.5px] font-sans-editorial uppercase text-[#666] truncate">{displaySourceName}</span>
-            </div>
-
-            <h3 className="text-[14.5px] sm:text-[15.5px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1 line-clamp-2">
-              ‘{article.title}’
-            </h3>
-
-            <p className="text-[12px] font-serif-editorial text-[#555555] leading-[1.38] line-clamp-2">
-              {getCleanSummary(130)}
-            </p>
-          </div>
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-2.5">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            loading="lazy"
+          />
         </div>
+
+        <div className="flex items-center gap-2 mb-1">
+          <span className="eyebrow text-[#111111] text-[9.5px]">{formattedCategory}</span>
+          <span className="text-[#888884] text-xs">•</span>
+          <span className="text-[9.5px] font-sans-editorial uppercase text-[#666]">{displaySourceName}</span>
+        </div>
+
+        <h3 className="text-[17px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-1.5 line-clamp-2">
+          ‘{article.title}’
+        </h3>
+
+        <p className="text-[12.5px] font-serif-editorial text-[#444444] leading-[1.45] mb-2 line-clamp-2">
+          {getCleanSummary(160)}
+        </p>
 
         <div suppressHydrationWarning className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2] mt-auto">
           <span>📖 | {readMins} MIN READ</span>

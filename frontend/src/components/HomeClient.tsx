@@ -53,11 +53,10 @@ export default function HomeClient({
     }
   }
 
-  // Top hero articles (Lead + 3 secondary stories in Column 2)
+  // Top hero articles (Lead + 2 stacked secondary stories in Column 2)
   const leadArticle = allArticles[0] || solarArticles[0]
   const secondArticle = allArticles[1] || exoplanetArticles[0]
   const thirdArticle = allArticles[2] || starGalaxyArticles[0]
-  const fourthArticle = allArticles[3] || cosmologyArticles[0]
 
   return (
     <div className="bg-[#fdfcf4] text-[#111111]">
@@ -88,7 +87,7 @@ export default function HomeClient({
               )}
             </div>
 
-            {/* Column 2: Stacked Secondary Stories (~33% width) - 3 stories to completely fill available area */}
+            {/* Column 2: Stacked Secondary Stories (~33% width) - 2 identical stacked cards with full imagery */}
             <div className="lg:col-span-4 lg:px-8 space-y-6">
               {secondArticle && (
                 <ArticleCard
@@ -103,17 +102,8 @@ export default function HomeClient({
                 <ArticleCard
                   article={thirdArticle}
                   index={2}
-                  variant="quote"
+                  variant="stacked"
                   onClick={() => setSelectedArticle(thirdArticle)}
-                />
-              )}
-
-              {fourthArticle && (
-                <ArticleCard
-                  article={fourthArticle}
-                  index={3}
-                  variant="quote"
-                  onClick={() => setSelectedArticle(fourthArticle)}
                 />
               )}
             </div>
@@ -123,7 +113,7 @@ export default function HomeClient({
               <MonocleRadioBox
                 onOpenRadio={() => setRadioOpen(true)}
                 onOpenArticle={(art) => setSelectedArticle(art)}
-                breakingArticles={allArticles.slice(4, 10)}
+                breakingArticles={allArticles.slice(3, 8)}
                 launchArticles={launchArticles}
               />
             </div>
