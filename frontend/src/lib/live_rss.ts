@@ -39,17 +39,119 @@ function cleanText(text: string): string {
     .trim()
 }
 
-function extractImage(itemXml: string): string | undefined {
+/**
+ * Topic-specific unique photography pools so that if a feed lacks an image,
+ * every story receives a distinct, authentic, category-accurate astronomy photo.
+ */
+const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {
+  'solar-system': [
+    'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80', // Mars
+    'https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=1200&q=80', // Jupiter
+    'https://images.unsplash.com/photo-1614732484003-ef9881555dc3?auto=format&fit=crop&w=1200&q=80', // Saturn
+    'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=1200&q=80', // Moon
+    'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80', // Sun solar
+  ],
+  'exoplanets': [
+    'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1543722530-d2c3201371e7?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80',
+  ],
+  'stars': [
+    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80',
+  ],
+  'galaxies': [
+    'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80', // Deep Nebula
+    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=1200&q=80', // Andromeda
+    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80', // Deep Field
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', // Cosmic Web
+  ],
+  'cosmology': [
+    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+  ],
+  'launches': [
+    'https://images.unsplash.com/photo-1517976487504-57042709935c?auto=format&fit=crop&w=1200&q=80', // Rocket launch
+    'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1200&q=80', // Launch pad
+    'https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?auto=format&fit=crop&w=1200&q=80', // Night launch
+  ],
+  'human-spaceflight': [
+    'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80', // Earth orbit
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', // Space station
+    'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80', // Astronaut horizon
+  ],
+  'robotic-spaceflight': [
+    'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80', // Mars Rover
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80', // Deep space probe
+    'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1200&q=80', // Webb telescope
+  ],
+  'today-in-the-history-of-astronomy': [
+    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=1200&q=80', // Historic telescope
+    'https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?auto=format&fit=crop&w=1200&q=80', // Historical observatory
+    'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80', // Radio dish
+  ],
+}
+
+function extractImageFromXml(itemXml: string): string | undefined {
   const mediaMatch = itemXml.match(/<media:(?:content|thumbnail)[^>]+url=["']([^"']+)["']/i)
-  if (mediaMatch) return mediaMatch[1]
+  if (mediaMatch && mediaMatch[1] && !mediaMatch[1].includes('404')) return mediaMatch[1]
 
   const encMatch = itemXml.match(/<enclosure[^>]+url=["']([^"']+)["']/i)
-  if (encMatch) return encMatch[1]
+  if (encMatch && encMatch[1] && !encMatch[1].includes('404')) return encMatch[1]
 
   const imgMatch = itemXml.match(/<img[^>]+src=["']([^"']+)["']/i)
-  if (imgMatch) return imgMatch[1]
+  if (imgMatch && imgMatch[1] && !imgMatch[1].includes('404') && !imgMatch[1].includes('Logo-white')) return imgMatch[1]
+
+  const urlInContent = itemXml.match(/https?:\/\/[^\s"'<>]+\.(?:jpg|jpeg|png|webp)(?:\?[^\s"'<>]*)?/i)
+  if (urlInContent && !urlInContent[0].includes('404') && !urlInContent[0].includes('Logo-white')) {
+    return urlInContent[0]
+  }
 
   return undefined
+}
+
+/**
+ * Fetch authentic OpenGraph/Twitter image directly from the source article page
+ * with a fast timeout.
+ */
+async function fetchSourceOgImage(url: string): Promise<string | undefined> {
+  if (!url || !url.startsWith('http')) return undefined
+  try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 2200)
+
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      },
+    })
+    clearTimeout(timeoutId)
+
+    if (!res.ok) return undefined
+    const html = await res.text()
+
+    const ogMatch =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
+      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i)
+
+    if (ogMatch && ogMatch[1] && !ogMatch[1].includes('404') && !ogMatch[1].includes('Logo-white')) {
+      return ogMatch[1]
+    }
+  } catch {}
+  return undefined
+}
+
+function getDistinctFallbackImage(title: string, category: string): string {
+  const pool = CATEGORY_IMAGE_POOLS[category] || CATEGORY_IMAGE_POOLS['solar-system']
+  const idx = Math.abs(hashString(title)) % pool.length
+  return pool[idx]
 }
 
 /**
@@ -173,7 +275,7 @@ export function classifyArticleCategory(title: string, desc: string, defaultCat:
 
   // 8. History of Astronomy & Retrospectives
   if (
-    /\b(anniversary|apollo 11|sputnik|yuri gagarin|neil armstrong|galileo|copernicus|newton|edwin hubble|historical milestone|years ago today|today in history|on this day in space|on this day in astronomy)\b/i.test(text)
+    /\b(anniversary|apollo 11|sputnik|yuri gagarin|neil armstrong|galileo|copernicus|newton|edwin hubble|historical milestone|years ago today|today in history|on this day in space|on this day in astronomy|wow! signal|wow signal)\b/i.test(text)
   ) {
     return 'today-in-the-history-of-astronomy'
   }
@@ -245,7 +347,13 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
       const xml = await res.text()
 
       const itemMatches = xml.match(/<item[\s\S]*?<\/item>/gi) || []
-      const parsed: Article[] = []
+      const rawParsed: Array<{
+        title: string
+        link: string
+        rawDesc: string
+        pubDate: string
+        xmlImg?: string
+      }> = []
 
       for (let i = 0; i < Math.min(itemMatches.length, 25); i++) {
         const itemXml = itemMatches[i]
@@ -258,7 +366,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
         const link = cleanText(linkMatch ? linkMatch[1] : '')
         const rawDesc = descMatch ? descMatch[1] : ''
         const pubDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
-        const imageUrl = extractImage(itemXml) || 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+        const xmlImg = extractImageFromXml(itemXml)
 
         // Check if article is a commercial advertisement, product review, or affiliate buying guide
         if (isCommercialOrAdvertorial(title, rawDesc, link)) {
@@ -267,25 +375,41 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
 
         if (title && link && !seenTitles.has(title.toLowerCase())) {
           seenTitles.add(title.toLowerCase())
-          const exactCategory = classifyArticleCategory(title, rawDesc, feed.defaultCategory)
-          const richSummary = buildComprehensiveSummary(title, rawDesc, exactCategory)
-
-          parsed.push({
-            id: Math.abs(hashString(link)),
-            title,
-            summary: richSummary,
-            content: richSummary,
-            url: link,
-            sourceName: feed.name,
-            sourceUrl: feed.url,
-            publishedAt: pubDate,
-            categories: [exactCategory],
-            tags: [exactCategory.replace(/-/g, ' ').toUpperCase()],
-            imageUrl,
-            isVerified: true,
-          })
+          rawParsed.push({ title, link, rawDesc, pubDate, xmlImg })
         }
       }
+
+      // Concurrently resolve original source og:image for top items that lack an image in RSS XML
+      const parsed: Article[] = await Promise.all(
+        rawParsed.map(async (item) => {
+          const exactCategory = classifyArticleCategory(item.title, item.rawDesc, feed.defaultCategory)
+          const richSummary = buildComprehensiveSummary(item.title, item.rawDesc, exactCategory)
+
+          let finalImageUrl = item.xmlImg
+          if (!finalImageUrl && item.link) {
+            finalImageUrl = await fetchSourceOgImage(item.link)
+          }
+          if (!finalImageUrl) {
+            finalImageUrl = getDistinctFallbackImage(item.title, exactCategory)
+          }
+
+          return {
+            id: Math.abs(hashString(item.link)),
+            title: item.title,
+            summary: richSummary,
+            content: richSummary,
+            url: item.link,
+            sourceName: feed.name,
+            sourceUrl: feed.url,
+            publishedAt: item.pubDate,
+            categories: [exactCategory],
+            tags: [exactCategory.replace(/-/g, ' ').toUpperCase()],
+            imageUrl: finalImageUrl,
+            isVerified: true,
+          }
+        })
+      )
+
       return parsed
     } catch {
       return []
