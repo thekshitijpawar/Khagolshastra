@@ -53,10 +53,15 @@ export default function HomeClient({
     }
   }
 
-  // Top hero articles (Lead + 2 stacked secondary stories in Column 2)
+  // Top hero articles:
+  // Column 1: Lead feature + 1 small observatory wire dispatch to fill the negative space
   const leadArticle = allArticles[0] || solarArticles[0]
+  const column1SubArticle = allArticles[3] || cosmologyArticles[0]
+
+  // Column 2: 2 stacked secondary stories + 1 small editorial brief dispatch to fill the negative space
   const secondArticle = allArticles[1] || exoplanetArticles[0]
   const thirdArticle = allArticles[2] || starGalaxyArticles[0]
+  const column2SubArticle = allArticles[4] || historyArticles[0]
 
   return (
     <div className="bg-[#fdfcf4] text-[#111111]">
@@ -76,7 +81,7 @@ export default function HomeClient({
           {/* 3-Column Grid matching reference Monocle layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 lg:divide-x lg:divide-[#dcd8cb]">
             {/* Column 1: Lead Hero Feature (~42% width) */}
-            <div className="lg:col-span-5 lg:pr-8">
+            <div className="lg:col-span-5 lg:pr-8 flex flex-col justify-between space-y-6">
               {leadArticle && (
                 <ArticleCard
                   article={leadArticle}
@@ -85,10 +90,36 @@ export default function HomeClient({
                   onClick={() => setSelectedArticle(leadArticle)}
                 />
               )}
+
+              {column1SubArticle && (
+                <div
+                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] transition-all cursor-pointer group mt-auto"
+                  onClick={() => setSelectedArticle(column1SubArticle)}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="eyebrow text-[#111111] text-[9.5px]">
+                      OBSERVATORY WIRE • {column1SubArticle.categories?.[0]?.replace(/-/g, ' ') || 'ASTROPHYSICS'}
+                    </span>
+                    <span className="text-[9.5px] font-sans-editorial text-[#888884] uppercase">
+                      {column1SubArticle.sourceName || 'Astronomy Wire'}
+                    </span>
+                  </div>
+                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug group-hover:text-[#555555] transition-colors mb-1 line-clamp-2">
+                    ‘{column1SubArticle.title}’
+                  </h4>
+                  <p className="text-[12px] font-serif-editorial text-[#555555] leading-snug line-clamp-2 mb-2.5">
+                    {column1SubArticle.summary || column1SubArticle.content}
+                  </p>
+                  <div className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+                    <span>📖 | 3 MIN READ</span>
+                    <span className="text-[#111111] group-hover:text-[#ffc500] transition-colors">READ DISPATCH →</span>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Column 2: Stacked Secondary Stories (~33% width) - 2 identical stacked cards with full imagery */}
-            <div className="lg:col-span-4 lg:px-8 space-y-6">
+            {/* Column 2: Stacked Secondary Stories (~33% width) */}
+            <div className="lg:col-span-4 lg:px-8 flex flex-col justify-between space-y-6">
               {secondArticle && (
                 <ArticleCard
                   article={secondArticle}
@@ -106,6 +137,32 @@ export default function HomeClient({
                   onClick={() => setSelectedArticle(thirdArticle)}
                 />
               )}
+
+              {column2SubArticle && (
+                <div
+                  className="bg-white border border-[#dcd8cb] p-4 shadow-2xs hover:border-[#111111] transition-all cursor-pointer group mt-auto"
+                  onClick={() => setSelectedArticle(column2SubArticle)}
+                >
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="eyebrow text-[#111111] text-[9.5px]">
+                      EDITORIAL BRIEF • {column2SubArticle.categories?.[0]?.replace(/-/g, ' ') || 'SOLAR SYSTEM'}
+                    </span>
+                    <span className="text-[9.5px] font-sans-editorial text-[#888884] uppercase">
+                      {column2SubArticle.sourceName || 'Astronomy Wire'}
+                    </span>
+                  </div>
+                  <h4 className="text-[15px] sm:text-[16px] font-serif-editorial font-normal text-[#111111] leading-snug group-hover:text-[#555555] transition-colors mb-1 line-clamp-2">
+                    ‘{column2SubArticle.title}’
+                  </h4>
+                  <p className="text-[12px] font-serif-editorial text-[#555555] leading-snug line-clamp-2 mb-2.5">
+                    {column2SubArticle.summary || column2SubArticle.content}
+                  </p>
+                  <div className="flex items-center justify-between text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+                    <span>📖 | 3 MIN READ</span>
+                    <span className="text-[#111111] group-hover:text-[#ffc500] transition-colors">READ BRIEF →</span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Column 3: Monocle Radio & Launch Radar Box (~25% width) */}
@@ -113,7 +170,7 @@ export default function HomeClient({
               <MonocleRadioBox
                 onOpenRadio={() => setRadioOpen(true)}
                 onOpenArticle={(art) => setSelectedArticle(art)}
-                breakingArticles={allArticles.slice(3, 8)}
+                breakingArticles={allArticles.slice(5, 11)}
                 launchArticles={launchArticles}
               />
             </div>
