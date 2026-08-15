@@ -80,7 +80,7 @@ export default function HomeClient({
           {/* 3-Column Grid matching reference Monocle layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 lg:divide-x lg:divide-[#dcd8cb]">
             {/* Column 1: Lead Hero Feature (~42% width) */}
-            <div className="lg:col-span-5 lg:pr-8 flex flex-col justify-between">
+            <div className="lg:col-span-5 lg:pr-8">
               {leadArticle && (
                 <ArticleCard
                   article={leadArticle}
@@ -92,7 +92,7 @@ export default function HomeClient({
             </div>
 
             {/* Column 2: Stacked Secondary Stories (~33% width) */}
-            <div className="lg:col-span-4 lg:px-8 space-y-6 flex flex-col justify-between">
+            <div className="lg:col-span-4 lg:px-8 space-y-6">
               {secondArticle && (
                 <ArticleCard
                   article={secondArticle}

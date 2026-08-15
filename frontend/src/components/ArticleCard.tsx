@@ -58,7 +58,6 @@ export default function ArticleCard({
   }
 
   // Dynamic deep multi-paragraph generator for the Lead Story
-  // Completely fills all vertical negative space dynamically for every day's changing news
   const getLeadDetailedSummary = () => {
     const rawContent = sanitize(article.content) || ''
     const rawSummary = sanitize(article.summary) || ''
@@ -170,98 +169,96 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer flex flex-col justify-between h-full animate-in"
+        className="group cursor-pointer flex flex-col animate-in"
         style={{ animationDelay: `${index * 60}ms` }}
       >
-        <div>
-          {/* Top Meta Bar */}
-          <div className="flex items-center gap-3 mb-2.5">
-            <span className="eyebrow text-[#111111]">{primaryCategory.replace('-', ' ')}</span>
-            <span className="text-[#888884] text-xs">•</span>
-            <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
-              {sourceName}
-            </span>
-            <span className="text-[#888884] text-xs">•</span>
-            <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold uppercase tracking-wider px-1.5 py-0.5">
-              LEAD DISPATCH
-            </span>
+        {/* Top Meta Bar */}
+        <div className="flex items-center gap-3 mb-2.5">
+          <span className="eyebrow text-[#111111]">{primaryCategory.replace('-', ' ')}</span>
+          <span className="text-[#888884] text-xs">•</span>
+          <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
+            {sourceName}
+          </span>
+          <span className="text-[#888884] text-xs">•</span>
+          <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold uppercase tracking-wider px-1.5 py-0.5">
+            LEAD DISPATCH
+          </span>
+        </div>
+
+        {/* Grand Headline */}
+        <h2 className="text-[28px] sm:text-[34px] lg:text-[38px] font-normal font-serif-editorial text-[#111111] leading-[1.1] tracking-[-0.01em] group-hover:text-[#444444] transition-colors mb-3">
+          {article.title}
+        </h2>
+
+        {/* Reading Time & Date Badge */}
+        <div
+          suppressHydrationWarning
+          className="flex items-center gap-2 text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] pb-3 mb-4 border-b border-[#e2ded2]"
+        >
+          <span>📖 | {readMins} MIN READ</span>
+          <span>•</span>
+          <span>{dateStr}</span>
+          <span>•</span>
+          <span className="text-[#0f4c81]">PEER-VERIFIED</span>
+        </div>
+
+        {/* Photography with Caption */}
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-4">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            loading="eager"
+          />
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2.5 text-white text-[10px] font-sans-editorial tracking-wider flex items-center justify-between">
+            <span>Observatory Field Capture</span>
+            <span className="text-[#ffc500]">VIA {sourceName.toUpperCase()}</span>
           </div>
+        </div>
 
-          {/* Grand Headline */}
-          <h2 className="text-[28px] sm:text-[34px] lg:text-[38px] font-normal font-serif-editorial text-[#111111] leading-[1.1] tracking-[-0.01em] group-hover:text-[#444444] transition-colors mb-3">
-            {article.title}
-          </h2>
+        {/* Dynamic 4-Paragraph Comprehensive Lead Editorial Suite */}
+        <div className="space-y-3 font-serif-editorial text-[#2c2c2c] text-[14px] sm:text-[14.5px] leading-[1.6] mb-4">
+          <p className="first-letter:float-left first-letter:text-[36px] first-letter:leading-[0.8] first-letter:mr-2.5 first-letter:font-serif-editorial first-letter:font-bold first-letter:text-[#111111]">
+            {para1}
+          </p>
 
-          {/* Reading Time & Date Badge */}
-          <div
-            suppressHydrationWarning
-            className="flex items-center gap-2 text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] pb-3 mb-4 border-b border-[#e2ded2]"
-          >
-            <span>📖 | {readMins} MIN READ</span>
-            <span>•</span>
-            <span>{dateStr}</span>
-            <span>•</span>
-            <span className="text-[#0f4c81]">PEER-VERIFIED</span>
+          <p className="text-[#3a3a3a]">
+            {para2}
+          </p>
+
+          <p className="text-[#444444]">
+            {para3}
+          </p>
+
+          <p className="text-[#444444]">
+            {para4}
+          </p>
+        </div>
+
+        {/* Dynamic Observatory Briefing & Key Insights Dossier */}
+        <div className="bg-[#f6f4ea] border-l-2 border-[#111111] p-4 mb-3">
+          <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] mb-2 border-b border-[#e2ded2] pb-1.5">
+            <span>🔭 OBSERVATORY BRIEFING & KEY INSIGHTS</span>
+            <span className="text-[#0f4c81]">WIRE DOSSIER</span>
           </div>
-
-          {/* Photography with Caption */}
-          <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-4">
-            <img
-              src={imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-              loading="eager"
-            />
-            <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2.5 text-white text-[10px] font-sans-editorial tracking-wider flex items-center justify-between">
-              <span>Observatory Field Capture</span>
-              <span className="text-[#ffc500]">VIA {sourceName.toUpperCase()}</span>
+          <div className="space-y-1.5 text-[12px] font-serif-editorial text-[#444444] leading-[1.45]">
+            <div className="flex items-start gap-2">
+              <span className="text-[#111111] font-bold">▪</span>
+              <span><strong>Observational Significance:</strong> {domain.technical}</span>
             </div>
-          </div>
-
-          {/* Dynamic 4-Paragraph Comprehensive Lead Editorial Suite */}
-          <div className="space-y-3.5 font-serif-editorial text-[#2c2c2c] text-[14px] sm:text-[14.5px] leading-[1.6] mb-5">
-            <p className="first-letter:float-left first-letter:text-[36px] first-letter:leading-[0.8] first-letter:mr-2.5 first-letter:font-serif-editorial first-letter:font-bold first-letter:text-[#111111]">
-              {para1}
-            </p>
-
-            <p className="text-[#3a3a3a]">
-              {para2}
-            </p>
-
-            <p className="text-[#444444]">
-              {para3}
-            </p>
-
-            <p className="text-[#444444]">
-              {para4}
-            </p>
-          </div>
-
-          {/* Dynamic Observatory Briefing & Key Insights Dossier */}
-          <div className="bg-[#f6f4ea] border-l-2 border-[#111111] p-4 mb-4">
-            <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] mb-2 border-b border-[#e2ded2] pb-1.5">
-              <span>🔭 OBSERVATORY BRIEFING & KEY INSIGHTS</span>
-              <span className="text-[#0f4c81]">WIRE DOSSIER</span>
+            <div className="flex items-start gap-2">
+              <span className="text-[#111111] font-bold">▪</span>
+              <span><strong>Scientific Impact:</strong> {domain.impact}</span>
             </div>
-            <div className="space-y-2 text-[12px] font-serif-editorial text-[#444444] leading-[1.45]">
-              <div className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold">▪</span>
-                <span><strong>Observational Significance:</strong> {domain.technical}</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold">▪</span>
-                <span><strong>Scientific Impact:</strong> {domain.impact}</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold">▪</span>
-                <span><strong>Forward Horizon:</strong> {domain.future}</span>
-              </div>
+            <div className="flex items-start gap-2">
+              <span className="text-[#111111] font-bold">▪</span>
+              <span><strong>Forward Horizon:</strong> {domain.future}</span>
             </div>
           </div>
         </div>
 
         {/* Footer Action Link */}
-        <div className="pt-3 border-t border-[#dcd8cb] flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors mt-2">
+        <div className="pt-2.5 border-t border-[#dcd8cb] flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] group-hover:text-[#0f4c81] transition-colors">
           <span>READ COMPLETE INVESTIGATION REPORT</span>
           <span>→</span>
         </div>
@@ -274,7 +271,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col justify-between"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] transition-all shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-3">
@@ -292,18 +289,17 @@ export default function ArticleCard({
           <span className="text-[10px] font-sans-editorial uppercase text-[#666]">{sourceName}</span>
         </div>
 
-        <h3 className="text-[19px] sm:text-[21px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-2 line-clamp-3">
+        <h3 className="text-[18px] sm:text-[20px] font-normal font-serif-editorial text-[#111111] leading-[1.2] group-hover:text-[#555555] transition-colors mb-2">
           {article.title}
         </h3>
 
-        <p className="text-[13.5px] font-serif-editorial text-[#444444] leading-[1.45] line-clamp-4 mb-3">
+        <p className="text-[13.5px] font-serif-editorial text-[#444444] leading-[1.45] mb-3">
           {getCleanSummary(280)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center gap-2 text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
           <span>📖 | {readMins} MIN READ</span>
-          <span>•</span>
-          <span>{dateStr}</span>
+          <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ REPORT →</span>
         </div>
       </article>
     )
@@ -314,7 +310,7 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer animate-in flex flex-col justify-between pt-4 border-t border-[#dcd8cb]"
+        className="group cursor-pointer animate-in flex flex-col bg-white border border-[#dcd8cb] p-4 hover:border-[#111111] transition-all shadow-2xs"
         style={{ animationDelay: `${index * 60}ms` }}
       >
         <div className="relative overflow-hidden bg-[#eae8dc] border border-[#dcd8cb] aspect-[16/10] mb-3">
@@ -332,18 +328,17 @@ export default function ArticleCard({
           <span className="text-[10px] font-sans-editorial uppercase text-[#666]">{sourceName}</span>
         </div>
 
-        <h3 className="text-[18px] sm:text-[20px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2 line-clamp-3">
+        <h3 className="text-[18px] sm:text-[20px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2">
           ‘{article.title}’
         </h3>
 
-        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.4] line-clamp-3 mb-3">
+        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.4] mb-3">
           {getCleanSummary(220)}
         </p>
 
-        <div suppressHydrationWarning className="flex items-center gap-2 text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
+        <div suppressHydrationWarning className="flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] pt-2 border-t border-[#e2ded2]">
           <span>📖 | {readMins} MIN READ</span>
-          <span>•</span>
-          <span>{dateStr}</span>
+          <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">READ DISPATCH →</span>
         </div>
       </article>
     )
@@ -354,40 +349,38 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer bg-[#fdfcf4] border border-[#dcd8cb] p-4 flex flex-col justify-between hover:border-[#111111] transition-all shadow-2xs animate-in"
+        className="group cursor-pointer bg-[#fdfcf4] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] transition-all shadow-2xs animate-in"
         style={{ animationDelay: `${index * 40}ms` }}
       >
-        <div>
-          <div className="relative overflow-hidden bg-[#eae8dc] border border-[#e2ded2] aspect-[16/10] mb-3">
-            <img
-              src={imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
-            <div className="absolute top-2 left-2 bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
-              {primaryCategory.replace('-', ' ')}
-            </div>
+        <div className="relative overflow-hidden bg-[#eae8dc] border border-[#e2ded2] aspect-[16/10] mb-3">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          <div className="absolute top-2 left-2 bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
+            {primaryCategory.replace('-', ' ')}
           </div>
-
-          <div
-            suppressHydrationWarning
-            className="flex items-center justify-between text-[10px] font-sans-editorial text-[#888884] mb-2 uppercase tracking-wider"
-          >
-            <span>{sourceName}</span>
-            <span>{dateStr}</span>
-          </div>
-
-          <h3 className="text-[18px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2 line-clamp-2">
-            {article.title}
-          </h3>
-
-          <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.4] line-clamp-3 mb-4">
-            {getCleanSummary(220)}
-          </p>
         </div>
 
-        <div className="pt-3 border-t border-[#eee] flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#777]">
+        <div
+          suppressHydrationWarning
+          className="flex items-center justify-between text-[10px] font-sans-editorial text-[#888884] mb-2 uppercase tracking-wider"
+        >
+          <span>{sourceName}</span>
+          <span>{dateStr}</span>
+        </div>
+
+        <h3 className="text-[18px] font-normal font-serif-editorial text-[#111111] leading-[1.22] group-hover:text-[#555555] transition-colors mb-2">
+          {article.title}
+        </h3>
+
+        <p className="text-[13px] font-serif-editorial text-[#555555] leading-[1.4] mb-4">
+          {getCleanSummary(220)}
+        </p>
+
+        <div className="pt-2.5 border-t border-[#eee] flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#777] mt-auto">
           <span>📖 | {readMins} MIN READ</span>
           <span className="text-[#111] group-hover:text-[#ffc500] transition-colors">
             READ DISPATCH →
@@ -428,32 +421,30 @@ export default function ArticleCard({
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer bg-[#ffffff] border border-[#111111] p-4 flex flex-col justify-between shadow-2xs hover:bg-[#fbfbf8] transition-colors"
+        className="group cursor-pointer bg-[#ffffff] border border-[#111111] p-4 flex flex-col shadow-2xs hover:bg-[#fbfbf8] transition-colors"
       >
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
-              ROCKET LAUNCH
-            </span>
-            <span suppressHydrationWarning className="text-[10px] font-sans-editorial font-bold text-[#666]">
-              {dateStr}
-            </span>
-          </div>
-          <div className="relative overflow-hidden aspect-[16/9] mb-3 bg-[#111]">
-            <img
-              src={imageUrl}
-              alt={article.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          </div>
-          <h3 className="text-[17px] font-serif-editorial font-bold text-[#111111] leading-tight mb-2 group-hover:text-[#555]">
-            {article.title}
-          </h3>
-          <p className="text-[12.5px] font-serif-editorial text-[#555] line-clamp-3 mb-3">
-            {getCleanSummary(180)}
-          </p>
+        <div className="flex items-center justify-between mb-2">
+          <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
+            ROCKET LAUNCH
+          </span>
+          <span suppressHydrationWarning className="text-[10px] font-sans-editorial font-bold text-[#666]">
+            {dateStr}
+          </span>
         </div>
-        <div className="pt-2 border-t border-[#eee] flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider">
+        <div className="relative overflow-hidden aspect-[16/9] mb-3 bg-[#111]">
+          <img
+            src={imageUrl}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <h3 className="text-[17px] font-serif-editorial font-bold text-[#111111] leading-tight mb-2 group-hover:text-[#555]">
+          {article.title}
+        </h3>
+        <p className="text-[12.5px] font-serif-editorial text-[#555] mb-3">
+          {getCleanSummary(180)}
+        </p>
+        <div className="pt-2 border-t border-[#eee] flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider mt-auto">
           <span className="text-[#111]">🚀 ORBITAL VEHICLE</span>
           <span className="text-[#0f4c81] group-hover:underline">MISSION BRIEF →</span>
         </div>
@@ -465,29 +456,27 @@ export default function ArticleCard({
   return (
     <article
       onClick={onClick}
-      className="group cursor-pointer bg-[#f7f6ec] border border-[#dcd8cb] p-4 flex flex-col justify-between hover:border-[#111111] transition-all"
+      className="group cursor-pointer bg-[#f7f6ec] border border-[#dcd8cb] p-4 flex flex-col hover:border-[#111111] transition-all"
     >
-      <div>
-        <div className="flex items-center gap-2 mb-2 text-[10px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider">
-          <span className="text-[#111]">🏛 HISTORICAL MILESTONE</span>
-          <span>•</span>
-          <span>ARCHIVE</span>
-        </div>
-        <div className="aspect-[16/10] overflow-hidden mb-3 bg-[#eae8dc] border border-[#dcd8cb]">
-          <img
-            src={imageUrl}
-            alt={article.title}
-            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-          />
-        </div>
-        <h3 className="text-[16px] font-serif-editorial text-[#111111] font-bold leading-snug group-hover:text-[#555] mb-2 line-clamp-2">
-          {article.title}
-        </h3>
-        <p className="text-[12.5px] font-serif-editorial text-[#555555] line-clamp-3 mb-3">
-          {getCleanSummary(180)}
-        </p>
+      <div className="flex items-center gap-2 mb-2 text-[10px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider">
+        <span className="text-[#111]">🏛 HISTORICAL MILESTONE</span>
+        <span>•</span>
+        <span>ARCHIVE</span>
       </div>
-      <div className="text-[10px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider">
+      <div className="aspect-[16/10] overflow-hidden mb-3 bg-[#eae8dc] border border-[#dcd8cb]">
+        <img
+          src={imageUrl}
+          alt={article.title}
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+        />
+      </div>
+      <h3 className="text-[16px] font-serif-editorial text-[#111111] font-bold leading-snug group-hover:text-[#555] mb-2">
+        {article.title}
+      </h3>
+      <p className="text-[12.5px] font-serif-editorial text-[#555555] mb-3">
+        {getCleanSummary(180)}
+      </p>
+      <div className="text-[10px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider pt-2 border-t border-[#e2ded2] mt-auto">
         DISPATCH RETROSPECTIVE →
       </div>
     </article>
