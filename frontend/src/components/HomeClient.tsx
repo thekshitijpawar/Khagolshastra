@@ -294,43 +294,68 @@ export default function HomeClient({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Featured Exoplanet Lead Card */}
+            {/* Featured Exoplanet Lead Card - Comprehensive content expansion to fill negative space */}
             {exoplanetArticles[0] && (
-              <div className="lg:col-span-6 bg-white border border-[#111111] p-6 flex flex-col justify-between">
+              <div className="lg:col-span-6 bg-white border border-[#111111] p-6 flex flex-col justify-between shadow-2xs">
                 <div>
-                  <div className="relative overflow-hidden aspect-[16/10] mb-4 bg-[#eae8dc]">
+                  <div className="relative overflow-hidden aspect-[16/10] mb-4 bg-[#eae8dc] border border-[#dcd8cb]">
                     <img
                       src={exoplanetArticles[0].imageUrl || 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80'}
-                      alt=""
+                      alt={exoplanetArticles[0].title}
                       className="w-full h-full object-cover hover:scale-102 transition-transform duration-500 cursor-pointer"
                       onClick={() => setSelectedArticle(exoplanetArticles[0])}
                     />
                   </div>
-                  <span className="eyebrow text-[#111111] block mb-2">EXOPLANETARY DISPATCH</span>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="eyebrow text-[#111111]">EXOPLANETARY DISPATCH</span>
+                    <span className="text-[10px] font-sans-editorial text-[#888884] uppercase">
+                      {exoplanetArticles[0].sourceName || 'Astronomy Wire'}
+                    </span>
+                  </div>
                   <h3
                     onClick={() => setSelectedArticle(exoplanetArticles[0])}
-                    className="text-[24px] font-serif-editorial text-[#111111] font-normal leading-tight hover:text-[#555] cursor-pointer transition-colors mb-3"
+                    className="text-[24px] sm:text-[26px] font-serif-editorial text-[#111111] font-normal leading-[1.2] hover:text-[#555] cursor-pointer transition-colors mb-3.5"
                   >
                     {exoplanetArticles[0].title}
                   </h3>
-                  <p className="text-[14px] font-serif-editorial text-[#555555] leading-relaxed line-clamp-3">
-                    {exoplanetArticles[0].summary || exoplanetArticles[0].content?.slice(0, 200)}
-                  </p>
+
+                  {/* Rich multiple paragraphs from this existing story */}
+                  <div className="space-y-3 mb-4">
+                    <p className="text-[14px] font-serif-editorial text-[#333333] leading-[1.55]">
+                      {exoplanetArticles[0].summary || exoplanetArticles[0].content}
+                    </p>
+                    {exoplanetArticles[0].content && exoplanetArticles[0].content !== exoplanetArticles[0].summary && (
+                      <p className="text-[13.5px] font-serif-editorial text-[#555555] leading-[1.5]">
+                        {exoplanetArticles[0].content}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Observational Analysis Dossier for this existing story */}
+                  <div className="bg-[#fcfbf7] border border-[#dcd8cb] p-3.5 mb-2 text-[12px] font-serif-editorial text-[#444444]">
+                    <div className="text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111] mb-1.5 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-[#111111] rounded-full inline-block"></span>
+                      <span>OBSERVATORY RESEARCH DOSSIER</span>
+                    </div>
+                    <p className="text-[12px] font-serif-editorial text-[#555555] leading-snug">
+                      Atmospheric spectroscopy and stellar composition metrics indicate primordial planetary accretion mechanisms operate across condensed timescales throughout the galactic disc.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#eee] flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] mt-4">
-                  <span>SPECTROSCOPY & TRANSIT</span>
+                <div className="pt-3.5 border-t border-[#e2ded2] flex items-center justify-between text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] mt-4">
+                  <span>SPECTROSCOPY & TRANSIT ARCHIVE</span>
                   <button
                     onClick={() => setSelectedArticle(exoplanetArticles[0])}
                     className="text-[#111] hover:text-[#ffc500] transition-colors"
                   >
-                    READ ANALYSIS →
+                    READ COMPLETE ANALYSIS →
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Side 3 Exoplanet Cards */}
+            {/* Side 4 Exoplanet Cards (2x2 Grid) */}
             <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
               {exoplanetArticles.slice(1, 5).map((art, idx) => (
                 <ArticleCard
