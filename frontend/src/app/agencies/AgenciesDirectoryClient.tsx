@@ -52,7 +52,7 @@ export default function AgenciesDirectoryClient() {
                 Government Space Agencies
               </h1>
               <p className="text-[15px] sm:text-[17px] font-serif-editorial text-[#444444] leading-relaxed">
-                Comprehensive directory and real-time news archive for 53 national space authorities, space programs, and intergovernmental agencies across 6 continents.
+                Comprehensive directory and real-time news archive for {SPACE_AGENCIES.length} national space authorities, space programs, and intergovernmental bodies worldwide based on UNOOSA and international space registries.
               </p>
             </div>
 
@@ -60,7 +60,7 @@ export default function AgenciesDirectoryClient() {
             <div className="flex items-center gap-4 bg-[#fdfcf4] border border-[#111111] p-4 sm:p-5 shrink-0 shadow-xs">
               <div className="text-center px-3 border-r border-[#dcd8cb]">
                 <div className="text-[28px] font-serif-editorial font-normal leading-none text-[#111111]">
-                  53
+                  {SPACE_AGENCIES.length}
                 </div>
                 <div className="text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] mt-1">
                   AGENCIES
@@ -68,10 +68,10 @@ export default function AgenciesDirectoryClient() {
               </div>
               <div className="text-center px-3">
                 <div className="text-[28px] font-serif-editorial font-normal leading-none text-[#111111]">
-                  6
+                  {REGIONS.length}
                 </div>
                 <div className="text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] mt-1">
-                  CONTINENTS
+                  REGIONS / BODIES
                 </div>
               </div>
             </div>

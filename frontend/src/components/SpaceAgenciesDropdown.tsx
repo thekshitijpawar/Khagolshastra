@@ -66,10 +66,10 @@ export default function SpaceAgenciesDropdown({ isOpen, onClose }: SpaceAgencies
 
         {/* Quick Filter Input & Close */}
         <div className="flex items-center gap-2">
-          <div className="relative w-48 sm:w-60">
+          <div className="relative w-48 sm:w-64">
             <input
               type="text"
-              placeholder="Filter 53 agencies..."
+              placeholder={`Filter ${SPACE_AGENCIES.length} agencies...`}
               value={filterQuery}
               onChange={(e) => setFilterQuery(e.target.value)}
               className="w-full pl-7 pr-2 py-1.5 bg-white border border-[#111111] text-xs font-serif-editorial text-[#111] placeholder:text-[#888] focus:outline-none"
@@ -103,7 +103,7 @@ export default function SpaceAgenciesDropdown({ isOpen, onClose }: SpaceAgencies
               : 'bg-white text-[#444444] border-[#dcd8cb] hover:border-[#111111]'
           }`}
         >
-          ALL (53)
+          ALL ({SPACE_AGENCIES.length})
         </button>
         {REGIONS.map((reg) => {
           const count = SPACE_AGENCIES.filter((a) => a.region === reg).length
@@ -124,7 +124,7 @@ export default function SpaceAgenciesDropdown({ isOpen, onClose }: SpaceAgencies
       </div>
 
       {/* Agencies Grid */}
-      <div className="max-h-[50vh] overflow-y-auto pr-1">
+      <div className="max-h-[52vh] overflow-y-auto pr-1">
         {filteredAgencies.length === 0 ? (
           <div className="text-center py-8 text-sm font-serif-editorial text-[#666]">
             No agencies matching &ldquo;{filterQuery}&rdquo;.
@@ -159,16 +159,16 @@ export default function SpaceAgenciesDropdown({ isOpen, onClose }: SpaceAgencies
       </div>
 
       {/* Bottom Footer Bar */}
-      <div className="mt-4 pt-3 border-t border-[#dcd8cb] flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider">
+      <div className="mt-4 pt-3 border-t border-[#dcd8cb] flex flex-col sm:flex-row sm:items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider gap-2">
         <span className="text-[#777777] text-[10px]">
-          53 National Space Agencies • 6 Continents
+          {SPACE_AGENCIES.length} World Space Agencies & International Bodies • Global Coverage
         </span>
         <Link
           href="/agencies"
           onClick={onClose}
           className="text-[#111111] hover:text-[#ffc500] hover:bg-[#111111] px-3 py-1 transition-colors inline-flex items-center gap-1"
         >
-          <span>OPEN FULL GLOBAL SPACE AGENCIES DIRECTORY</span>
+          <span>OPEN FULL GLOBAL SPACE AGENCIES DIRECTORY ({SPACE_AGENCIES.length})</span>
           <span>→</span>
         </Link>
       </div>
