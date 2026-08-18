@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --global user.name "Khagolshastra Automated Ingest"
           git config --global user.email "bot@khagolshastra.com"
-          git add frontend/src/lib/seed_data.ts backend/khagolshastra.db
+          git add frontend/src/lib/seed_data.ts
           if git diff --staged --quiet; then
             echo "No new articles found in this cycle."
           else
