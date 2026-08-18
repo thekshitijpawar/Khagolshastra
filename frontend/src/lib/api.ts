@@ -134,6 +134,27 @@ export async function fetchResearchPapers(params?: {
   page?: number
   size?: number
 }): Promise<{ items: ResearchPaper[]; total: number; page: number; size: number; total_pages: number }> {
+  // If running on client, fetch from Next.js internal API route proxy
+  if (typeof window !== 'undefined') {
+    try {
+      const searchParams = new URLSearchParams()
+      if (params?.source) searchParams.set('source', params.source)
+      if (params?.category) searchParams.set('category', params.category)
+      if (params?.query) searchParams.set('query', params.query)
+      if (params?.page) searchParams.set('page', String(params.page))
+      if (params?.size) searchParams.set('size', String(params.size))
+
+      const res = await fetch(`/api/research/papers?${searchParams.toString()}`, {
+        cache: 'no-store',
+      })
+      if (res.ok) {
+        return await res.json()
+      }
+    } catch {
+      // Fall through to local memory filter
+    }
+  }
+
   let list: ResearchPaper[] = []
   try {
     list = await fetchLiveArxivPapers()

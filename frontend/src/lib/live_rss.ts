@@ -130,18 +130,15 @@ function extractImageFromXml(itemXml: string): string | undefined {
  * with a fast timeout.
  */
 async function fetchSourceOgImage(url: string): Promise<string | undefined> {
+  if (typeof window !== 'undefined') return undefined
   if (!url || !url.startsWith('http')) return undefined
   try {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 2200)
-
     const res = await fetch(url, {
-      signal: controller.signal,
+      signal: AbortSignal.timeout(2000),
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
     })
-    clearTimeout(timeoutId)
 
     if (!res.ok) return undefined
     const html = await res.text()
@@ -426,6 +423,10 @@ function buildComprehensiveSummary(title: string, rawSummary: string, category: 
 }
 
 export async function fetchLiveRssArticles(): Promise<Article[]> {
+  if (typeof window !== 'undefined') {
+    return [...ALL_SEED_ARTICLES]
+  }
+
   const liveItems: Article[] = []
   const seenTitles = new Set<string>()
 
@@ -433,6 +434,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
     try {
       const res = await fetch(feed.url, {
         next: { revalidate: 3600 },
+        signal: AbortSignal.timeout(3500),
         headers: {
           'User-Agent': 'KhagolshastraEditorialAggregator/1.0 (+https://khagolshastra.com)',
         },
@@ -566,6 +568,10 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
 }
 
 export async function fetchLiveArxivPapers(): Promise<ResearchPaper[]> {
+  if (typeof window !== 'undefined') {
+    return [...ALL_SEED_PAPERS]
+  }
+
   const livePapers: ResearchPaper[] = []
   const seenTitles = new Set<string>()
 
@@ -573,6 +579,7 @@ export async function fetchLiveArxivPapers(): Promise<ResearchPaper[]> {
     const arxivUrl = 'https://export.arxiv.org/api/query?search_query=cat:astro-ph&max_results=30&sortBy=submittedDate&sortOrder=descending'
     const res = await fetch(arxivUrl, {
       next: { revalidate: 7200 },
+      signal: AbortSignal.timeout(3500),
       headers: {
         'User-Agent': 'KhagolshastraAcademicIndexer/1.0 (+https://khagolshastra.com)',
       },
