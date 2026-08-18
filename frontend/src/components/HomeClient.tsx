@@ -126,18 +126,6 @@ export default function HomeClient({
       {/* 1. HERO 3-COLUMN MONOCLE EDITORIAL GRID */}
       <section className="px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
         <div className="max-w-[1340px] mx-auto">
-          {/* Top section eyebrow bar */}
-          <div className="flex items-center justify-between border-b border-[#111111] pb-2 mb-6">
-            <div className="flex items-center gap-3">
-              <span className="eyebrow text-[#111111]">
-                LATEST DISPATCHES
-              </span>
-            </div>
-            <div suppressHydrationWarning className="text-[10px] font-sans-editorial font-bold uppercase tracking-widest text-[#888884] hidden sm:block">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-            </div>
-          </div>
-
           {/* 3-Column Grid matching reference Monocle layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 lg:divide-x lg:divide-[#dcd8cb]">
             {/* Column 1: Lead Hero Feature (~42% width) */}

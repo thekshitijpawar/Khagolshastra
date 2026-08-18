@@ -203,7 +203,7 @@ export default function Header() {
           {/* Live JWST Card in Mobile Drawer */}
           <div className="p-3 bg-[#f7f6ec] border border-[#dcd8cb]">
             <div className="text-[9px] font-sans-editorial font-bold uppercase tracking-widest text-[#888884] mb-2">
-              OBSERVATORY LIVE TELEMETRY
+              JWST RECORDING
             </div>
             <WebbLiveTracker variant="masthead" />
           </div>

@@ -81,12 +81,12 @@ export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTracke
               <img
                 src="/jwst-telescope.png"
                 alt="JWST"
-                className="w-full h-full object-contain animate-[spin_12s_linear_infinite]"
+                className="w-full h-full object-contain animate-flip-live"
               />
             </div>
             <div>
               <div className="text-[10px] font-sans-editorial font-bold tracking-widest text-[#ffc500] bg-[#111111] px-2 py-0.5 inline-block">
-                OBSERVATORY TELEMETRY
+                JWST RECORDING
               </div>
               <div className="text-[13px] font-serif-editorial font-bold text-[#111111] mt-0.5">
                 James Webb Space Telescope (JWST)
@@ -105,10 +105,7 @@ export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTracke
         <div className="bg-[#111111] text-white p-5 border border-[#333] mb-5">
           <div className="flex items-center justify-between text-[10px] font-sans-editorial tracking-widest uppercase text-[#ffc500] mb-1">
             <span>ACTIVE SKY TARGET</span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
-              REAL-TIME POINTING
-            </span>
+            <span>JWST LIVE POINTING</span>
           </div>
           <h3 className="text-[24px] font-serif-editorial font-normal text-white mb-1">
             {data.target}
@@ -199,13 +196,12 @@ export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTracke
               <img
                 src="/jwst-telescope.png"
                 alt="James Webb Space Telescope"
-                className="w-4 h-4 object-contain animate-[spin_10s_linear_infinite]"
+                className="w-4 h-4 object-contain animate-flip-live"
               />
             </div>
             <div className="flex items-center gap-1.5 min-w-0 text-[11px] font-sans-editorial">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
               <span className="font-bold text-[#111111] uppercase tracking-wider text-[10px] shrink-0">
-                JWST LIVE:
+                JWST RECORDING:
               </span>
               <span className="font-serif-editorial font-bold text-[#111111] truncate text-[12px] group-hover:text-[#555]">
                 {data.target}
@@ -235,14 +231,14 @@ export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTracke
         className="group cursor-pointer flex items-center gap-3 p-1.5 -m-1.5 rounded-xs hover:bg-[#f7f6ec] transition-colors select-none"
         title="Click to view full live JWST observatory telemetry"
       >
-        {/* Stamp Icon with Rotating JWST Telescope Illustration */}
+        {/* Stamp Icon with Horizontally Flipping JWST Telescope Illustration */}
         <div className="w-12 h-14 border border-[#111111] flex flex-col items-center justify-center p-0.5 bg-[#ffffff] shadow-xs group-hover:border-[#ffc500] transition-colors shrink-0">
           <div className="w-full h-full border border-dashed border-[#888884] flex flex-col items-center justify-between p-0.5 bg-[#fdfcf4] overflow-hidden">
             <div className="w-full h-7 flex items-center justify-center relative overflow-hidden">
               <img
                 src="/jwst-telescope.png"
                 alt="James Webb Space Telescope"
-                className="w-7 h-7 object-contain animate-[spin_10s_linear_infinite]"
+                className="w-7 h-7 object-contain animate-flip-live"
               />
             </div>
             <span className="text-[6.5px] font-sans-editorial font-bold tracking-tighter text-[#111111] uppercase bg-[#ffc500] w-full text-center py-0.5">
@@ -255,7 +251,7 @@ export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTracke
         <div className="text-[11px] font-sans-editorial text-[#555555] leading-[1.3]">
           {/* Top Label */}
           <div className="font-bold tracking-wider uppercase text-[10px] text-[#111111]">
-            WEBB LIVE TARGET
+            JWST RECORDING
           </div>
 
           {/* Current Target */}
