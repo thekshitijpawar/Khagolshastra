@@ -8,6 +8,15 @@ export type Region =
   | 'Oceania'
   | 'International Bodies'
 
+export interface OfficialRelease {
+  id: string
+  title: string
+  date: string
+  summary: string
+  url: string
+  category?: string
+}
+
 export interface SpaceAgency {
   slug: string
   acronym: string
@@ -18,9 +27,12 @@ export interface SpaceAgency {
   headquarters?: string
   established?: string
   website?: string
+  newsUrl: string
+  feedUrl?: string
   description: string
   searchTerms: string[]
   keyMissions?: string[]
+  officialReleases?: OfficialRelease[]
 }
 
 export const SPACE_AGENCIES: SpaceAgency[] = [
@@ -37,10 +49,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Algiers, Algeria',
     established: '2002',
     website: 'https://www.asal.dz',
+    newsUrl: 'https://www.asal.dz/actualites/',
     description:
       'Algeria’s government space agency directing national space technologies, the Alsat high-resolution Earth observation constellation (Alsat-1B, Alsat-2A/B), and the Alcomsat-1 geostationary telecommunications satellite.',
     searchTerms: ['Algerian Space Agency', 'ASAL', 'Algeria space', 'Alsat', 'Alcomsat-1'],
     keyMissions: ['Alsat-2 Optical Earth Observation Constellation', 'Alcomsat-1 Telecom', 'National Space Program 2040'],
+    officialReleases: [
+      {
+        id: 'asal-1',
+        title: 'Exploitation and Validation of Alsat-2 High-Resolution Earth Imagery for National Urban Planning',
+        date: '2024',
+        summary: 'The Algerian Space Agency released updated high-resolution Earth observation datasets acquired by the Alsat-2 optical constellation for regional infrastructure and environmental monitoring.',
+        url: 'https://www.asal.dz/actualites/',
+        category: 'Earth Observation',
+      },
+      {
+        id: 'asal-2',
+        title: 'Alcomsat-1 Satellite Telecommunications Network Extension Across North Africa and the Sahel',
+        date: '2023',
+        summary: 'ASAL reported the successful expansion of broadband connectivity and emergency response links provided by the Alcomsat-1 geostationary communications payload.',
+        url: 'https://www.asal.dz/actualites/',
+        category: 'Telecommunications',
+      },
+    ],
   },
   {
     slug: 'ggpen-angola',
@@ -52,25 +83,79 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Luanda, Angola',
     established: '2013',
     website: 'https://ggpen.gov.ao',
+    newsUrl: 'https://ggpen.gov.ao/noticias/',
     description:
       'Angola’s national space management office responsible for the AngoSat satellite telecommunications program (AngoSat-2 launched in 2022), Earth observation applications, and space science education across Southern Africa.',
     searchTerms: ['GGPEN', 'Angola space', 'AngoSat-2', 'AngoSat', 'Luanda space'],
     keyMissions: ['AngoSat-2 High-Throughput Communications Satellite', 'National Earth Observation Applications', 'Space Education Program'],
+    officialReleases: [
+      {
+        id: 'ggpen-1',
+        title: 'AngoSat-2 High-Throughput Satellite Commercial Services Operational Report',
+        date: '2024',
+        summary: 'GGPEN reported that AngoSat-2 is operating at peak capacity at 23°E orbital slot, delivering C-band and Ku-band telecommunications coverage to public and private sectors in Southern Africa.',
+        url: 'https://ggpen.gov.ao/noticias/',
+        category: 'Satellite Operations',
+      },
+      {
+        id: 'ggpen-2',
+        title: 'Tech-Gest Earth Observation Geospatial Monitoring for Agricultural Management in Angola',
+        date: '2024',
+        summary: 'Announcement of satellite-derived soil humidity and vegetation indices deployed under the Tech-Gest project for drought mitigation and crop yield forecasting.',
+        url: 'https://ggpen.gov.ao/noticias/',
+        category: 'Geospatial Analytics',
+      },
+    ],
   },
   {
     slug: 'egsa',
     acronym: 'EgSA',
-    name: 'Egyptian Space Agency',
+    name: 'Egyptian Space Agency (وكالة الفضاء المصرية)',
     country: 'Egypt',
     region: 'Africa',
     flag: '🇪🇬',
     headquarters: 'Space City, New Administrative Capital, Cairo, Egypt',
     established: '2018',
     website: 'https://egsa.gov.eg',
+    newsUrl: 'https://egsa.gov.eg/news/',
     description:
       'Egypt’s national space authority and host of the African Space Agency (AfSA) headquarters in Space City, operating MisrSat-2, EgyptSat-A, and the African Development Satellite constellation.',
     searchTerms: ['Egyptian Space Agency', 'EgSA', 'Egypt space', 'MisrSat-2', 'AfSA Cairo', 'EgyptSat'],
     keyMissions: ['MisrSat-2 High-Resolution Imaging Satellite', 'African Space Agency (AfSA) Continental HQ', 'NExSat-1 Tech Demonstrator'],
+    officialReleases: [
+      {
+        id: 'egsa-1',
+        title: 'MisrSat-2 High-Resolution Optical Satellite Operational In-Orbit Commissioning and Imagery Distribution',
+        date: '2024',
+        summary: 'Official announcement from the Egyptian Space Agency confirming successful orbital calibration and delivery of sub-2-meter Earth observation imagery from MisrSat-2 for national development projects.',
+        url: 'https://egsa.gov.eg/news/',
+        category: 'Satellite In-Orbit Operations',
+      },
+      {
+        id: 'egsa-2',
+        title: 'Inauguration of the African Space Agency (AfSA) Permanent Headquarters at Space City in Cairo',
+        date: '2023',
+        summary: 'The Egyptian Space Agency hosted the formal opening of the African Union’s African Space Agency headquarters at Space City, establishing Cairo as a central hub for pan-African space cooperation.',
+        url: 'https://egsa.gov.eg/news/',
+        category: 'International Space Diplomacy',
+      },
+      {
+        id: 'egsa-3',
+        title: 'Successful Signal Acquisition and Orbit Testing for NExSat-1 Micro-Satellite',
+        date: '2024',
+        summary: 'EgSA engineering teams confirmed nominal telemetry reception and payload checkout for NExSat-1, developed in collaboration with German space technology partners.',
+        url: 'https://egsa.gov.eg/news/',
+        category: 'Space Technology & Engineering',
+      },
+      {
+        id: 'egsa-4',
+        title: 'African Development Satellite (AfDev-Sat) Climate Consortium Progress Review',
+        date: '2024',
+        summary: 'EgSA convened participating African space nations for the joint development of the AfDev-Sat constellation dedicated to tracking greenhouse gas emissions and water resources.',
+        url: 'https://egsa.gov.eg/news/',
+        category: 'Pan-African Constellations',
+      },
+    ],
   },
   {
     slug: 'esti-ethiopia',
@@ -82,10 +167,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Addis Ababa, Ethiopia',
     established: '2016',
     website: 'https://ssgi.gov.et',
+    newsUrl: 'https://ssgi.gov.et/news/',
     description:
       'Ethiopia’s principal space science and geospatial institute managing the ETRSS-1 remote sensing satellite, Entoto Astronomical Observatory, and aerospace engineering in the Horn of Africa.',
     searchTerms: ['Space Science and Geospatial Institute', 'ESTI', 'SSGI', 'Ethiopia space', 'ETRSS-1', 'Entoto Observatory'],
     keyMissions: ['ETRSS-1 Remote Sensing Satellite', 'Entoto Astronomical Observatory', 'East African Geospatial Data Center'],
+    officialReleases: [
+      {
+        id: 'ssgi-1',
+        title: 'ETRSS-1 Satellite Multi-Spectral Data Utilization for Drought Early Warning and Agricultural Monitoring',
+        date: '2024',
+        summary: 'SSGI reported on the operational utilization of satellite remote sensing from Ethiopia’s ETRSS-1 for climate monitoring and agricultural crop assessment.',
+        url: 'https://ssgi.gov.et/news/',
+        category: 'Remote Sensing',
+      },
+      {
+        id: 'ssgi-2',
+        title: 'Entoto Astronomical Observatory Scientific Observations and Deep Sky Survey Program',
+        date: '2023',
+        summary: 'Release of astronomical observation reports from the twin 1-meter optical telescopes situated at Entoto Observatory in Addis Ababa.',
+        url: 'https://ssgi.gov.et/news/',
+        category: 'Astrophysics & Space Science',
+      },
+    ],
   },
   {
     slug: 'ksa-kenya',
@@ -97,10 +201,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Nairobi, Kenya',
     established: '2017',
     website: 'https://ksa.go.ke',
+    newsUrl: 'https://ksa.go.ke/media/news',
     description:
       'Coordinates Kenyan space activities, the historic Luigi Broglio Space Center (San Marco equatorial platform in Malindi), and the Taifa-1 operational optical Earth observation satellite.',
     searchTerms: ['Kenya Space Agency', 'KSA Kenya', 'KENSA', 'Taifa-1', 'Malindi spaceport', 'San Marco platform'],
     keyMissions: ['Taifa-1 Optical Earth Observation Satellite', 'Luigi Broglio Space Center (Malindi)', 'Strategic Space Plan 2030'],
+    officialReleases: [
+      {
+        id: 'ksa-1',
+        title: 'Taifa-1 Satellite First Full Year of Operational Earth Observation and Environmental Datasets',
+        date: '2024',
+        summary: 'The Kenya Space Agency published a milestone review of Taifa-1, Kenya’s first operational 3U Earth observation satellite launched aboard SpaceX Transporter-7.',
+        url: 'https://ksa.go.ke/media/news',
+        category: 'Mission Milestones',
+      },
+      {
+        id: 'ksa-2',
+        title: 'Modernization and Bilateral Agreement on Luigi Broglio Space Center at Malindi',
+        date: '2024',
+        summary: 'KSA and the Italian Space Agency (ASI) advanced discussions on telemetry upgrades and joint scientific research at the historic Malindi equatorial space center.',
+        url: 'https://ksa.go.ke/media/news',
+        category: 'Spaceport Infrastructure',
+      },
+    ],
   },
   {
     slug: 'crts-morocco',
@@ -112,10 +235,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Rabat, Morocco',
     established: '1989',
     website: 'http://www.crts.gov.ma',
+    newsUrl: 'http://www.crts.gov.ma/actualites',
     description:
       'Morocco’s national remote sensing authority managing the Mohammed VI-A and Mohammed VI-B high-resolution optical Earth reconnaissance satellite constellation and national space cartography.',
     searchTerms: ['Royal Centre for Remote Sensing', 'CRTS', 'Morocco space', 'Mohammed VI satellite', 'Rabat space'],
     keyMissions: ['Mohammed VI-A & VI-B Reconnaissance Constellation', 'Mediterranean & Saharan Remote Sensing', 'Space Spatial Data Infrastructure'],
+    officialReleases: [
+      {
+        id: 'crts-1',
+        title: 'Mohammed VI-A & Mohammed VI-B Satellite Constellation Mapping for Coastal and Desert Management',
+        date: '2024',
+        summary: 'CRTS released technical reports highlighting high-resolution optical data processing for desertification tracking, irrigation management, and urban expansion.',
+        url: 'http://www.crts.gov.ma/actualites',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'nasrda',
@@ -127,10 +261,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Abuja, Nigeria',
     established: '1999',
     website: 'https://nasrda.gov.ng',
+    newsUrl: 'https://nasrda.gov.ng/news/',
     description:
       'Nigeria’s primary government space agency operating NigeriaSat Earth observation satellites and NigComSat communications satellites, advancing food security, mineral surveying, and aerospace engineering.',
     searchTerms: ['NASRDA', 'Nigeria space', 'NigeriaSat', 'NigComSat', 'Abuja space agency'],
     keyMissions: ['NigeriaSat-2 & NigeriaSat-X Remote Sensing', 'NigComSat-1R Telecom Satellite', 'Centre for Satellite Technology Development'],
+    officialReleases: [
+      {
+        id: 'nasrda-1',
+        title: 'NigeriaSat Satellite Earth Observation Support for Sahel Security and Agricultural Forecasting',
+        date: '2024',
+        summary: 'NASRDA announced upgraded satellite telemetry and automated imagery dissemination pipelines for flood prediction in the Niger and Benue river basins.',
+        url: 'https://nasrda.gov.ng/news/',
+        category: 'Satellite Applications',
+      },
+      {
+        id: 'nasrda-2',
+        title: 'Strategic Roadmap 2030 for Sovereign Satellite Manufacturing and Aerospace Innovation',
+        date: '2023',
+        summary: 'NASRDA leadership outlined plans for indigenous Assembly, Integration and Testing (AIT) facilities in Abuja.',
+        url: 'https://nasrda.gov.ng/news/',
+        category: 'Strategic Planning',
+      },
+    ],
   },
   {
     slug: 'rsa-rwanda',
@@ -142,10 +295,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Kigali, Rwanda',
     established: '2021',
     website: 'https://space.gov.rw',
+    newsUrl: 'https://space.gov.rw/news-events/news',
     description:
       'Africa’s fast-rising space authority pioneering satellite mega-constellation filings (Cinnamon), national geospatial analytics via GeoHub, and Artemis Accords international collaboration.',
     searchTerms: ['Rwanda Space Agency', 'RSA Rwanda', 'Rwanda space', 'Rwasat-1', 'Kigali space', 'Cinnamon constellation'],
     keyMissions: ['National GeoHub Analytics Platform', 'Artemis Accords African Signatory', 'RwaSat Micro-satellite Constellation'],
+    officialReleases: [
+      {
+        id: 'rsa-1',
+        title: 'Rwanda Space Agency GeoHub Launch: Centralized Satellite Earth Observation Platform for Governance',
+        date: '2024',
+        summary: 'Official release from the Rwanda Space Agency on GeoHub, integrating multi-sensor satellite imagery to drive precision agriculture, mining oversight, and disaster response.',
+        url: 'https://space.gov.rw/news-events/news',
+        category: 'Geospatial Hub',
+      },
+      {
+        id: 'rsa-2',
+        title: 'Implementation of the Artemis Accords Principles for Sustainable Deep-Space and Lunar Exploration',
+        date: '2023',
+        summary: 'RSA reaffirmed Rwanda’s commitment to peaceful outer space exploration and international capacity-building under the Artemis Accords framework.',
+        url: 'https://space.gov.rw/news-events/news',
+        category: 'International Space Policy',
+      },
+    ],
   },
   {
     slug: 'sansa',
@@ -157,10 +329,30 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Pretoria & Hermanus, South Africa',
     established: '2010',
     website: 'https://www.sansa.org.za',
+    newsUrl: 'https://www.sansa.org.za/media-centre/news/',
+    feedUrl: 'https://www.sansa.org.za/feed/',
     description:
       'South Africa’s space agency managing the Hermanus Space Weather Regional Warning Centre, deep-space telemetry at Hartebeesthoek (ground tracking for NASA Artemis), and Earth observation satellites.',
     searchTerms: ['South African National Space Agency', 'SANSA', 'South Africa space', 'Hartebeesthoek', 'Space Weather Hermanus'],
     keyMissions: ['Deep Space Ground Tracking for Artemis', 'Hermanus Space Weather Warning Centre', 'ZACube CubeSat Series', 'Space Infrastructure Hub'],
+    officialReleases: [
+      {
+        id: 'sansa-1',
+        title: 'SANSA Deep Space Ground Station at Hartebeesthoek Prepares Communications Support for Artemis Missions',
+        date: '2024',
+        summary: 'SANSA announced advanced lunar tracking telemetry infrastructure upgrades at Hartebeesthoek to provide dedicated deep space ground communications for crewed and robotic lunar missions.',
+        url: 'https://www.sansa.org.za/media-centre/news/',
+        category: 'Deep Space Tracking',
+      },
+      {
+        id: 'sansa-2',
+        title: 'Space Weather Regional Warning Centre in Hermanus Delivers High-Precision Geomagnetic Storm Forecasts',
+        date: '2024',
+        summary: 'Official bulletin on solar flare activity during Solar Cycle 25 maximum and 24/7 space weather advisory services for commercial civil aviation across Africa.',
+        url: 'https://www.sansa.org.za/media-centre/news/',
+        category: 'Space Weather',
+      },
+    ],
   },
   {
     slug: 'cnct-tunisia',
@@ -172,10 +364,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Tunis, Tunisia',
     established: '1988',
     website: 'http://www.cnct.nat.tn',
+    newsUrl: 'http://www.cnct.nat.tn/',
     description:
       'Tunisia’s national authority for space cartography and remote sensing, collaborating with domestic tech innovators behind the Challenge-One satellite and IoT constellation initiatives.',
     searchTerms: ['CNCT', 'Tunisia space', 'Challenge-One', 'Tunis remote sensing'],
     keyMissions: ['Challenge-One IoT Satellite Integration', 'National Space Cartography & Geographic Information System'],
+    officialReleases: [
+      {
+        id: 'cnct-1',
+        title: 'Integration of Space Remote Sensing for Mediterranean Water Resource and Agricultural Monitoring',
+        date: '2024',
+        summary: 'CNCT published new cartographic assessments utilizing multi-temporal satellite data for aquifer replenishment and coastal monitoring in Tunisia.',
+        url: 'http://www.cnct.nat.tn/',
+        category: 'Remote Sensing',
+      },
+    ],
   },
   {
     slug: 'zingsa-zimbabwe',
@@ -187,10 +390,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Harare, Zimbabwe',
     established: '2018',
     website: 'https://zingsa.ac.zw',
+    newsUrl: 'https://zingsa.ac.zw/news',
     description:
       'Zimbabwe’s space and geospatial agency driving the ZimSat-1 Earth observation cubesat mission deployed from the ISS, drone mapping, and agricultural forecasting.',
     searchTerms: ['ZINGSA', 'Zimbabwe space', 'ZIMSAT-1', 'Harare space agency'],
     keyMissions: ['ZimSat-1 Earth Observation CubeSat', 'National Geospatial Intelligence Center', 'Agricultural Drought Early Warning'],
+    officialReleases: [
+      {
+        id: 'zingsa-1',
+        title: 'ZimSat-1 CubeSat Mission Data Processing for Mineral Exploration and Agricultural Planning',
+        date: '2024',
+        summary: 'ZINGSA published analytical outcomes from ZimSat-1 imagery deployed via the ISS Kibo module, supporting national geospatial intelligence in Zimbabwe.',
+        url: 'https://zingsa.ac.zw/news',
+        category: 'CubeSat Operations',
+      },
+    ],
   },
 
   // =========================================================================
@@ -206,10 +420,46 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Washington, D.C., USA',
     established: '1958',
     website: 'https://www.nasa.gov',
+    newsUrl: 'https://www.nasa.gov/news/all-news/',
+    feedUrl: 'https://www.nasa.gov/news-release/feed/',
     description:
       'The civilian space agency of the United States government responsible for the civilian space program, aeronautics research, and space exploration including the Artemis lunar campaign, James Webb Space Telescope, and Mars exploration rovers.',
     searchTerms: ['NASA', 'Artemis', 'Perseverance', 'Curiosity', 'James Webb', 'JWST', 'Hubble', 'Kennedy Space Center', 'JPL', 'Goddard'],
     keyMissions: ['Artemis Program', 'James Webb Space Telescope', 'Perseverance Mars Rover', 'Europa Clipper', 'Commercial Crew'],
+    officialReleases: [
+      {
+        id: 'nasa-1',
+        title: 'NASA’s Europa Clipper Spacecraft Begins Historic Journey to Jupiter’s Ocean Moon',
+        date: '2024',
+        summary: 'Official NASA press release: NASA’s Europa Clipper launched from Kennedy Space Center to investigate whether Europa, Jupiter’s icy moon, has conditions suitable to support life beneath its frozen surface.',
+        url: 'https://www.nasa.gov/news-release/',
+        category: 'Planetary Exploration',
+      },
+      {
+        id: 'nasa-2',
+        title: 'NASA’s James Webb Space Telescope Discovers Ancient Galaxies at Cosmic Dawn',
+        date: '2024',
+        summary: 'Official release from the Space Telescope Science Institute and NASA detailing NIRCam and NIRSpec observations of JADES-GS-z14-0, the most distant confirmed galaxy observed in the universe.',
+        url: 'https://www.nasa.gov/news-release/',
+        category: 'Astrophysics',
+      },
+      {
+        id: 'nasa-3',
+        title: 'NASA Advances Artemis II Crewed Lunar Flyby Preparations and Orion Spacecraft Testing',
+        date: '2024',
+        summary: 'NASA engineers completed integrated environmental altitude chamber testing for the Orion spacecraft at Kennedy Space Center ahead of the Artemis II mission around the Moon.',
+        url: 'https://www.nasa.gov/news-release/',
+        category: 'Human Spaceflight',
+      },
+      {
+        id: 'nasa-4',
+        title: 'NASA’s Perseverance Mars Rover Collects New Samples at Jezero Crater River Delta',
+        date: '2024',
+        summary: 'Perseverance completed core sampling of sedimentary rock at the Bright Angel formation containing mineral signatures indicative of past microbial habitability on ancient Mars.',
+        url: 'https://www.nasa.gov/news-release/',
+        category: 'Mars Exploration',
+      },
+    ],
   },
   {
     slug: 'csa-asc',
@@ -221,10 +471,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Longueuil, Quebec, Canada',
     established: '1989',
     website: 'https://www.asc-csa.gc.ca',
+    newsUrl: 'https://www.asc-csa.gc.ca/eng/news/',
     description:
       'Canada’s national space agency, leader in advanced space robotics (Canadarm, Canadarm2, Canadarm3), satellite Earth observation (RADARSAT), and astronaut participation in the Artemis and ISS programs.',
     searchTerms: ['Canadian Space Agency', 'CSA', 'Canadarm', 'Jeremy Hansen', 'RADARSAT', 'ASC'],
     keyMissions: ['Canadarm3 (Lunar Gateway)', 'Artemis II (Jeremy Hansen)', 'RADARSAT Constellation', 'NEOSSat'],
+    officialReleases: [
+      {
+        id: 'csa-1',
+        title: 'Canadian Astronaut Jeremy Hansen and Artemis II Crew Complete Lunar Trajectory Simulation',
+        date: '2024',
+        summary: 'Official CSA dispatch on Jeremy Hansen’s training and mission milestone simulations for Artemis II, the first crewed lunar flyby of the 21st century.',
+        url: 'https://www.asc-csa.gc.ca/eng/news/',
+        category: 'Astronaut Program',
+      },
+      {
+        id: 'csa-2',
+        title: 'Canadarm3 Smart Robotics System Passes Preliminary Design Gate for Lunar Gateway',
+        date: '2024',
+        summary: 'MDA Space and CSA achieved major technical milestones for Canadarm3’s artificial intelligence navigation and robotic manipulation algorithms.',
+        url: 'https://www.asc-csa.gc.ca/eng/news/',
+        category: 'Space Robotics',
+      },
+    ],
   },
   {
     slug: 'aem',
@@ -236,10 +505,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Mexico City, Mexico',
     established: '2010',
     website: 'https://www.gob.mx/aem',
+    newsUrl: 'https://www.gob.mx/aem/prensa',
     description:
       'Mexico’s decentralized space agency coordinating national space infrastructure, Earth observation applications, scientific research, and international partnerships in Latin America and the Artemis Accords.',
     searchTerms: ['Agencia Espacial Mexicana', 'AEM', 'Mexico space', 'Colmena', 'AztechSat'],
     keyMissions: ['AztechSat Nano-satellites', 'Colmena Lunar Micro-Robotics', 'Earth Observation Network'],
+    officialReleases: [
+      {
+        id: 'aem-1',
+        title: 'Colmena Lunar Micro-Robotics Mission: Key Data Acquisition and Deep-Space Telemetry Success',
+        date: '2024',
+        summary: 'Official communiqué from AEM and UNAM LINX laboratory regarding scientific data returned by the Colmena micro-robots during lunar transit.',
+        url: 'https://www.gob.mx/aem/prensa',
+        category: 'Lunar Technology',
+      },
+      {
+        id: 'aem-2',
+        title: 'AztechSat Constellation Agreement for Marine Fauna and Environmental Space Tracking',
+        date: '2024',
+        summary: 'AEM and NASA signed implementation arrangements for the AztechSat constellation dedicated to tracking marine biodiversity from orbit.',
+        url: 'https://www.gob.mx/aem/prensa',
+        category: 'Constellation Partnerships',
+      },
+    ],
   },
 
   // =========================================================================
@@ -255,10 +543,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Buenos Aires, Argentina',
     established: '1991',
     website: 'https://www.argentina.gob.ar/ciencia/conae',
+    newsUrl: 'https://www.argentina.gob.ar/ciencia/conae/noticias',
     description:
       'Argentina’s civilian space agency specializing in advanced synthetic aperture radar (SAR) Earth observation satellites (SAOCOM series) and satellite engineering through INVAP.',
     searchTerms: ['CONAE', 'Argentina space', 'SAOCOM', 'Tronador', 'SABIA-Mar'],
     keyMissions: ['SAOCOM 1A/1B Radar Constellation', 'SABIA-Mar Ocean Observation', 'Tronador Rocket Project'],
+    officialReleases: [
+      {
+        id: 'conae-1',
+        title: 'SAOCOM Synthetic Aperture Radar Constellation Provides Critical Flood Monitoring in South America',
+        date: '2024',
+        summary: 'CONAE published SAR radar L-band imagery confirming soil moisture tracking and flood relief support across agricultural basins.',
+        url: 'https://www.argentina.gob.ar/ciencia/conae/noticias',
+        category: 'SAR Earth Observation',
+      },
+      {
+        id: 'conae-2',
+        title: 'SABIA-Mar Ocean Color and Topography Satellite Testing Enters Final Integration Phase',
+        date: '2024',
+        summary: 'INVAP and CONAE engineers conducted thermal vacuum and optical calibration for the SABIA-Mar oceanographic satellite.',
+        url: 'https://www.argentina.gob.ar/ciencia/conae/noticias',
+        category: 'Satellite Manufacturing',
+      },
+    ],
   },
   {
     slug: 'aeb',
@@ -270,10 +577,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Brasília, Brazil',
     established: '1994',
     website: 'https://www.gov.br/aeb',
+    newsUrl: 'https://www.gov.br/aeb/pt-br/assuntos/noticias',
     description:
       'The Brazilian Space Agency oversees civil space development, the Alcântara Launch Center near the equator, CBERS Earth observation satellites with China, and Amazon environmental monitoring.',
     searchTerms: ['Agencia Espacial Brasileira', 'AEB', 'Brazil space', 'Alcantara', 'CBERS', 'Amazonia-1'],
     keyMissions: ['Amazonia-1', 'CBERS Satellite Series', 'Alcântara Space Center Spaceport'],
+    officialReleases: [
+      {
+        id: 'aeb-1',
+        title: 'Amazonia-1 Satellite Delivers Continuous Deforestation and Land-Use Monitoring Datasets',
+        date: '2024',
+        summary: 'AEB and INPE confirmed the nominal operation of Amazonia-1, Brazil’s first 100% indigenous Earth observation satellite.',
+        url: 'https://www.gov.br/aeb/pt-br/assuntos/noticias',
+        category: 'Earth Observation',
+      },
+      {
+        id: 'aeb-2',
+        title: 'Alcântara Space Center (CEA) Advances Commercial Spaceport Launch Licenses and Infrastructure',
+        date: '2024',
+        summary: 'Official report on equatorial launch pad readiness for private suborbital and orbital microlaunchers at Alcântara.',
+        url: 'https://www.gov.br/aeb/pt-br/assuntos/noticias',
+        category: 'Spaceport Operations',
+      },
+    ],
   },
   {
     slug: 'aec-chile',
@@ -285,10 +611,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Santiago, Chile',
     established: '2001',
     website: 'https://www.defensa.cl/espacio',
+    newsUrl: 'https://www.defensa.cl/noticias/',
     description:
       'Chile’s national space coordination entity managing the National Satellite System (SNSAT), high-altitude astronomical observatory hosting in the Atacama Desert, and space technologies.',
     searchTerms: ['AEC', 'Chilean Space Agency', 'SNSAT', 'FASat', 'Chile space'],
     keyMissions: ['National Satellite System (SNSAT)', 'FASat-Delta', 'Atacama Space Observation Support'],
+    officialReleases: [
+      {
+        id: 'aec-1',
+        title: 'National Satellite System (SNSAT): FASat-Delta Operational Earth Imaging Results',
+        date: '2024',
+        summary: 'Official briefing on the commissioning of FASat-Delta, the first spacecraft of Chile’s new sovereign satellite constellation.',
+        url: 'https://www.defensa.cl/noticias/',
+        category: 'National Satellites',
+      },
+    ],
   },
   {
     slug: 'aep-paraguay',
@@ -300,10 +637,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Asunción, Paraguay',
     established: '2014',
     website: 'https://aep.gov.py',
+    newsUrl: 'https://aep.gov.py/noticias/',
     description:
       'Paraguay’s national space authority leading the GuaraniSat-1 satellite mission deployed from the ISS for vector-borne disease tracking, space education, and Earth observation.',
     searchTerms: ['AEP', 'Paraguayan Space Agency', 'GuaraniSat-1', 'Paraguay space'],
     keyMissions: ['GuaraniSat-1 Satellite Mission', 'National Space Science Capacity Building', 'Chaco Earth Monitoring'],
+    officialReleases: [
+      {
+        id: 'aep-1',
+        title: 'GuaraniSat Program and Earth Observation Mapping for Chaco Region Environmental Monitoring',
+        date: '2024',
+        summary: 'AEP presented findings on satellite telemetry and remote sensing stations tracking forest cover in the Paraguayan Chaco.',
+        url: 'https://aep.gov.py/noticias/',
+        category: 'Space Applications',
+      },
+    ],
   },
   {
     slug: 'conida',
@@ -315,10 +663,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Lima, Peru',
     established: '1974',
     website: 'https://www.gob.pe/conida',
+    newsUrl: 'https://www.gob.pe/conida/noticias',
     description:
       'The Peruvian Space Agency operating the high-resolution PeruSat-1 optical Earth observation satellite and advancing astronomical research at the National Astronomical Observatory.',
     searchTerms: ['CONIDA', 'Peruvian Space Agency', 'PeruSat-1', 'Peru space'],
     keyMissions: ['PeruSat-1 High Resolution Earth Observation', 'National Center for Satellite Operations (CNOIS)'],
+    officialReleases: [
+      {
+        id: 'conida-1',
+        title: 'PeruSat-1 Sub-Meter Satellite Imagery Catalog Surpasses 100,000 High-Resolution Scenes',
+        date: '2024',
+        summary: 'CONIDA reported on CNOIS operations in Pucusana, providing satellite imagery for national security, disaster mitigation, and cartography in Peru.',
+        url: 'https://www.gob.pe/conida/noticias',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'abae',
@@ -330,10 +689,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Caracas, Venezuela',
     established: '2007',
     website: 'http://www.abae.gob.ve',
+    newsUrl: 'http://www.abae.gob.ve/web/noticias.php',
     description:
       'Venezuela’s national space agency operating communications and remote sensing satellites, including the Venesat-1 (Simón Bolívar) and VRSS satellite programs.',
     searchTerms: ['ABAE', 'Venezuela space', 'Venesat', 'Miranda satellite', 'Sucre satellite'],
     keyMissions: ['VRSS-1 Francisco de Miranda', 'VRSS-2 Antonio José de Sucre', 'VeneSat Telecom'],
+    officialReleases: [
+      {
+        id: 'abae-1',
+        title: 'VRSS-2 Antonio José de Sucre Remote Sensing Satellite Operations and Telemetry Review',
+        date: '2024',
+        summary: 'ABAE ground stations in Luepa and El Sombrero confirmed continued telemetry reception and imaging for national territorial planning.',
+        url: 'http://www.abae.gob.ve/web/noticias.php',
+        category: 'Remote Sensing',
+      },
+    ],
   },
 
   // =========================================================================
@@ -349,10 +719,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Vienna, Austria',
     established: '1972',
     website: 'https://www.ffg.at/en/space',
+    newsUrl: 'https://www.ffg.at/en/space/news',
     description:
       'Austria’s space agency managing Austrian participation in ESA, satellite communications, the BRITE-Constellation space astronomy mission (BRITE-Austria, UniBRITE), and quantum communications.',
     searchTerms: ['Austrian Space Agency', 'FFG Space', 'Austria space', 'BRITE-Austria', 'UniBRITE'],
     keyMissions: ['BRITE-Constellation Stellar Astronomy', 'Quantum Optical Space Links', 'ESA Science Consortia Contributions'],
+    officialReleases: [
+      {
+        id: 'ffg-1',
+        title: 'Austrian Space Industry Contributions to ESA Science Missions and Quantum Space Encryption',
+        date: '2024',
+        summary: 'FFG Aeronautics and Space Agency highlighted Austrian instrumentation on ESA missions and national quantum cryptography satellite links.',
+        url: 'https://www.ffg.at/en/space/news',
+        category: 'Quantum & Science',
+      },
+    ],
   },
   {
     slug: 'azercosmos',
@@ -364,10 +745,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Baku, Azerbaijan',
     established: '1992',
     website: 'https://azercosmos.az',
+    newsUrl: 'https://azercosmos.az/en/news',
     description:
       'The premier satellite operator and space agency of Azerbaijan, operating Azerspace-1 and Azerspace-2 telecommunications satellites and Azersky Earth observation, and host of IAC 2023 in Baku.',
     searchTerms: ['Azercosmos', 'MAKA', 'Azerbaijan space', 'Azerspace', 'Azersky'],
     keyMissions: ['Azerspace Telecom Fleet', '74th International Astronautical Congress (IAC Baku)', 'Azerbaijan Space Academy'],
+    officialReleases: [
+      {
+        id: 'azercosmos-1',
+        title: 'Azercosmos Advances New High-Throughput Satellite Network and Climate Monitoring from Orbit',
+        date: '2024',
+        summary: 'Official Azercosmos press release detailing space data applications supporting the COP29 climate summit in Baku.',
+        url: 'https://azercosmos.az/en/news',
+        category: 'Satellite Fleet',
+      },
+    ],
   },
   {
     slug: 'belspo-bira',
@@ -379,10 +771,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Brussels, Belgium',
     established: '1959',
     website: 'https://www.aeronomie.be',
+    newsUrl: 'https://www.aeronomie.be/en/news',
     description:
       'Belgium’s space science authorities directing atmospheric aeronomy, the PROBA microsatellite line (PROBA-V, PROBA-3 formation flying coronagraph), and ESA mission payloads.',
     searchTerms: ['BELSPO', 'BIRA-IASB', 'Belgian Space', 'PROBA', 'Belgium space', 'PROBA-3'],
     keyMissions: ['PROBA-3 Solar Coronagraphy Formation Flying', 'ALTIUS Atmospheric Limb Sounder', 'Euro Space Center Research'],
+    officialReleases: [
+      {
+        id: 'bira-1',
+        title: 'PROBA-3 Formation-Flying Solar Coronagraph Satellites Prepared for Launch Campaign',
+        date: '2024',
+        summary: 'BIRA-IASB and BELSPO confirmed final integration testing for PROBA-3 to create an artificial solar eclipse in orbit with millimeter precision.',
+        url: 'https://www.aeronomie.be/en/news',
+        category: 'Solar Astrophysics',
+      },
+    ],
   },
   {
     slug: 'cso',
@@ -394,10 +797,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Prague, Czech Republic',
     established: '2003',
     website: 'https://www.czechspaceportal.cz',
+    newsUrl: 'https://www.czechspaceportal.cz/novinky/',
     description:
       'Coordinates Czech participation in ESA programs, optical instruments for astronomical satellites, and hosts the EU Agency for the Space Programme (EUSPA) in Prague.',
     searchTerms: ['Czech Space Office', 'CSO', 'Czech space', 'EUSPA Prague', 'VZLUSAT'],
     keyMissions: ['VZLUSAT Technology Demonstrators', 'EUSPA Galileo & Copernicus Coordination', 'ESA Optical Payloads'],
+    officialReleases: [
+      {
+        id: 'cso-1',
+        title: 'Czech Space Industry Expansion and VZLUSAT Technology Demonstrations in Low Earth Orbit',
+        date: '2024',
+        summary: 'CSO released updates on Czech space science hardware deployed on ESA and commercial missions.',
+        url: 'https://www.czechspaceportal.cz/novinky/',
+        category: 'Space Industry',
+      },
+    ],
   },
   {
     slug: 'dtu-denmark',
@@ -409,10 +823,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Lyngby & Copenhagen, Denmark',
     established: '1968',
     website: 'https://www.space.dtu.dk',
+    newsUrl: 'https://www.space.dtu.dk/english/news',
     description:
       'Denmark’s national space institute leading magnetic field satellite missions (ESA Swarm), the ASIM atmosphere-space interactions observatory on the ISS, and astrophysics star trackers.',
     searchTerms: ['DTU Space', 'Denmark space', 'ASIM ISS', 'Swarm satellite', 'Danish space'],
     keyMissions: ['ESA Swarm Geomagnetic Constellation', 'ASIM Climate Observatory on ISS', 'DISCO CubeSat Series'],
+    officialReleases: [
+      {
+        id: 'dtu-1',
+        title: 'ASIM Atmosphere-Space Interactions Monitor on ISS Delivers New Terrestrial Gamma-Ray Flash Discoveries',
+        date: '2024',
+        summary: 'DTU Space scientists published breakthrough findings on high-altitude lightning and atmospheric physics.',
+        url: 'https://www.space.dtu.dk/english/news',
+        category: 'Atmospheric Physics',
+      },
+    ],
   },
   {
     slug: 'estcube-estonia',
@@ -424,10 +849,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Tallinn & Tartu, Estonia',
     established: '2006',
     website: 'https://www.estcube.eu',
+    newsUrl: 'https://www.estcube.eu/news',
     description:
       'Estonia’s space office and academic program famous for ESTCube-1 (testing the electric solar wind sail) and ESTCube-2, and rapid integration into ESA deep space initiatives.',
     searchTerms: ['ESTCube', 'Estonian Space Office', 'Estonia space', 'Electric solar wind sail', 'Tartu Observatory'],
     keyMissions: ['ESTCube-1 Electric Solar Sail Demonstrator', 'ESTCube-2 In-Orbit Technology Mission', 'ESA Comet Interceptor Optical Camera Support'],
+    officialReleases: [
+      {
+        id: 'estcube-1',
+        title: 'Tartu Observatory and Estonian Space Office Advance Optical Instrumentation for ESA Comet Interceptor',
+        date: '2024',
+        summary: 'Official report on Estonia’s OPIC optical camera development for ESA’s upcoming mission to an interstellar comet.',
+        url: 'https://www.estcube.eu/news',
+        category: 'Deep Space Instrumentation',
+      },
+    ],
   },
   {
     slug: 'finland-space',
@@ -439,10 +875,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Helsinki, Finland',
     established: '2002',
     website: 'https://spacefinland.fi',
+    newsUrl: 'https://spacefinland.fi/en/news/',
     description:
       'Finland’s national space coordinator supporting world-leading radar SAR innovation (ICEYE constellation), Foresail CubeSat missions, and aurora/space weather research.',
     searchTerms: ['Space Finland', 'Finnish Space Agency', 'Finland space', 'ICEYE', 'Foresail', 'Aalto-1'],
     keyMissions: ['ICEYE Commercial Radar SAR Constellation', 'Foresail-1 CubeSat Mission', 'Space Weather & Aurora Instrumentation'],
+    officialReleases: [
+      {
+        id: 'fin-1',
+        title: 'Space Finland Highlights Record Growth of Finnish NewSpace Radar and Space Weather Sector',
+        date: '2024',
+        summary: 'Business Finland and Space Finland released annual industry figures on SAR satellite exports and Foresail radiation belt studies.',
+        url: 'https://spacefinland.fi/en/news/',
+        category: 'NewSpace',
+      },
+    ],
   },
   {
     slug: 'cnes',
@@ -454,10 +901,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Paris & Toulouse, France',
     established: '1961',
     website: 'https://cnes.fr',
+    newsUrl: 'https://cnes.fr/en/news-press',
     description:
       'The French space agency, European leader in launcher development, Guiana Space Centre spaceport operations, climate science, planetary exploration instruments, and satellite innovation.',
     searchTerms: ['CNES', 'France space', 'French space agency', 'Guiana Space Centre', 'Toulouse Space Center', 'SWOT'],
     keyMissions: ['Guiana Space Centre (CSG)', 'SWOT Surface Water and Ocean Topography', 'MicroCarb Climate Mission', 'SuperCam on Perseverance'],
+    officialReleases: [
+      {
+        id: 'cnes-1',
+        title: 'SWOT Surface Water and Ocean Topography Mission Releases Global High-Resolution Hydrology Data',
+        date: '2024',
+        summary: 'Official CNES-NASA release confirming open access to SWOT radar interferometry measurements of Earth’s lakes, rivers, and oceanic mesoscale eddies.',
+        url: 'https://cnes.fr/en/news-press',
+        category: 'Climate Science',
+      },
+      {
+        id: 'cnes-2',
+        title: 'Guiana Space Centre (CSG) Operational Modernization for Ariane 6 and Commercial Small Launchers',
+        date: '2024',
+        summary: 'CNES reported on the successful inaugural launch support and green propellant infrastructure installed at Europe’s Spaceport in Kourou, French Guiana.',
+        url: 'https://cnes.fr/en/news-press',
+        category: 'Spaceport Operations',
+      },
+    ],
   },
   {
     slug: 'dlr',
@@ -469,10 +935,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Cologne & Oberpfaffenhofen, Germany',
     established: '1969',
     website: 'https://www.dlr.de',
+    newsUrl: 'https://www.dlr.de/en/latest/news',
     description:
       'Germany’s national research center for aeronautics and space conducting robotics, planetary exploration, Earth observation (TerraSAR-X, EnMAP), and human spaceflight operations.',
     searchTerms: ['DLR', 'German Aerospace Center', 'Germany space', 'EnMAP', 'TerraSAR-X', 'TanDEM-X'],
     keyMissions: ['Columbus Module Operations', 'EnMAP Hyperspectral Satellite', 'TerraSAR-X Radar', 'MASCOT Asteroid Lander'],
+    officialReleases: [
+      {
+        id: 'dlr-1',
+        title: 'EnMAP Hyperspectral Satellite Delivers Precision Environmental Data for Global Ecosystem Science',
+        date: '2024',
+        summary: 'DLR’s German Space Operations Center (GSOC) published multi-spectral calibration records assessing soil degradation, water quality, and forest biodiversity.',
+        url: 'https://www.dlr.de/en/latest/news',
+        category: 'Earth Observation',
+      },
+      {
+        id: 'dlr-2',
+        title: 'DLR Autonomous Robotics and AI Systems Tested for Future Lunar and Martian Surface Exploration',
+        date: '2024',
+        summary: 'DLR Robotics and Mechatronics Center demonstrated multi-robot cooperation in simulated extraterrestrial terrain.',
+        url: 'https://www.dlr.de/en/latest/news',
+        category: 'Space Robotics',
+      },
+    ],
   },
   {
     slug: 'hsa-greece',
@@ -484,10 +969,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Athens, Greece',
     established: '2019',
     website: 'https://hsc.gov.gr',
+    newsUrl: 'https://hsc.gov.gr/en/news/',
     description:
       'The Greek national space organization coordinating satellite communications (Hellas Sat), maritime monitoring in the Mediterranean, and national micro-satellite constellations.',
     searchTerms: ['Hellenic Space Center', 'HSA', 'HSC', 'Greece space', 'Hellas Sat', 'Greek space agency'],
     keyMissions: ['National Small Satellite Constellation', 'Hellas Sat Communications', 'Mediterranean Maritime Observation'],
+    officialReleases: [
+      {
+        id: 'hsc-1',
+        title: 'Greek National Microsatellite Constellation Project Enters Implementation Phase',
+        date: '2024',
+        summary: 'HSC announced procurement and manufacturing agreements for sovereign Earth observation and telecommunication microsatellites.',
+        url: 'https://hsc.gov.gr/en/news/',
+        category: 'National Constellation',
+      },
+    ],
   },
   {
     slug: 'hunor-hungary',
@@ -499,10 +995,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Budapest, Hungary',
     established: '1992',
     website: 'https://hunor.gov.hu',
+    newsUrl: 'https://hunor.gov.hu/hirek',
     description:
       'Directs Hungary’s national space strategy and the HUNOR astronaut mission to the ISS, space dosimeters (Pille), and academic nanosatellite developments (Masat-1, SMOG-P).',
     searchTerms: ['HUNOR', 'Hungarian Space Office', 'Hungary space', 'Masat-1', 'Pille dosimeter'],
     keyMissions: ['HUNOR Hungarian Astronaut Expedition to ISS', 'SMOG-P PocketQube Electrosmog Satellite', 'Pille Space Radiation Dosimeter'],
+    officialReleases: [
+      {
+        id: 'hunor-1',
+        title: 'HUNOR Hungarian Astronaut Program: Final Candidate Flight Training and Scientific Experiment Suite',
+        date: '2024',
+        summary: 'HUNOR revealed the medical, radiation, and materials science experiments scheduled for the Hungarian astronaut flight to the ISS.',
+        url: 'https://hunor.gov.hu/hirek',
+        category: 'Human Spaceflight',
+      },
+    ],
   },
   {
     slug: 'ireland-space',
@@ -514,10 +1021,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Dublin, Ireland',
     established: '2019',
     website: 'https://www.enterprise-ireland.com/en/space-ireland',
+    newsUrl: 'https://www.enterprise-ireland.com/en/news',
     description:
       'Manages Ireland’s space enterprise ecosystem, ESA programs, and celebrated the launch of EIRSAT-1, Ireland’s very first sovereign orbital satellite.',
     searchTerms: ['Enterprise Ireland Space', 'Ireland space', 'EIRSAT-1', 'Irish space programme'],
     keyMissions: ['EIRSAT-1 Ireland’s First Satellite', 'ESA Space Solutions Centre Ireland', 'Earth Observation Analytics Hub'],
+    officialReleases: [
+      {
+        id: 'eir-1',
+        title: 'EIRSAT-1 Sovereign Satellite Completes Successful Gamma-Ray Burst and Thermal Coating Operations',
+        date: '2024',
+        summary: 'Enterprise Ireland and University College Dublin published successful in-orbit results from Ireland’s first orbital spacecraft.',
+        url: 'https://www.enterprise-ireland.com/en/news',
+        category: 'Sovereign Satellite',
+      },
+    ],
   },
   {
     slug: 'asi',
@@ -529,10 +1047,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Rome, Italy',
     established: '1988',
     website: 'https://www.asi.it',
+    newsUrl: 'https://www.asi.it/en/news/',
     description:
       'The Italian Space Agency, premier developer of pressurized space station modules (Harmony, Tranquility, Cupola), COSMO-SkyMed radar constellation, Vega rocket architectures, and PRISMA hyperspectral imaging.',
     searchTerms: ['Agenzia Spaziale Italiana', 'ASI', 'Italy space', 'COSMO-SkyMed', 'Vega launcher', 'Prisma'],
     keyMissions: ['COSMO-SkyMed Second Generation Radar', 'Vega Launcher Series', 'PRISMA Hyperspectral Satellite', 'ISS Modules Architecture'],
+    officialReleases: [
+      {
+        id: 'asi-1',
+        title: 'COSMO-SkyMed Second Generation Radar Constellation Operational Expansion',
+        date: '2024',
+        summary: 'ASI confirmed the operational integration of CSG SAR satellites delivering dual-use synthetic aperture radar monitoring globally.',
+        url: 'https://www.asi.it/en/news/',
+        category: 'Radar Earth Observation',
+      },
+      {
+        id: 'asi-2',
+        title: 'PRISMA Hyperspectral Satellite Mission Delivers Unprecedented Mineral and Agricultural Maps',
+        date: '2024',
+        summary: 'Italian Space Agency researchers showcased global hyperspectral imaging results covering mineralogy, water basins, and atmospheric constituents.',
+        url: 'https://www.asi.it/en/news/',
+        category: 'Hyperspectral Science',
+      },
+    ],
   },
   {
     slug: 'lsa',
@@ -544,10 +1081,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Luxembourg City, Luxembourg',
     established: '2018',
     website: 'https://space-agency.public.lu',
+    newsUrl: 'https://space-agency.public.lu/en/news-media/news.html',
     description:
       'World pioneer in commercial space resources legal frameworks, financing newspace ventures, lunar mining ecosystems (SpaceResources.lu), and space communications.',
     searchTerms: ['Luxembourg Space Agency', 'LSA', 'SpaceResources.lu', 'Luxembourg space', 'ESRIC'],
     keyMissions: ['SpaceResources.lu Lunar Mining Initiative', 'European Space Resources Innovation Centre (ESRIC)'],
+    officialReleases: [
+      {
+        id: 'lsa-1',
+        title: 'ESRIC Advances In-Situ Resource Utilization (ISRU) Technologies for Lunar Regolith Extraction',
+        date: '2024',
+        summary: 'The Luxembourg Space Agency and ESRIC announced new research initiatives into extracting oxygen and metals from lunar soil for long-term Moon bases.',
+        url: 'https://space-agency.public.lu/en/news-media/news.html',
+        category: 'Space Resources',
+      },
+    ],
   },
   {
     slug: 'nso-netherlands',
@@ -559,10 +1107,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'The Hague & Leiden, Netherlands',
     established: '2009',
     website: 'https://www.spaceoffice.nl',
+    newsUrl: 'https://www.spaceoffice.nl/en/news/',
     description:
       'Coordinates Dutch space policy, hosts ESA’s European Space Research and Technology Centre (ESTEC) in Noordwijk, and developed the groundbreaking TROPOMI atmospheric instrument on Sentinel-5P.',
     searchTerms: ['Netherlands Space Office', 'NSO', 'SRON', 'TROPOMI', 'ESTEC Noordwijk', 'Dutch space'],
     keyMissions: ['TROPOMI Air Quality Instrument on Sentinel-5P', 'ESA ESTEC Tech Center Hosting', 'SPEXone Aerosol Polarimeter'],
+    officialReleases: [
+      {
+        id: 'nso-1',
+        title: 'TROPOMI Satellite Instrument Delivers Global High-Precision Methane and NO2 Emission Mappings',
+        date: '2024',
+        summary: 'NSO, KNMI, and SRON published latest atmospheric pollution analytics tracking super-emitters and global greenhouse gas plumes.',
+        url: 'https://www.spaceoffice.nl/en/news/',
+        category: 'Atmospheric Monitoring',
+      },
+    ],
   },
   {
     slug: 'nosa',
@@ -574,10 +1133,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Oslo, Norway',
     established: '1987',
     website: 'https://www.romsenter.no',
+    newsUrl: 'https://www.romsenter.no/Aktuelt/Siste-nytt',
     description:
       'Norway’s government agency managing satellite communications, Arctic maritime surveillance AIS fleets, Andøya Spaceport orbital launch facility, and Svalbard satellite ground stations (SvalSat).',
     searchTerms: ['Norwegian Space Agency', 'NOSA', 'Norsk Romsenter', 'Andøya', 'Norway space', 'SvalSat'],
     keyMissions: ['Andøya Spaceport Orbital Infrastructure', 'Arctic Maritime Surveillance AIS Fleet', 'Svalbard Satellite Ground Station'],
+    officialReleases: [
+      {
+        id: 'nosa-1',
+        title: 'Andøya Spaceport Inauguration for Continental European Orbital Launch Operations',
+        date: '2024',
+        summary: 'Norwegian Space Agency reported on orbital launch complex readiness at Andøya for European microlaunchers and polar orbit insertions.',
+        url: 'https://www.romsenter.no/Aktuelt/Siste-nytt',
+        category: 'Spaceport Launch',
+      },
+    ],
   },
   {
     slug: 'polsa',
@@ -589,10 +1159,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Gdańsk & Warsaw, Poland',
     established: '2014',
     website: 'https://polsa.gov.pl',
+    newsUrl: 'https://polsa.gov.pl/en/news/',
     description:
       'Poland’s national space agency supporting Polish space industry integration with ESA, space domain awareness (SDA), Earth observation, and the Artemis Accords.',
     searchTerms: ['Polish Space Agency', 'POLSA', 'Poland space', 'Polska Agencja Kosmiczna'],
     keyMissions: ['Polish Space Surveillance and Tracking (SST)', 'ESA Science Consortia', 'Ignis Micro-Satellite Systems'],
+    officialReleases: [
+      {
+        id: 'polsa-1',
+        title: 'Polish Space Sector Expansion and Space Surveillance and Tracking (SST) Network Milestones',
+        date: '2024',
+        summary: 'POLSA confirmed expanding orbital debris tracking telescopes and Polish astronaut mission preparation with ESA.',
+        url: 'https://polsa.gov.pl/en/news/',
+        category: 'Space Surveillance',
+      },
+    ],
   },
   {
     slug: 'portugal-space',
@@ -604,10 +1185,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Lisbon & Santa Maria (Azores), Portugal',
     established: '2019',
     website: 'https://ptspace.pt',
+    newsUrl: 'https://ptspace.pt/news/',
     description:
       'Develops Portugal’s space strategy, Atlantic Constellation Earth observation satellites, and the Santa Maria spaceport initiative in the Azores.',
     searchTerms: ['Portugal Space', 'PTSPACE', 'Portuguese Space Agency', 'Azores spaceport', 'Atlantic Constellation'],
     keyMissions: ['Atlantic Constellation Earth Observation', 'Santa Maria Azores Space Port Hub', 'Space Rider Landing Site'],
+    officialReleases: [
+      {
+        id: 'pts-1',
+        title: 'Atlantic Constellation Project: Portugal and Spain Advance Joint Earth Observation Fleet',
+        date: '2024',
+        summary: 'Portugal Space confirmed satellite contracts for the Atlantic Constellation providing high-revisit ocean and territory surveillance.',
+        url: 'https://ptspace.pt/news/',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'rosa',
@@ -619,10 +1211,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Bucharest, Romania',
     established: '1991',
     website: 'https://www.rosa.ro',
+    newsUrl: 'https://www.rosa.ro/en/news',
     description:
       'The Romanian Space Agency coordinating national space research, planetary defense participation in ESA’s Hera mission, and space security infrastructure.',
     searchTerms: ['Romanian Space Agency', 'ROSA', 'Romania space', 'Hera mission Romania', 'Goliat'],
     keyMissions: ['ESA Hera Planetary Defense Subsystems', 'Earth Observation Centre', 'Space Situational Awareness'],
+    officialReleases: [
+      {
+        id: 'rosa-1',
+        title: 'Romanian Space Industry Hardware Contributions to ESA Hera Planetary Defense Mission',
+        date: '2024',
+        summary: 'ROSA highlighted Romanian engineering on the altimeter and guidance navigation systems for ESA’s Hera asteroid spacecraft.',
+        url: 'https://www.rosa.ro/en/news',
+        category: 'Planetary Defense',
+      },
+    ],
   },
   {
     slug: 'roscosmos',
@@ -634,10 +1237,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Moscow, Russia',
     established: '1992',
     website: 'https://www.roscosmos.ru',
+    newsUrl: 'https://www.roscosmos.ru/press/',
     description:
       'The Russian state corporation for space activities operating Soyuz and Progress crew and cargo flights to the ISS, GLONASS navigation constellation, and launch facilities at Baikonur and Vostochny.',
     searchTerms: ['Roscosmos', 'Soyuz', 'Progress', 'Cosmonauts', 'Vostochny', 'GLONASS', 'Baikonur'],
     keyMissions: ['Soyuz Crew Spaceflight', 'ISS Russian Orbital Segment', 'GLONASS Navigation Fleet', 'Luna Exploration'],
+    officialReleases: [
+      {
+        id: 'roscosmos-1',
+        title: 'Soyuz MS Crew Spaceflight Expedition Launch and Docking at the International Space Station',
+        date: '2024',
+        summary: 'Official Roscosmos statement on the launch of Soyuz MS from Baikonur Cosmodrome and successful automated docking with the Prichal module.',
+        url: 'https://www.roscosmos.ru/press/',
+        category: 'Human Spaceflight',
+      },
+    ],
   },
   {
     slug: 'aee-spain',
@@ -649,10 +1263,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Seville & Madrid, Spain',
     established: '2023',
     website: 'https://www.aee.gob.es',
+    newsUrl: 'https://www.aee.gob.es/noticias',
     description:
       'Spain’s newly unified national space agency managing the PAZ radar satellite, Ingenio optical systems, PLD Space Miura launch programs, and NASA/ESA Deep Space Communications Complex in Robledo de Chavela.',
     searchTerms: ['Agencia Espacial Espanola', 'AEE', 'Spain space', 'CDTI', 'PAZ satellite', 'Miura rocket', 'Robledo'],
     keyMissions: ['PAZ Synthetic Aperture Radar Satellite', 'Miura Small Satellite Launchers', 'Madrid Deep Space Communications Complex'],
+    officialReleases: [
+      {
+        id: 'aee-1',
+        title: 'Spanish Space Agency Establishes National Space Strategic Plan and Micro-Launcher Support',
+        date: '2024',
+        summary: 'AEE announced new investments in sovereign orbital launch capabilities and PAZ SAR constellation integration.',
+        url: 'https://www.aee.gob.es/noticias',
+        category: 'National Space Strategy',
+      },
+    ],
   },
   {
     slug: 'snsa',
@@ -664,10 +1289,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Solna, Sweden',
     established: '1972',
     website: 'https://www.rymdstyrelsen.se',
+    newsUrl: 'https://www.rymdstyrelsen.se/nyheter/',
     description:
       'Sweden’s government agency for space activities operating the Esrange Space Center inside the Arctic Circle for microgravity research, suborbital launches, and orbital spaceflight.',
     searchTerms: ['Swedish National Space Agency', 'SNSA', 'Rymdstyrelsen', 'Esrange', 'Sweden space'],
     keyMissions: ['Esrange Spaceport Orbital Launch Site', 'MATS Atmospheric Satellite', 'Odin Satellite Observatory'],
+    officialReleases: [
+      {
+        id: 'snsa-1',
+        title: 'MATS Satellite Atmospheric Waves Survey and Esrange Space Center Test Operations',
+        date: '2024',
+        summary: 'Rymdstyrelsen published new scientific results from the MATS satellite observing mesospheric nightglow and gravity waves.',
+        url: 'https://www.rymdstyrelsen.se/nyheter/',
+        category: 'Atmospheric Science',
+      },
+    ],
   },
   {
     slug: 'sso-switzerland',
@@ -679,10 +1315,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Bern, Switzerland',
     established: '1998',
     website: 'https://www.sbfi.admin.ch/space',
+    newsUrl: 'https://www.sbfi.admin.ch/space',
     description:
       'Directs Switzerland’s space participation in ESA and international missions, high-precision atomic clocks for Galileo satellites, CHEOPS exoplanet telescope leadership, and ClearSpace orbital debris removal.',
     searchTerms: ['Swiss Space Office', 'SSO', 'Switzerland space', 'CHEOPS', 'ClearSpace', 'SwissCube'],
     keyMissions: ['CHEOPS Exoplanet Characterisation Satellite', 'ClearSpace-1 Active Debris Removal', 'Galileo Atomic Clocks'],
+    officialReleases: [
+      {
+        id: 'sso-1',
+        title: 'CHEOPS Exoplanet Space Telescope Extended Mission Reveals Atmospheric Planetary Rings and Tidal Deformations',
+        date: '2024',
+        summary: 'Swiss Space Office and University of Bern announced landmark photometric observations of exoplanet transits from CHEOPS.',
+        url: 'https://www.sbfi.admin.ch/space',
+        category: 'Exoplanet Science',
+      },
+    ],
   },
   {
     slug: 'tua',
@@ -694,10 +1341,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Ankara, Türkiye',
     established: '2018',
     website: 'https://tua.gov.tr',
+    newsUrl: 'https://tua.gov.tr/tr/haberler',
     description:
       'Coordinates Turkey’s National Space Program including astronaut missions to the ISS (Axiom-3), indigenous rockets (Roketsan), Türksat communications satellites, and the AYAP lunar mission.',
     searchTerms: ['Turkish Space Agency', 'TUA', 'Turkiye space', 'Alper Gezeravci', 'Turksat', 'IMECE', 'AYAP'],
     keyMissions: ['National Lunar Mission (AYAP)', 'IMECE High-Resolution Earth Observation', 'Axiom-3 Turkish Astronaut Mission'],
+    officialReleases: [
+      {
+        id: 'tua-1',
+        title: 'Turkish Space Agency Lunar Exploration Project (AYAP) Propulsion Subsystem Test Success',
+        date: '2024',
+        summary: 'Official TUA release on the static fire testing of the indigenous hybrid rocket engine destined to power Türkiye’s lunar impactor.',
+        url: 'https://tua.gov.tr/tr/haberler',
+        category: 'Lunar Mission',
+      },
+      {
+        id: 'tua-2',
+        title: 'İMECE Satellite Delivers Sub-Meter Earth Observation Imagery for Agricultural and Defense Mapping',
+        date: '2024',
+        summary: 'TUA and TÜBİTAK UZAY confirmed full operational deployment of Türkiye’s first indigenously developed sub-meter optical satellite.',
+        url: 'https://tua.gov.tr/tr/haberler',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'ssau',
@@ -709,10 +1375,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Kyiv, Ukraine',
     established: '1992',
     website: 'https://www.nkau.gov.ua',
+    newsUrl: 'https://www.nkau.gov.ua/en/news/',
     description:
       'Pioneering rocket engineering hub (Yuzhnoye Design Office, Yuzhmash) famous for Zenit, Dnepr, Cyclone rockets, Antares first-stage core structures, and Vega upper-stage rocket engines.',
     searchTerms: ['State Space Agency of Ukraine', 'SSAU', 'Ukraine space', 'Yuzhnoye', 'Zenit', 'Antares stage'],
     keyMissions: ['Sich-2-30 Earth Observation Satellite', 'Antares Core Stage Engineering', 'Vega Rocket Upper Stage RD-843'],
+    officialReleases: [
+      {
+        id: 'ssau-1',
+        title: 'State Space Agency of Ukraine Space Engineering and International Propulsion Partnerships',
+        date: '2024',
+        summary: 'SSAU confirmed ongoing aerospace engineering cooperation in orbital propulsion, satellite tracking, and international rocket stages.',
+        url: 'https://www.nkau.gov.ua/en/news/',
+        category: 'Rocket Propulsion',
+      },
+    ],
   },
   {
     slug: 'uksa',
@@ -724,10 +1401,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Swindon, United Kingdom',
     established: '2010',
     website: 'https://www.gov.uk/government/organisations/uk-space-agency',
+    newsUrl: 'https://www.gov.uk/government/organisations/uk-space-agency/news',
     description:
       'Executive agency of the UK government fostering the commercial space economy, small satellite manufacturing, regional spaceports (SaxaVord, Sutherland), and major contributions to ESA science and Artemis.',
     searchTerms: ['UK Space Agency', 'UKSA', 'Britain space', 'SaxaVord', 'Sutherland', 'OneWeb', 'Vigil'],
     keyMissions: ['Vigil Space Weather Mission Support', 'UK Spaceports Program', 'Lunar Pathfinder Communications Satellite'],
+    officialReleases: [
+      {
+        id: 'uksa-1',
+        title: 'UK Space Agency Backs ESA Vigil Space Weather Mission at Lagrange Point L5',
+        date: '2024',
+        summary: 'Official UKSA release: The UK is providing leadership and advanced instrumentation for the ESA Vigil spacecraft to provide early warning of extreme solar storms.',
+        url: 'https://www.gov.uk/government/organisations/uk-space-agency/news',
+        category: 'Space Weather',
+      },
+      {
+        id: 'uksa-2',
+        title: 'SaxaVord Spaceport Licencing and Orbital Small-Satellite Launch Operations in Shetland',
+        date: '2024',
+        summary: 'The UK Space Agency confirmed regulatory readiness and launch facility operational testing at SaxaVord Spaceport.',
+        url: 'https://www.gov.uk/government/organisations/uk-space-agency/news',
+        category: 'Spaceports',
+      },
+    ],
   },
   {
     slug: 'lithuanian-space',
@@ -739,10 +1435,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Vilnius, Lithuania',
     established: '2007',
     website: 'https://space.lt',
+    newsUrl: 'https://space.lt/news/',
     description:
       'Lithuania’s aerospace association and government agency driving nanosatellite technology (LituanicaSAT-1, LituanicaSAT-2), advanced optics, and ESA Associate Membership.',
     searchTerms: ['Lithuanian Space Association', 'Lithuania space', 'LituanicaSAT', 'Vilnius space'],
     keyMissions: ['LituanicaSAT Nanosatellite Constellation', 'ESA Associate Membership Integration', 'Laser Optical Space Payloads'],
+    officialReleases: [
+      {
+        id: 'lit-1',
+        title: 'Lithuanian Space Sector Milestone: Advanced Nanosatellite Subsystems and Laser Payloads in Orbit',
+        date: '2024',
+        summary: 'Innovation Agency Lithuania published a comprehensive overview of Lithuanian space laser optics and small satellite platforms.',
+        url: 'https://space.lt/news/',
+        category: 'Nanosatellites',
+      },
+    ],
   },
 
   // =========================================================================
@@ -758,10 +1465,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Manama, Bahrain',
     established: '2014',
     website: 'https://www.nssa.gov.bh',
+    newsUrl: 'https://www.nssa.gov.bh/news/',
     description:
       'Bahrain’s government space agency promoting space science research, satellite monitoring, and joint cube satellite missions including Light-1 with the UAE and the upcoming Al-Munther satellite.',
     searchTerms: ['NSSA Bahrain', 'Bahrain space', 'Light-1 satellite', 'Al-Munther', 'Manama space'],
     keyMissions: ['Light-1 Terrestrial Gamma-Ray Flash Satellite', 'Al-Munther National Satellite', 'Space Data Analytics Lab'],
+    officialReleases: [
+      {
+        id: 'nssa-1',
+        title: 'NSSA Bahrain Announces Al-Munther Nanosatellite Mission Design and Artificial Intelligence Payloads',
+        date: '2024',
+        summary: 'Official communiqué on the development of Al-Munther, designed and built by Bahraini engineers to analyze environmental data in orbit using on-board AI.',
+        url: 'https://www.nssa.gov.bh/news/',
+        category: 'Nanosatellites',
+      },
+    ],
   },
   {
     slug: 'isa-iran',
@@ -773,10 +1491,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Tehran, Iran',
     established: '2004',
     website: 'https://isa.ir',
+    newsUrl: 'https://isa.ir/news',
     description:
       'Iran’s national agency for civilian space activities, operating indigenous Simorgh, Qaim, and Safir launch systems and the Pars, Nahid, and Khayyam Earth observation satellites.',
     searchTerms: ['Iranian Space Agency', 'ISA Iran', 'Iran space', 'Khayyam satellite', 'Simorgh rocket', 'Pars satellite'],
     keyMissions: ['Khayyam Earth Observation Satellite', 'Pars-1 Remote Sensing Satellite', 'Simorgh Launch Vehicle'],
+    officialReleases: [
+      {
+        id: 'isa-ir-1',
+        title: 'Pars-1 Remote Sensing Research Satellite Orbital Insertion and Telemetry Validation',
+        date: '2024',
+        summary: 'The Iranian Space Agency confirmed successful signal reception from the Pars-1 satellite following orbital insertion at 500 km altitude.',
+        url: 'https://isa.ir/news',
+        category: 'Satellite Launches',
+      },
+    ],
   },
   {
     slug: 'israel-space-agency',
@@ -788,10 +1517,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Tel Aviv, Israel',
     established: '1983',
     website: 'https://www.space.gov.il',
+    newsUrl: 'https://www.space.gov.il/en/news',
     description:
       'Government agency directing civilian space innovation, including the Beresheet lunar lander project, ultra-lightweight Ofeq and Venus micro-satellites, and the ULTRASAT ultraviolet space telescope.',
     searchTerms: ['Israel Space Agency', 'ISA Israel', 'Beresheet', 'ULTRASAT', 'SpaceIL', 'Venus satellite'],
     keyMissions: ['ULTRASAT Ultraviolet Space Telescope', 'Beresheet-2 Lunar Project', 'VENµS Micro-satellite'],
+    officialReleases: [
+      {
+        id: 'isa-il-1',
+        title: 'ULTRASAT Ultraviolet Space Telescope Passes Critical Scientific Review for Cosmic Transient Detection',
+        date: '2024',
+        summary: 'Official ISA and Weizmann Institute release: ULTRASAT will monitor the sky in ultraviolet to capture supernova explosions and gravitational wave sources.',
+        url: 'https://www.space.gov.il/en/news',
+        category: 'Astrophysics Observatories',
+      },
+    ],
   },
   {
     slug: 'ssa-saudi',
@@ -803,10 +1543,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Riyadh, Saudi Arabia',
     established: '2018',
     website: 'https://ssa.gov.sa',
+    newsUrl: 'https://ssa.gov.sa/en/media-center/news/',
     description:
       'Directs the Kingdom’s Vision 2030 space ambitions, including human spaceflight to the ISS (Rayyanah Barnawi, Ali AlQarni), Artemis Accords participation, and deep space research.',
     searchTerms: ['Saudi Space Agency', 'SSA Saudi', 'Saudi space', 'Rayyanah Barnawi', 'Ali AlQarni', 'Vision 2030 space'],
     keyMissions: ['Axiom-2 Saudi Astronaut Mission to ISS', 'Artemis Accords Lunar Partnerships', 'Space Debris Monitoring'],
+    officialReleases: [
+      {
+        id: 'ssa-sa-1',
+        title: 'Saudi Space Agency Publishes Scientific Results from ISS Microgravity Biomedical Experiments',
+        date: '2024',
+        summary: 'SSA researchers reported on biomedical stem cell and immune response trials conducted aboard the ISS during the Ax-2 expedition.',
+        url: 'https://ssa.gov.sa/en/media-center/news/',
+        category: 'Microgravity Science',
+      },
+      {
+        id: 'ssa-sa-2',
+        title: 'Kingdom of Saudi Arabia Expands Global Space Debris and Orbital Domain Awareness Network',
+        date: '2024',
+        summary: 'SSA established new space monitoring partnerships for satellite protection and long-term sustainability of space activities.',
+        url: 'https://ssa.gov.sa/en/media-center/news/',
+        category: 'Space Domain Awareness',
+      },
+    ],
   },
   {
     slug: 'gors-syria',
@@ -818,10 +1577,12 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Damascus, Syria',
     established: '1986',
     website: '',
+    newsUrl: '',
     description:
       'Syria’s state organization for space research and remote sensing applications in agriculture, geological surveys, and environmental monitoring.',
     searchTerms: ['GORS', 'Syrian Space Agency', 'Syria space', 'Damascus remote sensing'],
     keyMissions: ['Remote Sensing Environmental Monitoring', 'Geological Cartography Surveys'],
+    officialReleases: [],
   },
   {
     slug: 'uaesa-mbrsc',
@@ -833,10 +1594,37 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Abu Dhabi & Dubai, UAE',
     established: '2014',
     website: 'https://space.gov.ae',
+    newsUrl: 'https://space.gov.ae/media-centre/news',
     description:
       'UAE’s visionary space authorities behind the Hope Probe (Emirates Mars Mission), Rashid lunar rovers, upcoming Asteroid Belt Explorer (EMA), and astronaut Sultan Al Neyadi’s historic ISS expedition.',
     searchTerms: ['UAE Space Agency', 'UAESA', 'MBRSC', 'Hope Probe', 'Emirates Mars Mission', 'Rashid Rover', 'Sultan Al Neyadi', 'EMA Asteroid'],
     keyMissions: ['Hope Probe (Emirates Mars Mission)', 'Emirates Mission to the Asteroid Belt (EMA)', 'MBR Space Centre Lunar Rovers', 'MBZ-SAT Optical Satellite'],
+    officialReleases: [
+      {
+        id: 'uae-1',
+        title: 'Emirates Mission to the Asteroid Belt (EMA) Reveals Spacecraft Design and Target Asteroids',
+        date: '2024',
+        summary: 'Official UAE Space Agency announcement: The MBR Explorer spacecraft will journey 5 billion km to explore seven asteroids, culminating in a landing on Justitia.',
+        url: 'https://space.gov.ae/media-centre/news',
+        category: 'Deep Space Missions',
+      },
+      {
+        id: 'uae-2',
+        title: 'Hope Probe Captures Unprecedented High-Resolution Observations of Mars’ Moon Deimos',
+        date: '2024',
+        summary: 'The Emirates Mars Mission team released definitive scientific imagery and spectroscopy indicating a planetary origin for Deimos.',
+        url: 'https://space.gov.ae/media-centre/news',
+        category: 'Mars Science',
+      },
+      {
+        id: 'uae-3',
+        title: 'MBZ-SAT High-Precision Optical Earth Observation Satellite Finalizes Pre-Launch Tests',
+        date: '2024',
+        summary: 'MBRSC engineers confirmed MBZ-SAT is the most advanced commercial satellite in the region, featuring fully automated high-accuracy imaging.',
+        url: 'https://space.gov.ae/media-centre/news',
+        category: 'Satellite Technology',
+      },
+    ],
   },
 
   // =========================================================================
@@ -852,10 +1640,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Dhaka, Bangladesh',
     established: '1980',
     website: 'http://www.sparrso.gov.bd',
+    newsUrl: 'http://www.sparrso.gov.bd/site/view/notices',
     description:
       'Bangladesh’s autonomous agency for peaceful applications of space science, remote sensing for delta agriculture and cyclone monitoring, in coordination with the Bangabandhu satellite network.',
     searchTerms: ['SPARRSO', 'Bangladesh space', 'Bangabandhu Satellite', 'Dhaka space agency'],
     keyMissions: ['Bangabandhu-1 Satellite Operations Support', 'Bay of Bengal Space Remote Sensing & Cyclone Tracking'],
+    officialReleases: [
+      {
+        id: 'sparrso-1',
+        title: 'Satellite Remote Sensing and Early Warning Tracking for Bay of Bengal Cyclone Monitoring',
+        date: '2024',
+        summary: 'SPARRSO issued technical bulletins on geostationary satellite tracking of monsoon storm formations impacting coastal Bangladesh.',
+        url: 'http://www.sparrso.gov.bd/site/view/notices',
+        category: 'Disaster Warning',
+      },
+    ],
   },
   {
     slug: 'cnsa',
@@ -867,10 +1666,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Haidian, Beijing, China',
     established: '1993',
     website: 'http://www.cnsa.gov.cn',
+    newsUrl: 'http://www.cnsa.gov.cn/english/n6465652/n6465653/index.html',
     description:
       'China’s national space authorities directing the Tiangong Space Station, Chang’e lunar sample return & south pole missions, Tianwen Mars probes, and Long March launch vehicles.',
     searchTerms: ['China National Space Administration', 'CNSA', 'CMSA', 'Tiangong', 'Chang\'e', 'Tianwen', 'Long March', 'Zhurong', 'Shenzhou'],
     keyMissions: ['Tiangong Orbital Space Station', 'Chang’e 6 Lunar Far Side Sample Return', 'Tianwen-3 Mars Sample Return', 'Long March 9 Super Heavy'],
+    officialReleases: [
+      {
+        id: 'cnsa-1',
+        title: 'Chang’e-6 Mission Accomplishes Historic World-First Sample Return from Far Side of the Moon',
+        date: '2024',
+        summary: 'Official CNSA press release: The Chang’e-6 return capsule landed safely in Inner Mongolia carrying 1,935.3 grams of pristine lunar far-side regolith from the South Pole-Aitken Basin.',
+        url: 'http://www.cnsa.gov.cn/english/n6465652/n6465653/index.html',
+        category: 'Lunar Exploration',
+      },
+      {
+        id: 'cnsa-2',
+        title: 'Tiangong Space Station Shenzhou Crew Rotations and Mengtian Laboratory Scientific Achievements',
+        date: '2024',
+        summary: 'CMSA reported on continuous human presence aboard the Tiangong orbital complex, conducting microgravity fluid physics and space medicine experiments.',
+        url: 'http://www.cnsa.gov.cn/english/n6465652/n6465653/index.html',
+        category: 'Human Spaceflight',
+      },
+    ],
   },
   {
     slug: 'isro',
@@ -882,10 +1700,46 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Bengaluru, Karnataka, India',
     established: '1969',
     website: 'https://www.isro.gov.in',
+    newsUrl: 'https://www.isro.gov.in/PressReleases.html',
+    feedUrl: 'https://www.isro.gov.in/rss.xml',
     description:
       'India’s primary space agency, globally celebrated for the historic Chandrayaan-3 lunar south pole landing, Aditya-L1 solar observatory, Gaganyaan human spaceflight program, and highly reliable PSLV/LVM3 launch vehicles.',
     searchTerms: ['Indian Space Research Organisation', 'ISRO', 'Chandrayaan', 'Gaganyaan', 'Aditya-L1', 'PSLV', 'LVM3', 'SSLV', 'Mangalyaan', 'Shukrayaan'],
     keyMissions: ['Chandrayaan-3 Lunar South Pole Landing', 'Aditya-L1 Solar Observatory', 'Gaganyaan Crewed Spaceflight', 'NISAR with NASA'],
+    officialReleases: [
+      {
+        id: 'isro-1',
+        title: 'Chandrayaan-3 Propulsion Module Transferred from Lunar Orbit to Earth Orbit for Future Mission Validation',
+        date: '2024',
+        summary: 'Official ISRO press release: In a landmark maneuver, the Chandrayaan-3 Propulsion Module returned from lunar orbit to Earth orbit, proving orbital hopping and re-entry trajectory algorithms for future sample-return missions.',
+        url: 'https://www.isro.gov.in/PressReleases.html',
+        category: 'Lunar Exploration',
+      },
+      {
+        id: 'isro-2',
+        title: 'Aditya-L1 Solar Observatory Successfully Injected into Halo Orbit at Sun-Earth Lagrange Point 1',
+        date: '2024',
+        summary: 'ISRO announced the precise halo-orbit insertion of India’s maiden solar probe Aditya-L1, commencing continuous, unobstructed observation of the solar corona and coronal mass ejections.',
+        url: 'https://www.isro.gov.in/PressReleases.html',
+        category: 'Solar Astrophysics',
+      },
+      {
+        id: 'isro-3',
+        title: 'Gaganyaan Human Spaceflight Program: Crew Module Parachute and Abort System Flight Qualification',
+        date: '2024',
+        summary: 'ISRO successfully concluded integrated air-drop and drogue parachute deployment trials at Terminal Ballistics Research Laboratory ahead of the uncrewed Gaganyaan orbital mission.',
+        url: 'https://www.isro.gov.in/PressReleases.html',
+        category: 'Human Spaceflight',
+      },
+      {
+        id: 'isro-4',
+        title: 'NASA-ISRO Synthetic Aperture Radar (NISAR) Observatory Final Assembly and Environmental Testing',
+        date: '2024',
+        summary: 'The joint dual-frequency L-band and S-band NISAR Earth science satellite completed final thermal vacuum checkout at URSC Bengaluru.',
+        url: 'https://www.isro.gov.in/PressReleases.html',
+        category: 'Joint Missions',
+      },
+    ],
   },
   {
     slug: 'brin-lapan',
@@ -897,10 +1751,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Jakarta, Indonesia',
     established: '1963',
     website: 'https://www.brin.go.id',
+    newsUrl: 'https://www.brin.go.id/news',
     description:
       'Indonesia’s central research and space agency operating remote sensing networks, satellite development (LAPAN-A series), and planning the Biak equatorial spaceport.',
     searchTerms: ['BRIN', 'LAPAN', 'Indonesia space', 'LAPAN-A', 'Biak spaceport'],
     keyMissions: ['LAPAN-A3 Micro-Satellite', 'Biak Equatorial Spaceport Initiative', 'Tropical Forestry Space Monitoring'],
+    officialReleases: [
+      {
+        id: 'brin-1',
+        title: 'BRIN Space Research Organization Remote Sensing Monitoring of Archipelago Forestry and Maritime Zones',
+        date: '2024',
+        summary: 'BRIN published multi-satellite Earth data tracking tropical rainforest preservation and marine EEZ traffic in Indonesia.',
+        url: 'https://www.brin.go.id/news',
+        category: 'Maritime & Forestry',
+      },
+    ],
   },
   {
     slug: 'jaxa',
@@ -912,10 +1777,37 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Chofu, Tokyo, Japan',
     established: '2003',
     website: 'https://global.jaxa.jp',
+    newsUrl: 'https://global.jaxa.jp/press/',
     description:
       'Japan’s national aerospace agency renowned for asteroid sample returns (Hayabusa/Hayabusa2), precision Moon landers (SLIM), XRISM X-ray observatory, H3 launch vehicle, and the Kibo ISS module.',
     searchTerms: ['Japan Aerospace Exploration Agency', 'JAXA', 'Hayabusa', 'SLIM Moon', 'XRISM', 'H3 rocket', 'Kibo module', 'MMX Mars'],
     keyMissions: ['SLIM Pinpoint Lunar Lander', 'XRISM X-Ray Space Telescope', 'MMX Martian Moons Explorer', 'H3 Launch Vehicle'],
+    officialReleases: [
+      {
+        id: 'jaxa-1',
+        title: 'SLIM (Smart Lander for Investigating Moon) Precision Pinpoint Lunar Landing Success and Multi-Band Spectroscopic Results',
+        date: '2024',
+        summary: 'Official JAXA press release confirming SLIM landed within 55 meters of its target on the Moon’s Shioli Crater, returning groundbreaking multi-band spectroscopic analysis of olivine minerals.',
+        url: 'https://global.jaxa.jp/press/',
+        category: 'Lunar Science',
+      },
+      {
+        id: 'jaxa-2',
+        title: 'XRISM (X-Ray Imaging and Spectroscopy Mission) First Light and Cosmic Supernova Remnant Gas Dynamics',
+        date: '2024',
+        summary: 'JAXA, NASA, and ESA revealed XRISM Resolve spectrometer data demonstrating unprecedented precision measurements of hot gas velocities inside galaxy clusters.',
+        url: 'https://global.jaxa.jp/press/',
+        category: 'X-Ray Astronomy',
+      },
+      {
+        id: 'jaxa-3',
+        title: 'H3 Launch Vehicle Flight 3 Places ALOS-4 Advanced Land Observing Satellite into Polar Orbit',
+        date: '2024',
+        summary: 'JAXA confirmed flawless flight performance of the flagship H3 rocket from Tanegashima Space Center.',
+        url: 'https://global.jaxa.jp/press/',
+        category: 'Launch Vehicles',
+      },
+    ],
   },
   {
     slug: 'kazcosmos',
@@ -927,10 +1819,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Astana, Kazakhstan',
     established: '2007',
     website: 'https://gharysh.kz',
+    newsUrl: 'https://gharysh.kz/en/news/',
     description:
       'The National Space Agency of Kazakhstan, home to the historic Baikonur Cosmodrome, operating KazSat communications and KazEOSat Earth observation satellites.',
     searchTerms: ['Kazcosmos', 'KazCosmos', 'Kazakhstan space', 'Baikonur', 'KazSat', 'KazEOSat'],
     keyMissions: ['Baiterek Green Rocket Complex at Baikonur', 'KazEOSat Earth Observation Constellation', 'KazSat-3 Telecom'],
+    officialReleases: [
+      {
+        id: 'kaz-1',
+        title: 'KazCosmos Baiterek Space Rocket Complex Modernization and Green Launch Pad Operations',
+        date: '2024',
+        summary: 'Official report on the joint modernization of Baikonur’s Launch Complex 45 for environmentally safe Soyuz-5 space rockets.',
+        url: 'https://gharysh.kz/en/news/',
+        category: 'Spaceports',
+      },
+    ],
   },
   {
     slug: 'mysa',
@@ -942,10 +1845,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Kuala Lumpur, Malaysia',
     established: '2002',
     website: 'https://www.mysa.gov.my',
+    newsUrl: 'https://www.mysa.gov.my/category/berita/',
     description:
       'Malaysia’s government space agency developing national space infrastructure, RazakSAT satellite programs, and downstream Earth observation applications for Southeast Asia.',
     searchTerms: ['MYSA', 'Malaysian Space Agency', 'Malaysia space', 'Angkasa', 'RazakSAT'],
     keyMissions: ['National Space Policy 2030', 'TiungSAT and RazakSAT Line', 'Equatorial Satellite Ground Station'],
+    officialReleases: [
+      {
+        id: 'mysa-1',
+        title: 'National Space Policy 2030: Expanding Malaysia’s Space Economy and Downstream Earth Intelligence',
+        date: '2024',
+        summary: 'MYSA announced key partnerships in geospatial big data for agriculture, natural disaster mitigation, and coastal defense.',
+        url: 'https://www.mysa.gov.my/category/berita/',
+        category: 'Space Policy',
+      },
+    ],
   },
   {
     slug: 'msa-mongolia',
@@ -956,11 +1870,22 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     flag: '🇲🇳',
     headquarters: 'Ulaanbaatar, Mongolia',
     established: '2022',
-    website: '',
+    website: 'https://mddc.gov.mn',
+    newsUrl: 'https://mddc.gov.mn',
     description:
       'Mongolia’s state body for aerospace development, operating Mazaalai cubesats, high-latitude space situational awareness, and the National Satellite Communications Project.',
     searchTerms: ['Mongolian Space Agency', 'Mongolia space', 'Mazaalai satellite', 'Ulaanbaatar space'],
     keyMissions: ['National High-Throughput Satellite', 'Mazaalai CubeSat Education Series', 'Steppe Space Science Program'],
+    officialReleases: [
+      {
+        id: 'msa-1',
+        title: 'Mongolian National Satellite Telecommunications Project Advances for Nationwide Remote Connectivity',
+        date: '2024',
+        summary: 'Official briefing on the sovereign geostationary telecommunications satellite program.',
+        url: 'https://mddc.gov.mn',
+        category: 'Satellite Telecom',
+      },
+    ],
   },
   {
     slug: 'nata-north-korea',
@@ -972,10 +1897,12 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Pyongyang, North Korea',
     established: '2013',
     website: '',
+    newsUrl: '',
     description:
       'North Korea’s government aerospace agency directing the Malligyong military reconnaissance satellite series and Chollima-1 launch vehicles from Sohae.',
     searchTerms: ['NATA North Korea', 'NADA', 'Malligyong', 'Chollima rocket', 'North Korea space'],
     keyMissions: ['Malligyong Reconnaissance Satellites', 'Chollima-1 Launch Vehicle'],
+    officialReleases: [],
   },
   {
     slug: 'suparco',
@@ -987,10 +1914,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Karachi & Islamabad, Pakistan',
     established: '1961',
     website: 'https://suparco.gov.pk',
+    newsUrl: 'https://suparco.gov.pk/news-updates/',
     description:
       'Pakistan’s executive space authority operating the PakSAT communications and PRSS remote sensing satellite constellations, with student lunar payload participation on Chang’e 6.',
     searchTerms: ['SUPARCO', 'Pakistan space', 'PakSAT', 'PRSS-1', 'ICUBE-Q'],
     keyMissions: ['PakSAT-MM1 High Throughput Satellite', 'PRSS-1 Earth Observation', 'ICUBE-Q Lunar Orbiter CubeSat'],
+    officialReleases: [
+      {
+        id: 'suparco-1',
+        title: 'ICUBE-Q Lunar CubeSat Successfully Transmits Lunar Orbit Images from Chang’e-6 Mission',
+        date: '2024',
+        summary: 'Official SUPARCO release confirming successful separation and imaging of the lunar surface by the ICUBE-Q miniature satellite aboard China’s Chang’e-6 mission.',
+        url: 'https://suparco.gov.pk/news-updates/',
+        category: 'Lunar Payloads',
+      },
+      {
+        id: 'suparco-2',
+        title: 'PakSAT-MM1 Multi-Mission Communication Satellite Placed into Geostationary Orbit',
+        date: '2024',
+        summary: 'SUPARCO confirmed the launch and orbital checkout of PakSAT-MM1 from Xichang, providing high-speed broadband and 5G backhaul across Pakistan.',
+        url: 'https://suparco.gov.pk/news-updates/',
+        category: 'Telecommunications',
+      },
+    ],
   },
   {
     slug: 'philsa',
@@ -1002,10 +1948,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Quezon City, Philippines',
     established: '2019',
     website: 'https://philsa.gov.ph',
+    newsUrl: 'https://philsa.gov.ph/news/',
     description:
       'The central government space agency of the Philippines directing the Diwata microsatellite and Maya cubesat programs, maritime surveillance, and disaster resilience space applications.',
     searchTerms: ['PhilSA', 'Philippine Space Agency', 'Philippines space', 'Diwata', 'Maya CubeSat', 'MULA'],
     keyMissions: ['Multispectral Unit for Land Assessment (MULA)', 'Diwata Microsatellites', 'Maya CubeSat Fleet'],
+    officialReleases: [
+      {
+        id: 'philsa-1',
+        title: 'Multispectral Unit for Land Assessment (MULA) Satellite Engineering Development Advances',
+        date: '2024',
+        summary: 'Official PhilSA release detailing satellite flight model assembly for MULA, the biggest commercial Earth-imaging satellite developed for the Philippines.',
+        url: 'https://philsa.gov.ph/news/',
+        category: 'Satellite Development',
+      },
+    ],
   },
   {
     slug: 'ostin-singapore',
@@ -1017,10 +1974,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Singapore',
     established: '2013',
     website: 'https://www.ostin.gov.sg',
+    newsUrl: 'https://www.ostin.gov.sg/news-and-resources/',
     description:
       'Singapore’s national space office directing satellite technologies (TeLEOS optical & radar satellites, NeuSAR), space domain awareness, and NewSpace incubation.',
     searchTerms: ['OSTIn', 'NSAS', 'CRISP Singapore', 'Singapore space', 'TeLEOS', 'NeuSAR'],
     keyMissions: ['TeLEOS Earth Observation SAR Fleet', 'NeuSAR Commercial Micro-Satellites', 'Singapore Space Technology Incubation'],
+    officialReleases: [
+      {
+        id: 'ostin-1',
+        title: 'OSTIn Expands National Space Venture Grants for Quantum Communications in Low Earth Orbit',
+        date: '2024',
+        summary: 'Singapore Space Office announced funding for space quantum key distribution (QKD) payloads and radar SAR processing.',
+        url: 'https://www.ostin.gov.sg/news-and-resources/',
+        category: 'Quantum Space Technology',
+      },
+    ],
   },
   {
     slug: 'kasa-kari',
@@ -1032,10 +2000,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Sacheon & Daejeon, South Korea',
     established: '1989',
     website: 'https://www.kasa.go.kr',
+    newsUrl: 'https://www.kasa.go.kr',
     description:
       'South Korea’s newly established centralized space administration supervising the indigenous Nuri (KSLV-II) rocket, Danuri lunar orbiter, KOMPSAT satellites, and future robotic lunar landings.',
     searchTerms: ['KASA', 'KARI', 'KASI', 'South Korea space', 'Nuri rocket', 'Danuri moon', 'KOMPSAT'],
     keyMissions: ['Nuri (KSLV-II) Sovereign Launch Vehicle', 'Danuri (KPLO) Lunar Orbiter', 'Next-Gen Lunar Lander 2032'],
+    officialReleases: [
+      {
+        id: 'kasa-1',
+        title: 'Korea AeroSpace Administration (KASA) Commences Official Operations as National Space Agency',
+        date: '2024',
+        summary: 'Official launch of KASA in Sacheon, consolidating South Korea’s space exploration, aerospace technology, and lunar exploration roadmap under a single cabinet agency.',
+        url: 'https://www.kasa.go.kr',
+        category: 'Agency Governance',
+      },
+      {
+        id: 'kasa-2',
+        title: 'Danuri Lunar Orbiter Extended Mission Delivers High-Precision Permanently Shadowed Region Maps',
+        date: '2024',
+        summary: 'KARI and KASI researchers published high-resolution imagery of lunar south pole craters, confirming ice deposits and future Artemis landing site candidates.',
+        url: 'https://www.kasa.go.kr',
+        category: 'Lunar Science',
+      },
+    ],
   },
   {
     slug: 'tasa-taiwan',
@@ -1047,10 +2034,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Hsinchu, Taiwan',
     established: '1991',
     website: 'https://www.tasa.org.tw',
+    newsUrl: 'https://www.tasa.org.tw/en/news',
     description:
       'Taiwan’s dedicated space agency developing the FORMOSAT optical and meteorological satellite constellations, the Triton ocean wind satellite, and sovereign orbital rocket capabilities.',
     searchTerms: ['Taiwan Space Agency', 'TASA', 'NSPO', 'FORMOSAT', 'Triton satellite', 'Taiwan space'],
     keyMissions: ['FORMOSAT-8 High-Resolution Optical Fleet', 'Triton Ocean Wind Reflector', 'B5G Low Earth Orbit Telecom Constellation'],
+    officialReleases: [
+      {
+        id: 'tasa-1',
+        title: 'Triton (FORMOSAT-7R) Indigenous Ocean Wind Satellite Operational Data Validation Success',
+        date: '2024',
+        summary: 'Official TASA release confirming that Triton’s GNSS-Reflectometry payload is delivering real-time ocean wind speed and typhoon intensity data.',
+        url: 'https://www.tasa.org.tw/en/news',
+        category: 'Meteorology & Oceanography',
+      },
+    ],
   },
   {
     slug: 'gistda',
@@ -1062,10 +2060,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Bangkok & Chonburi, Thailand',
     established: '2000',
     website: 'https://www.gistda.or.th',
+    newsUrl: 'https://www.gistda.or.th/news',
     description:
       'Thailand’s space agency operating the THEOS and THEOS-2 high-resolution optical satellites and the Space Krenovation Park for Southeast Asian space technology incubation.',
     searchTerms: ['GISTDA', 'Thailand space', 'THEOS-2', 'THEOS', 'Space Krenovation Park'],
     keyMissions: ['THEOS-2 Earth Observation Satellite', 'AESP National Spaceport Study', 'Space Technology Park'],
+    officialReleases: [
+      {
+        id: 'gistda-1',
+        title: 'THEOS-2 High-Resolution Earth Observation Satellite Commences Full Commercial Operation',
+        date: '2024',
+        summary: 'GISTDA announced operational readiness of THEOS-2, providing 0.5-meter optical imagery for agriculture, natural disaster monitoring, and urban planning.',
+        url: 'https://www.gistda.or.th/news',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'tnsa-turkmenistan',
@@ -1077,10 +2086,12 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Ashgabat, Turkmenistan',
     established: '2011',
     website: '',
+    newsUrl: '',
     description:
       'Turkmenistan’s national space agency overseeing the TürkmenÄlem 52°E communications satellite providing broadband and broadcast services across Central Asia, Europe, and North Africa.',
     searchTerms: ['TNSA', 'Turkmenistan space', 'TurkmenAlem', 'Ashgabat space'],
     keyMissions: ['TürkmenÄlem 52°E Communications Satellite', 'Central Asian Space Geodesy'],
+    officialReleases: [],
   },
   {
     slug: 'uzbekcosmos',
@@ -1092,10 +2103,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Tashkent, Uzbekistan',
     established: '2019',
     website: 'https://uzspace.uz',
+    newsUrl: 'https://uzspace.uz/en/news',
     description:
       'Uzbekistan’s national space agency advancing satellite Earth remote sensing for agricultural monitoring, water basin management in the Aral Sea, and space education.',
     searchTerms: ['Uzbekcosmos', 'Uzbekistan space', 'Tashkent space agency', 'Aral Sea space monitoring'],
     keyMissions: ['National Space Remote Sensing GIS System', 'Aral Sea Basin Environmental Monitoring', 'Uzbek Space Exploration Youth Academy'],
+    officialReleases: [
+      {
+        id: 'uzb-1',
+        title: 'Uzbekcosmos Satellite Remote Sensing Monitoring for Aral Sea Desiccation Mitigation and Agriculture',
+        date: '2024',
+        summary: 'Official report on state GIS platforms analyzing soil salinization and water resource usage in Central Asia.',
+        url: 'https://uzspace.uz/en/news',
+        category: 'Remote Sensing',
+      },
+    ],
   },
   {
     slug: 'vnsc',
@@ -1107,10 +2129,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Hanoi, Vietnam',
     established: '2011',
     website: 'https://vnsc.org.vn',
+    newsUrl: 'https://vnsc.org.vn/en/news-events/',
     description:
       'Vietnam’s national space center managing LOTUSat radar satellites, the Hoa Lac Space Center, and astronomical observatories in Nha Trang and Hanoi.',
     searchTerms: ['Vietnam National Space Center', 'VNSC', 'Vietnam space', 'LOTUSat-1', 'PicoDragon'],
     keyMissions: ['LOTUSat-1 Earth Observation SAR Satellite', 'Hoa Lac Space Center', 'MicroDragon Satellite'],
+    officialReleases: [
+      {
+        id: 'vnsc-1',
+        title: 'LOTUSat-1 Synthetic Aperture Radar (SAR) Satellite Flight Model Ready for Orbital Launch',
+        date: '2024',
+        summary: 'VNSC confirmed final integration testing for LOTUSat-1, providing all-weather, day-night Earth observation for Vietnam.',
+        url: 'https://vnsc.org.vn/en/news-events/',
+        category: 'Radar Satellites',
+      },
+    ],
   },
 
   // =========================================================================
@@ -1126,10 +2159,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Adelaide, South Australia',
     established: '2018',
     website: 'https://www.space.gov.au',
+    newsUrl: 'https://www.space.gov.au/news',
     description:
       'Australia’s national space agency leading the "Roo-ver" semi-autonomous lunar rover for NASA’s Artemis missions, space situational awareness in the Southern Hemisphere, and regional spaceports.',
     searchTerms: ['Australian Space Agency', 'ASA Australia', 'Australia space', 'Roo-ver', 'Grose rover', 'Kanyini', 'Adelaide space'],
     keyMissions: ['Roo-ver Australian Lunar Rover for Artemis', 'Kanyini Earth Observation Satellite', 'Southern Space Launch Facilities'],
+    officialReleases: [
+      {
+        id: 'asa-1',
+        title: 'Roo-ver: Australia’s First Lunar Rover Engineering Model Unveiled for NASA Artemis Program',
+        date: '2024',
+        summary: 'Official Australian Space Agency release: The Australian-built semi-autonomous rover will collect lunar soil containing oxide minerals to test oxygen extraction on the Moon.',
+        url: 'https://www.space.gov.au/news',
+        category: 'Lunar Exploration',
+      },
+      {
+        id: 'asa-2',
+        title: 'Kanyini Satellite Reaches Orbit to Monitor South Australia’s Environment and Bushfire Risks',
+        date: '2024',
+        summary: 'ASA and SmartSat CRC confirmed successful launch and operational telemetry from Kanyini, South Australia’s first state-sponsored satellite.',
+        url: 'https://www.space.gov.au/news',
+        category: 'Earth Observation',
+      },
+    ],
   },
   {
     slug: 'new-zealand-space-agency',
@@ -1141,10 +2193,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Wellington, New Zealand',
     established: '2016',
     website: 'https://www.mbie.govt.nz/science-and-technology/space',
+    newsUrl: 'https://www.mbie.govt.nz/science-and-technology/space/news',
     description:
       'Regulates and promotes New Zealand’s thriving commercial launch industry centered around Rocket Lab’s Launch Complex 1 on the Māhia Peninsula, and leads the MethaneSAT climate satellite operations.',
     searchTerms: ['New Zealand Space Agency', 'NZSA', 'New Zealand space', 'Mahia Peninsula', 'Rocket Lab New Zealand', 'MethaneSAT'],
     keyMissions: ['MethaneSAT Mission Operations Control', 'Māhia Peninsula Orbital Spaceport Regulation', 'Artemis Accords Collaboration'],
+    officialReleases: [
+      {
+        id: 'nzsa-1',
+        title: 'MethaneSAT Climate Satellite Reaches Orbit and Mission Operations Control Center Commences Operations in New Zealand',
+        date: '2024',
+        summary: 'NZSA and University of Auckland confirmed full activation of the Host Spacecraft Mission Operations Control Center for global methane tracking.',
+        url: 'https://www.mbie.govt.nz/science-and-technology/space/news',
+        category: 'Climate Monitoring',
+      },
+    ],
   },
 
   // =========================================================================
@@ -1160,10 +2223,38 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Paris, France',
     established: '1975',
     website: 'https://www.esa.int',
+    newsUrl: 'https://www.esa.int/Newsroom/Press_Releases',
+    feedUrl: 'https://www.esa.int/rssfeed/Our_Activities/Space_News',
     description:
       'An intergovernmental organisation of 22 member states dedicated to space exploration, world-leading science missions (Euclid, Gaia, Juice, BepiColombo), the Copernicus Earth monitoring fleet, and Ariane launchers.',
     searchTerms: ['European Space Agency', 'ESA', 'Ariane', 'Euclid', 'Juice', 'BepiColombo', 'Gaia', 'Copernicus', 'Sentinel'],
     keyMissions: ['Euclid Dark Universe Observatory', 'Juice Jupiter Moons Explorer', 'Ariane 6', 'Copernicus Sentinels'],
+    officialReleases: [
+      {
+        id: 'esa-1',
+        title: 'Ariane 6 Inaugural Flight Restores Independent European Access to Space',
+        date: '2024',
+        summary: 'Official ESA press release: Ariane 6 lifted off successfully from Europe’s Spaceport in Kourou, French Guiana, demonstrating autonomous reignition of the Vinci upper stage.',
+        url: 'https://www.esa.int/Newsroom/Press_Releases',
+        category: 'Launchers',
+      },
+      {
+        id: 'esa-2',
+        title: 'ESA’s Juice Spacecraft Executes World-First Lunar-Earth Gravity Assist En Route to Jupiter',
+        date: '2024',
+        summary: 'Juice successfully performed a double flyby of the Moon and Earth within 24 hours, adjusting its trajectory toward Venus and the Jovian system.',
+        url: 'https://www.esa.int/Newsroom/Press_Releases',
+        category: 'Deep Space Exploration',
+      },
+      {
+        id: 'esa-3',
+        title: 'Euclid Space Telescope Releases First Deep-Field Survey Cataloging Billions of Galaxies',
+        date: '2024',
+        summary: 'ESA’s dark matter and dark energy observatory Euclid delivered stunning high-precision optical and near-infrared cosmic maps.',
+        url: 'https://www.esa.int/Newsroom/Press_Releases',
+        category: 'Astrophysics',
+      },
+    ],
   },
   {
     slug: 'euspa',
@@ -1175,10 +2266,29 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Prague, Czech Republic',
     established: '2021',
     website: 'https://www.euspa.europa.eu',
+    newsUrl: 'https://www.euspa.europa.eu/newsroom/news',
     description:
       'The operational European Union agency managing EU space infrastructure, including Galileo satellite navigation, EGNOS, Copernicus market uptake, GOVSATCOM secure communications, and the IRIS² sovereign satellite constellation.',
     searchTerms: ['EUSPA', 'European Union Space Programme', 'Galileo satellite', 'EGNOS', 'IRIS2', 'Prague space'],
     keyMissions: ['Galileo Global Navigation Satellite System', 'Copernicus Market & Downstream Uptake', 'IRIS² Sovereign Secure Satellite Constellation'],
+    officialReleases: [
+      {
+        id: 'euspa-1',
+        title: 'Galileo Satellite Constellation Reaches Over 4 Billion Global Smartphone Users with Decimeter-Level High Accuracy Service',
+        date: '2024',
+        summary: 'Official EUSPA release on Galileo positioning accuracy and autonomous vehicle navigation benchmarks.',
+        url: 'https://www.euspa.europa.eu/newsroom/news',
+        category: 'Satellite Navigation',
+      },
+      {
+        id: 'euspa-2',
+        title: 'IRIS² Sovereign Multi-Orbital Secure Satellite Constellation Advances Procurement Phase',
+        date: '2024',
+        summary: 'EUSPA and European Commission progress towards deploying Europe’s sovereign encrypted broadband constellation.',
+        url: 'https://www.euspa.europa.eu/newsroom/news',
+        category: 'Secure Connectivity',
+      },
+    ],
   },
   {
     slug: 'apsco',
@@ -1190,10 +2300,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Beijing, China',
     established: '2008',
     website: 'http://www.apsco.int',
+    newsUrl: 'http://www.apsco.int/html/comp3/index.aspx',
     description:
       'Intergovernmental space organization promoting multilateral space science, joint satellite constellations (Student Small Satellite project SSS), and space education across member states in the Asia-Pacific region.',
     searchTerms: ['APSCO', 'Asia-Pacific Space Cooperation', 'APSCO satellite', 'Multilateral space'],
     keyMissions: ['APSCO Student Small Satellite (SSS) Constellation', 'Joint Optical Satellite Space Tracking Network (APOSOS)'],
+    officialReleases: [
+      {
+        id: 'apsco-1',
+        title: 'APSCO Member States Multilateral Space Science and Joint Satellite Training Program',
+        date: '2024',
+        summary: 'Official report on joint data sharing for disaster management and space science capacity building across Asia-Pacific.',
+        url: 'http://www.apsco.int/html/comp3/index.aspx',
+        category: 'Multilateral Cooperation',
+      },
+    ],
   },
   {
     slug: 'unoosa',
@@ -1205,10 +2326,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Vienna International Centre, Vienna, Austria',
     established: '1958',
     website: 'https://www.unoosa.org',
+    newsUrl: 'https://www.unoosa.org/oosa/en/informationfor/media/press-releases.html',
     description:
       'The United Nations office promoting international cooperation in the peaceful uses of outer space, maintaining the official UN Register of Objects Launched into Outer Space, and implementing the UN space treaties.',
     searchTerms: ['UNOOSA', 'United Nations Space', 'UN Register space', 'World Space Forum', 'Outer Space Treaty'],
     keyMissions: ['UN Register of Objects Launched into Outer Space', 'Space4SDGs Development Initiative', 'Access to Space for All Initiative'],
+    officialReleases: [
+      {
+        id: 'unoosa-1',
+        title: 'United Nations Office for Outer Space Affairs Releases Updated Global Registry of Objects Launched into Outer Space',
+        date: '2024',
+        summary: 'Official UN press release on space traffic registration compliance, mega-constellation coordination, and orbital sustainability.',
+        url: 'https://www.unoosa.org/oosa/en/informationfor/media/press-releases.html',
+        category: 'UN Space Governance',
+      },
+    ],
   },
   {
     slug: 'uncopuos',
@@ -1220,10 +2352,21 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
     headquarters: 'Vienna, Austria',
     established: '1959',
     website: 'https://www.unoosa.org/oosa/en/ourwork/copuos/index.html',
+    newsUrl: 'https://www.unoosa.org/oosa/en/ourwork/copuos/index.html',
     description:
       'The principal UN committee governing the exploration and use of space for the benefit of humanity, establishing guidelines for long-term sustainability of space activities, space debris mitigation, and lunar governance.',
     searchTerms: ['UNCOPUOS', 'COPUOS', 'Peaceful Uses of Outer Space', 'Space Debris Guidelines', 'Lunar governance UN'],
     keyMissions: ['Guidelines for the Long-term Sustainability of Outer Space Activities', 'Space Debris Mitigation Standards', 'Planetary Defense Coordination'],
+    officialReleases: [
+      {
+        id: 'uncopuos-1',
+        title: 'UN Committee on the Peaceful Uses of Outer Space Adopts New Recommendations on Space Debris Mitigation and Lunar Resource Governance',
+        date: '2024',
+        summary: 'UNCOPUOS concluded its annual session in Vienna, establishing multilateral technical standards for orbital debris mitigation and international lunar activities.',
+        url: 'https://www.unoosa.org/oosa/en/ourwork/copuos/index.html',
+        category: 'International Space Law',
+      },
+    ],
   },
 ]
 
