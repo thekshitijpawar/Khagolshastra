@@ -179,10 +179,6 @@ export default function ArticleCard({
           <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
             {displaySourceName}
           </span>
-          <span className="text-[#888884] text-xs">•</span>
-          <span className="bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold uppercase tracking-wider px-1.5 py-0.5">
-            LEAD DISPATCH
-          </span>
         </div>
 
         {/* Grand Headline (stays solid black) */}

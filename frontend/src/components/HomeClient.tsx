@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Article } from '@/types'
 import { subscribeNewsletter } from '@/lib/api'
 import { areArticlesDuplicateTopic } from '@/lib/live_rss'
-import { getDailyEditionRoman } from '@/lib/edition'
 import ArticleCard from '@/components/ArticleCard'
 import MonocleRadioBox from '@/components/MonocleRadioBox'
 import BreakingTicker from '@/components/BreakingTicker'
@@ -130,8 +129,8 @@ export default function HomeClient({
           {/* Top section eyebrow bar */}
           <div className="flex items-center justify-between border-b border-[#111111] pb-2 mb-6">
             <div className="flex items-center gap-3">
-              <span suppressHydrationWarning className="eyebrow text-[#111111]">
-                {`EDITION NO. ${getDailyEditionRoman()}`}
+              <span className="eyebrow text-[#111111]">
+                LATEST DISPATCHES
               </span>
             </div>
             <div suppressHydrationWarning className="text-[10px] font-sans-editorial font-bold uppercase tracking-widest text-[#888884] hidden sm:block">
