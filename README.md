@@ -42,3 +42,47 @@ A comprehensive scientific library indexing authentic peer-reviewed research pap
 
 ### 4. Astronomy Radio & Audio Intelligence
 * **Integrated Radio Player**: Seamless audio streaming featuring in-depth educational discussions on cosmos history, general relativity, stellar nucleosynthesis, and observational techniques.
+
+---
+
+## 🔒 Security & Deployment Advisory
+
+> [!WARNING]
+> **CRITICAL SECRET ROTATION NOTICE FOR PRODUCTION DEPLOYMENTS:**  
+> If any API key, database password, or secret token was previously hardcoded or committed to git history, consider that key compromised. **You must immediately rotate and invalidate any previous credentials across all external service providers** (NASA ADS, NASA API, PostgreSQL, Redis, Cloudflare, Supabase, Stripe, etc.) before deploying to a live production domain.
+
+### 🛡️ Production Security Architecture:
+1. **Zero Hardcoded Secrets**: All credentials, database URLs, and master keys are strictly decoupled into environment variables loaded via `.env` (which is excluded in `.gitignore`).
+2. **Fail-Safe Startup Verification**: The backend startup sequence refuses to boot in `production` mode if insecure default development keys are detected (`Settings.validate_production_readiness()`).
+3. **Defense-in-Depth HTTP Security Headers**: Both FastAPI backend and Next.js frontend inject strict enterprise security headers on every response:
+   - `X-Content-Type-Options: nosniff`
+   - `X-Frame-Options: DENY`
+   - `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+   - `Referrer-Policy: strict-origin-when-cross-origin`
+   - `Content-Security-Policy: default-src 'self' ...`
+   - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+4. **Sliding-Window Rate Limiting**: Sensitive endpoints (`/api/newsletter/*`, `/api/privacy/*`, `/api/admin/*`) enforce a strict sliding-window rate limit (10 requests/minute per client IP) to block abuse and brute-force attacks.
+5. **GDPR / CCPA Right to Erasure**: Complete zero-trace data deletion endpoint implemented at `POST /api/privacy/delete-data`.
+6. **Zero PII Logging**: All subscriber emails are automatically masked (`j***@domain.com`) in server logs to prevent PII leakage.
+
+---
+
+## 🚀 Deployment Checklist
+
+Before taking the application live on production infrastructure:
+1. Copy `.env.example` to `.env` and supply production values:
+   ```bash
+   SECRET_KEY=$(openssl rand -hex 32)
+   ENVIRONMENT=production
+   DATABASE_URL=postgresql://user:password@db-host:5432/khagolshastra
+   ```
+2. Build and verify static generation across all pages:
+   ```bash
+   cd frontend
+   npm run build
+   ```
+3. Launch with production process supervisor or Docker:
+   ```bash
+   docker-compose up -d
+   ```
+

@@ -318,8 +318,8 @@ export async function GET() {
       lastFetchTime = now
       return NextResponse.json(parsed)
     }
-  } catch (err) {
-    console.error('Error fetching SpaceWeatherLive sunspot data:', err)
+  } catch {
+    // Remote SpaceWeatherLive fetch timed out or unavailable; fallback gracefully
   }
 
   // Graceful fallback

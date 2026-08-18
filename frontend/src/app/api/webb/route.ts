@@ -90,8 +90,8 @@ export async function GET() {
         return NextResponse.json(parsedData)
       }
     }
-  } catch (err) {
-    console.error('Error fetching live Webb data directly from Space Telescope Live:', err)
+  } catch {
+    // External fetch timed out or unavailable; fallback cleanly
   }
 
   // 2. Try fetching from local FastAPI backend if running
