@@ -36,7 +36,11 @@ const DEFAULT_WEBB: WebbData = {
   source_url: 'https://spacetelescopelive.org/webb?obsId=01M040JJSZARZ35VYT37YGY0JQ',
 }
 
-export default function WebbLiveTracker() {
+interface WebbLiveTrackerProps {
+  variant?: 'masthead' | 'compact-bar' | 'drawer'
+}
+
+export default function WebbLiveTracker({ variant = 'masthead' }: WebbLiveTrackerProps) {
   const [data, setData] = useState<WebbData>(DEFAULT_WEBB)
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -60,6 +64,168 @@ export default function WebbLiveTracker() {
     const interval = setInterval(fetchLiveWebb, 60000)
     return () => clearInterval(interval)
   }, [])
+
+  const renderModal = () => (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in"
+      onClick={() => setModalOpen(false)}
+    >
+      <div
+        className="bg-[#fdfcf4] text-[#111111] max-w-lg w-full border-2 border-[#111111] shadow-2xl p-6 sm:p-8 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="flex items-center justify-between border-b-2 border-[#111111] pb-3 mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 border border-[#111] bg-white p-1 flex items-center justify-center shrink-0">
+              <img
+                src="/jwst-telescope.png"
+                alt="JWST"
+                className="w-full h-full object-contain animate-[spin_12s_linear_infinite]"
+              />
+            </div>
+            <div>
+              <div className="text-[10px] font-sans-editorial font-bold tracking-widest text-[#ffc500] bg-[#111111] px-2 py-0.5 inline-block">
+                OBSERVATORY TELEMETRY
+              </div>
+              <div className="text-[13px] font-serif-editorial font-bold text-[#111111] mt-0.5">
+                James Webb Space Telescope (JWST)
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => setModalOpen(false)}
+            className="w-7 h-7 flex items-center justify-center border border-[#111111] bg-white hover:bg-[#111111] hover:text-white transition-colors font-bold text-xs"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Target Highlight Box */}
+        <div className="bg-[#111111] text-white p-5 border border-[#333] mb-5">
+          <div className="flex items-center justify-between text-[10px] font-sans-editorial tracking-widest uppercase text-[#ffc500] mb-1">
+            <span>ACTIVE SKY TARGET</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
+              REAL-TIME POINTING
+            </span>
+          </div>
+          <h3 className="text-[24px] font-serif-editorial font-normal text-white mb-1">
+            {data.target}
+          </h3>
+          <div className="text-[12px] font-sans-editorial text-[#cccccc]">
+            Category: <span className="text-white font-bold">{data.target_category}</span> ({data.category})
+          </div>
+        </div>
+
+        {/* Scientific Parameters Grid */}
+        <div className="grid grid-cols-2 gap-3 text-[11px] font-sans-editorial mb-5">
+          <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
+            <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
+              ACTIVE INSTRUMENTS
+            </div>
+            <div className="font-bold text-[#111111] text-[12px]">
+              {data.instruments.join(', ')}
+            </div>
+          </div>
+
+          <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
+            <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
+              SKY COORDINATES
+            </div>
+            <div className="font-mono text-[#111111] text-[11px]">
+              RA: {data.ra} | Dec: {data.dec}
+            </div>
+          </div>
+
+          <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
+            <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
+              PRINCIPAL INVESTIGATOR
+            </div>
+            <div className="font-serif-editorial font-bold text-[#111111] text-[12px]">
+              {data.pi_name}
+            </div>
+          </div>
+
+          <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
+            <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
+              ORBITAL POSITION
+            </div>
+            <div className="font-sans-editorial font-bold text-[#111111] text-[11px]">
+              L2 Halo Orbit (~1.5M km)
+            </div>
+          </div>
+        </div>
+
+        {/* Proposal Details */}
+        <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3.5 mb-6 text-[12px] font-serif-editorial">
+          <div className="text-[9px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] mb-1">
+            SCIENCE INVESTIGATION • PROPOSAL #{data.proposal_id}
+          </div>
+          <p className="text-[#333333] leading-snug italic">
+            &ldquo;{data.proposal_title}&rdquo;
+          </p>
+        </div>
+
+        {/* Footer Action */}
+        <div className="flex items-center justify-between pt-3 border-t border-[#dcd8cb]">
+          <span className="text-[10px] font-sans-editorial text-[#888884]">
+            Source: Space Telescope Science Institute (STScI)
+          </span>
+          <a
+            href={data.source_url || 'https://spacetelescopelive.org/webb'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-[#111111] hover:bg-[#ffc500] hover:text-[#111111] text-white text-[10px] font-sans-editorial font-bold uppercase tracking-widest transition-colors inline-flex items-center gap-1.5 shadow-xs"
+          >
+            <span>OPEN SPACE TELESCOPE LIVE</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+
+  if (variant === 'compact-bar') {
+    return (
+      <>
+        <div
+          onClick={() => setModalOpen(true)}
+          className="w-full flex items-center justify-between gap-2 py-0.5 cursor-pointer group select-none"
+          title="Click to view full live JWST observatory telemetry"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-6 h-6 border border-[#111111] bg-white flex items-center justify-center p-0.5 shadow-2xs shrink-0 group-hover:border-[#ffc500] transition-colors">
+              <img
+                src="/jwst-telescope.png"
+                alt="James Webb Space Telescope"
+                className="w-4 h-4 object-contain animate-[spin_10s_linear_infinite]"
+              />
+            </div>
+            <div className="flex items-center gap-1.5 min-w-0 text-[11px] font-sans-editorial">
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse shrink-0" />
+              <span className="font-bold text-[#111111] uppercase tracking-wider text-[10px] shrink-0">
+                JWST LIVE:
+              </span>
+              <span className="font-serif-editorial font-bold text-[#111111] truncate text-[12px] group-hover:text-[#555]">
+                {data.target}
+              </span>
+              <span className="text-[#777777] text-[10px] hidden xs:inline truncate">
+                ({data.instruments.join('+')})
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1 bg-[#111111] text-[#ffc500] group-hover:bg-[#ffc500] group-hover:text-[#111111] px-2 py-0.5 text-[9.5px] font-sans-editorial font-bold uppercase tracking-wider shrink-0 transition-colors shadow-2xs">
+            <span>TELEMETRY</span>
+            <span>↗</span>
+          </div>
+        </div>
+
+        {modalOpen && renderModal()}
+      </>
+    )
+  }
 
   return (
     <>
@@ -104,127 +270,7 @@ export default function WebbLiveTracker() {
         </div>
       </div>
 
-      {/* Interactive Modal Telemetry Drawer */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-xs animate-in"
-          onClick={() => setModalOpen(false)}
-        >
-          <div
-            className="bg-[#fdfcf4] text-[#111111] max-w-lg w-full border-2 border-[#111111] shadow-2xl p-6 sm:p-8 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b-2 border-[#111111] pb-3 mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 border border-[#111] bg-white p-1 flex items-center justify-center shrink-0">
-                  <img
-                    src="/jwst-telescope.png"
-                    alt="JWST"
-                    className="w-full h-full object-contain animate-[spin_12s_linear_infinite]"
-                  />
-                </div>
-                <div>
-                  <div className="text-[10px] font-sans-editorial font-bold tracking-widest text-[#ffc500] bg-[#111111] px-2 py-0.5 inline-block">
-                    OBSERVATORY TELEMETRY
-                  </div>
-                  <div className="text-[13px] font-serif-editorial font-bold text-[#111111] mt-0.5">
-                    James Webb Space Telescope (JWST)
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={() => setModalOpen(false)}
-                className="w-7 h-7 flex items-center justify-center border border-[#111111] bg-white hover:bg-[#111111] hover:text-white transition-colors font-bold text-xs"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Target Highlight Box */}
-            <div className="bg-[#111111] text-white p-5 border border-[#333] mb-5">
-              <div className="flex items-center justify-between text-[10px] font-sans-editorial tracking-widest uppercase text-[#ffc500] mb-1">
-                <span>ACTIVE SKY TARGET</span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-ping" />
-                  REAL-TIME POINTING
-                </span>
-              </div>
-              <h3 className="text-[24px] font-serif-editorial font-normal text-white mb-1">
-                {data.target}
-              </h3>
-              <div className="text-[12px] font-sans-editorial text-[#cccccc]">
-                Category: <span className="text-white font-bold">{data.target_category}</span> ({data.category})
-              </div>
-            </div>
-
-            {/* Scientific Parameters Grid */}
-            <div className="grid grid-cols-2 gap-3 text-[11px] font-sans-editorial mb-5">
-              <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
-                <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
-                  ACTIVE INSTRUMENTS
-                </div>
-                <div className="font-bold text-[#111111] text-[12px]">
-                  {data.instruments.join(', ')}
-                </div>
-              </div>
-
-              <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
-                <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
-                  SKY COORDINATES
-                </div>
-                <div className="font-mono text-[#111111] text-[11px]">
-                  RA: {data.ra} | Dec: {data.dec}
-                </div>
-              </div>
-
-              <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
-                <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
-                  PRINCIPAL INVESTIGATOR
-                </div>
-                <div className="font-serif-editorial font-bold text-[#111111] text-[12px]">
-                  {data.pi_name}
-                </div>
-              </div>
-
-              <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3">
-                <div className="text-[9px] font-bold text-[#888884] uppercase tracking-wider mb-0.5">
-                  ORBITAL POSITION
-                </div>
-                <div className="font-sans-editorial font-bold text-[#111111] text-[11px]">
-                  L2 Halo Orbit (~1.5M km)
-                </div>
-              </div>
-            </div>
-
-            {/* Proposal Details */}
-            <div className="bg-[#f7f6ec] border border-[#dcd8cb] p-3.5 mb-6 text-[12px] font-serif-editorial">
-              <div className="text-[9px] font-sans-editorial font-bold uppercase tracking-wider text-[#888884] mb-1">
-                SCIENCE INVESTIGATION • PROPOSAL #{data.proposal_id}
-              </div>
-              <p className="text-[#333333] leading-snug italic">
-                &ldquo;{data.proposal_title}&rdquo;
-              </p>
-            </div>
-
-            {/* Footer Action */}
-            <div className="flex items-center justify-between pt-3 border-t border-[#dcd8cb]">
-              <span className="text-[10px] font-sans-editorial text-[#888884]">
-                Source: Space Telescope Science Institute (STScI)
-              </span>
-              <a
-                href={data.source_url || 'https://spacetelescopelive.org/webb'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-[#111111] hover:bg-[#ffc500] hover:text-[#111111] text-white text-[10px] font-sans-editorial font-bold uppercase tracking-widest transition-colors inline-flex items-center gap-1.5 shadow-xs"
-              >
-                <span>OPEN SPACE TELESCOPE LIVE</span>
-                <span>→</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {modalOpen && renderModal()}
     </>
   )
 }

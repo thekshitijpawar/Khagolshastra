@@ -140,7 +140,7 @@ export default function Header() {
         <div className="max-w-[1340px] mx-auto grid grid-cols-1 md:grid-cols-12 items-center gap-4">
           {/* Left Column: Live James Webb Space Telescope Tracker */}
           <div className="hidden md:flex md:col-span-3 items-center">
-            <WebbLiveTracker />
+            <WebbLiveTracker variant="masthead" />
           </div>
 
           {/* Center Column: Grand Serif Masthead Logo */}
@@ -173,6 +173,11 @@ export default function Header() {
         </div>
       </div>
 
+      {/* Mobile JWST Live Observation Ribbon */}
+      <div className="md:hidden bg-[#f7f6ec] border-b border-[#dcd8cb] px-4 py-1.5 shadow-2xs">
+        <WebbLiveTracker variant="compact-bar" />
+      </div>
+
       {/* Primary Section Navigation Ribbon with Pipes */}
       <div className="hidden lg:block bg-[#fdfcf4] px-4 sm:px-6 lg:px-10 border-b border-[#111111]">
         <div className="max-w-[1340px] mx-auto flex items-center justify-between h-11 text-[11px] font-sans-editorial font-bold tracking-[0.10em] uppercase text-[#111111] overflow-x-auto whitespace-nowrap">
@@ -195,6 +200,14 @@ export default function Header() {
       {/* Mobile Drawer Menu */}
       {mobileOpen && (
         <div className="lg:hidden bg-[#fdfcf4] border-b-2 border-[#111111] px-6 py-5 space-y-4 animate-in">
+          {/* Live JWST Card in Mobile Drawer */}
+          <div className="p-3 bg-[#f7f6ec] border border-[#dcd8cb]">
+            <div className="text-[9px] font-sans-editorial font-bold uppercase tracking-widest text-[#888884] mb-2">
+              OBSERVATORY LIVE TELEMETRY
+            </div>
+            <WebbLiveTracker variant="masthead" />
+          </div>
+
           <div className="grid grid-cols-2 gap-2 text-[12px] font-sans-editorial font-bold tracking-wider uppercase">
             {sectionsNav.map((sec) => (
               <Link
