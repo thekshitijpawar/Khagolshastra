@@ -102,7 +102,7 @@ export default function Footer() {
       {/* Bottom Colophon Bar */}
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 lg:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-sans-editorial text-[#888888]">
         <div className="flex flex-wrap items-center gap-3">
-          <span>© {new Date().getFullYear()} KHAGOLSHASTRA JOURNAL. ALL RIGHTS RESERVED.</span>
+          <span>© {new Date().getFullYear()} KHAGOLSHASTRA. ALL RIGHTS RESERVED.</span>
           <span>•</span>
           <button
             onClick={() => setPrivacyModalOpen(true)}
