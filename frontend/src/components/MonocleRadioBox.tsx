@@ -19,7 +19,7 @@ interface PodcastEpisode {
   duration: string
   show: string
   hosts: string
-  hours_until_next_rotation?: number
+  published?: string
 }
 
 interface IssTelemetry {
@@ -39,13 +39,12 @@ interface IssTelemetry {
 const DEFAULT_PODCAST: PodcastEpisode = {
   id: 'ac-1',
   ep_number: 1,
-  title: 'Episode 1: The Moon',
+  title: 'Ep. 1: The Moon',
   description: "Fraser Cain and Dr. Pamela Gay explore Earth's closest celestial companion, the Moon.",
   audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-061218.mp3',
   duration: '28:15',
   show: 'Astronomy Cast',
   hosts: 'Fraser Cain & Dr. Pamela Gay',
-  hours_until_next_rotation: 33,
 }
 
 const DEFAULT_ISS: IssTelemetry = {
@@ -82,13 +81,14 @@ export default function MonocleRadioBox({
 
   useEffect(() => {
     setMounted(true)
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
     
-    // Podcast fetch
-    fetch(`${apiUrl}/api/podcast/current`, { cache: 'no-store' })
+    // Podcast fetch from dedicated Next.js endpoint
+    fetch('/api/podcast', { cache: 'no-store' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && data.title) setPodcast(data)
+        if (data && data.current && data.current.title) {
+          setPodcast(data.current)
+        }
       })
       .catch(() => {})
 
@@ -136,25 +136,25 @@ export default function MonocleRadioBox({
         </div>
         <div className="flex items-center gap-1.5 text-[10px] font-sans-editorial font-bold text-[#ffc500]">
           <span className="w-2 h-2 rounded-full bg-[#ffc500] animate-ping" />
-          <span>2-DAY ROTATION</span>
+          <span>FEATURED BROADCAST</span>
         </div>
       </div>
 
-      {/* Astronomy Cast Program Block */}
+      {/* Astronomy Cast Program Block - Protected with overflow-hidden and min-w-0 to prevent wave animation overflow */}
       <div
         onClick={onOpenRadio}
-        className="bg-[#202020] hover:bg-[#282828] border border-[#333333] hover:border-[#ffc500] p-3.5 flex items-center justify-between gap-3 cursor-pointer transition-colors"
+        className="bg-[#202020] hover:bg-[#282828] border border-[#333333] hover:border-[#ffc500] p-3 flex items-center justify-between gap-3 cursor-pointer transition-colors overflow-hidden rounded-xs"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 bg-[#0f4c81] border border-[#ffc500]/40 flex flex-col items-center justify-center text-white shrink-0 p-1">
-            <span className="text-[14px]">🎙️</span>
-            <span className="text-[7px] font-sans-editorial font-bold text-[#ffc500]">EP #{podcast.ep_number}</span>
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          <div className="w-10 h-10 bg-[#0f4c81] border border-[#ffc500]/40 flex flex-col items-center justify-center text-white shrink-0 p-1 rounded-xs">
+            <span className="text-[13px]">🎙️</span>
+            <span className="text-[7.5px] font-sans-editorial font-bold text-[#ffc500]">EP #{podcast.ep_number}</span>
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 text-[9px] font-sans-editorial font-bold tracking-widest text-[#ffc500] uppercase">
               <span>ASTRONOMY CAST</span>
               <span>•</span>
-              <span className="text-[#888884]">{podcast.hours_until_next_rotation ? `Next in ${podcast.hours_until_next_rotation}h` : 'Active'}</span>
+              <span className="text-[#888884]">Space Radio</span>
             </div>
             <div className="text-[13px] font-serif-editorial font-semibold text-white leading-tight truncate">
               {podcast.title}
@@ -165,7 +165,8 @@ export default function MonocleRadioBox({
           </div>
         </div>
 
-        <div className="flex items-end gap-1 h-5 pr-1 shrink-0">
+        {/* Animated Sound Wave Graphic - Securely Pinned Inside Box */}
+        <div className="flex items-end gap-1 h-5 shrink-0 pl-1">
           <span className="w-1 bg-[#ffc500] animate-wave-1 rounded-xs" />
           <span className="w-1 bg-[#ffc500] animate-wave-2 rounded-xs" />
           <span className="w-1 bg-[#ffc500] animate-wave-3 rounded-xs" />
@@ -176,7 +177,7 @@ export default function MonocleRadioBox({
       {/* Listen Live Button */}
       <button
         onClick={onOpenRadio}
-        className="w-full bg-[#ffc500] hover:bg-[#f0ba00] text-[#111111] py-2.5 px-4 font-sans-editorial font-bold text-[12px] uppercase tracking-[0.14em] flex items-center justify-center gap-2 transition-all transform active:scale-95 shadow-sm"
+        className="w-full bg-[#ffc500] hover:bg-[#f0ba00] text-[#111111] py-2.5 px-4 font-sans-editorial font-bold text-[12px] uppercase tracking-[0.14em] flex items-center justify-center gap-2 transition-all transform active:scale-95 shadow-sm cursor-pointer"
       >
         <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
           <path d="M8 5v14l11-7z" />
@@ -184,7 +185,7 @@ export default function MonocleRadioBox({
         <span>LISTEN PODCAST ({podcast.duration})</span>
       </button>
 
-      {/* Top of the Hour Wire (Expanded with 6 breaking headlines) */}
+      {/* Top of the Hour Wire */}
       <div className="border-t border-[#2d2d2d] pt-3.5">
         <div className="text-[10px] font-sans-editorial font-bold tracking-[0.15em] uppercase text-[#ffc500] mb-2.5 flex items-center justify-between">
           <span>TOP OF THE HOUR DISPATCHES</span>
@@ -256,72 +257,71 @@ export default function MonocleRadioBox({
           </div>
           <div className="bg-[#111111] p-2 border border-[#282828]">
             <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">ALTITUDE</div>
-            <div className="text-[12px] font-bold text-[#ffc500]">
-              {iss.altitude_km} KM
-            </div>
+            <div className="text-[12px] font-bold text-[#ffc500]">{iss.altitude_km} km</div>
           </div>
           <div className="bg-[#111111] p-2 border border-[#282828]">
-            <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">VELOCITY</div>
-            <div className="text-[12px] font-bold text-[#ffc500]">
-              {iss.velocity_kmh.toLocaleString()} KM/H
-            </div>
+            <div className="text-[8px] text-[#888888] font-sans-editorial uppercase">SPEED</div>
+            <div className="text-[12px] font-bold text-[#ffc500]">{iss.velocity_kmh.toLocaleString()} km/h</div>
           </div>
         </div>
 
-        {/* Station Status Meta */}
-        <div className="flex items-center justify-between text-[9px] font-sans-editorial uppercase text-[#888888] pt-1">
-          <span>CREW: {iss.crew_count} ASTRONAUTS</span>
-          <span className="text-emerald-400 font-bold">● {iss.status}</span>
+        <div className="text-[9px] font-sans-editorial text-center text-[#777] flex items-center justify-between pt-1 border-t border-[#262626]">
+          <span>ORBITAL SPEED: MACH {iss.velocity_mach}</span>
+          <span className="text-emerald-400 font-bold">{iss.status}</span>
         </div>
       </div>
 
-      {/* Rocket Launch Radar Box */}
-      <div className="bg-[#1a1a1a] p-3.5 border border-[#333]">
-        <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold tracking-widest uppercase text-[#ffc500] mb-2">
-          <span>🚀 ROCKET LAUNCH RADAR</span>
-          <span className="text-white bg-[#333] px-1.5 py-0.5 text-[9px]">T-MINUS</span>
+      {/* 🚀 LAUNCH RADAR & COUNTDOWN */}
+      <div className="border-t border-[#2d2d2d] pt-3.5 bg-[#181818] p-3.5 border border-[#333333]">
+        <div className="flex items-center justify-between text-[10px] font-sans-editorial font-bold tracking-widest uppercase mb-2">
+          <div className="flex items-center gap-1.5 text-[#ffc500]">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            <span>🚀 UPCOMING LAUNCH RADAR</span>
+          </div>
+          <span className="text-[#ffc500] text-[9px] bg-[#242424] px-1.5 py-0.5 border border-[#3a3a3a] font-bold">
+            T-MINUS
+          </span>
         </div>
 
-        <div className="text-[13px] font-serif-editorial font-bold text-white line-clamp-1 mb-1">
-          {nextLaunch?.title || 'Falcon 9 • Starlink Group 12 Mission'}
+        {/* Live Mission Card */}
+        <div className="bg-[#111111] p-2.5 border border-[#282828] mb-2.5">
+          <div className="text-[13px] font-serif-editorial font-bold text-white leading-snug line-clamp-1 mb-1">
+            {nextLaunch?.title || 'Falcon 9 • Starlink Group 12-4 Mission'}
+          </div>
+          <div className="flex items-center justify-between text-[9px] font-sans-editorial text-[#999999]">
+            <span>PAD: LC-39A (KSC, FL)</span>
+            <span className="text-[#ffc500] font-bold">SPACEX / NASA</span>
+          </div>
         </div>
 
-        <div className="text-[11px] text-[#aaaaaa] font-sans-editorial mb-2 line-clamp-1">
-          Cape Canaveral Space Force Station, SLC-40
-        </div>
-
-        {/* Countdown Clock */}
-        <div className="grid grid-cols-3 gap-2 text-center bg-[#111111] p-2 border border-[#2a2a2a] font-mono">
+        {/* Big Live Digital Clock */}
+        <div className="bg-[#0d0d0d] p-2.5 border border-[#222222] flex items-center justify-around font-mono text-center mb-2">
           <div>
-            <div className="text-[15px] font-bold text-[#ffc500]">
+            <div className="text-[16px] font-bold text-white tracking-widest">
               {String(timeLeft.hours).padStart(2, '0')}
             </div>
-            <div className="text-[8px] text-[#777] font-sans-editorial uppercase">HRS</div>
+            <div className="text-[8px] text-[#888888] font-sans-editorial uppercase tracking-wider">HOURS</div>
           </div>
+          <span className="text-[#ffc500] text-lg font-bold pb-2">:</span>
           <div>
-            <div className="text-[15px] font-bold text-[#ffc500]">
+            <div className="text-[16px] font-bold text-white tracking-widest">
               {String(timeLeft.minutes).padStart(2, '0')}
             </div>
-            <div className="text-[8px] text-[#777] font-sans-editorial uppercase">MIN</div>
+            <div className="text-[8px] text-[#888888] font-sans-editorial uppercase tracking-wider">MINS</div>
           </div>
+          <span className="text-[#ffc500] text-lg font-bold pb-2">:</span>
           <div>
-            <div className="text-[15px] font-bold text-[#ffc500]">
+            <div className="text-[16px] font-bold text-[#ffc500] tracking-widest">
               {String(timeLeft.seconds).padStart(2, '0')}
             </div>
-            <div className="text-[8px] text-[#777] font-sans-editorial uppercase">SEC</div>
+            <div className="text-[8px] text-[#888888] font-sans-editorial uppercase tracking-wider">SECS</div>
           </div>
         </div>
-      </div>
 
-      {/* Program Guide Footer Link */}
-      <div className="pt-3 border-t border-[#2d2d2d] text-center">
-        <a
-          href="#launches-section"
-          className="text-[11px] font-sans-editorial font-bold uppercase tracking-widest text-[#cccccc] hover:text-[#ffc500] transition-colors inline-flex items-center gap-1"
-        >
-          <span>VIEW FULL PROGRAMME & MANIFEST</span>
-          <span>→</span>
-        </a>
+        <div className="text-[9px] font-sans-editorial text-center text-[#777] flex items-center justify-between pt-1 border-t border-[#262626]">
+          <span>PAYLOAD: 23 STARLINK V2 MINI</span>
+          <span className="text-emerald-400 font-bold">GO FOR LAUNCH</span>
+        </div>
       </div>
     </div>
   )

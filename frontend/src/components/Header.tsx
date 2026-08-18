@@ -163,7 +163,7 @@ export default function Header() {
 
               {/* Centered Gray Tagline */}
               <div className="mt-2 text-center text-[10px] sm:text-[11px] font-sans-editorial tracking-[0.22em] uppercase text-[#666666] font-medium w-full">
-                THE INTERNATIONAL JOURNAL OF ASTRONOMY & SPACEFLIGHT
+                ASTRONOMY & SPACE NEWS • SCIENTIFIC RESEARCH PAPERS
               </div>
             </Link>
           </div>

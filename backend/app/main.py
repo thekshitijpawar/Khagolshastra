@@ -20,7 +20,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Khagolshastra API",
-    description="International Journal of Astronomy & Spaceflight API",
+    description="Khagolshastra — Astronomy News & Scientific Research Papers API",
     version="0.1.0",
     docs_url="/docs" if not settings.is_production else None,
     redoc_url="/redoc" if not settings.is_production else None,

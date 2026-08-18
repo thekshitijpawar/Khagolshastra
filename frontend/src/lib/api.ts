@@ -6,19 +6,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 export function normalizeCategorySlug(rawCat: string = ''): string {
   const c = rawCat.toLowerCase().trim()
+  if (c.includes('this-week') || c.includes('observing') || c.includes('skywatching') || c.includes('stargazing')) return 'this-week-in-astronomy'
+  if (c.includes('history') || c.includes('historical') || c.includes('today-in-the-history')) return 'today-in-the-history-of-astronomy'
   if (c.includes('exoplanet')) return 'exoplanets'
   if (c.includes('galaxies') || c.includes('galaxy') || c.includes('milky-way')) return 'galaxies'
-  if (c.includes('star') && !c.includes('history')) return 'stars'
+  if (c.includes('star') && !c.includes('history') && !c.includes('stargazing')) return 'stars'
   if (c.includes('cosmology') || c.includes('black-hole') || c.includes('exotic')) return 'cosmology'
   if (c.includes('launch') || c.includes('rocket')) return 'launches'
   if (c.includes('human') || c.includes('spaceflight') || c.includes('station') || c.includes('artemis')) return 'human-spaceflight'
   if (c.includes('robotic') || c.includes('probe') || c.includes('telescope') || c.includes('rover')) return 'robotic-spaceflight'
-  if (c.includes('history') || c.includes('historical')) return 'today-in-the-history-of-astronomy'
   if (c.includes('solar') || c.includes('planet') || c.includes('moon') || c.includes('asteroid') || c.includes('meteor')) return 'solar-system'
-  return 'solar-system'
+  return c || 'solar-system'
 }
 
 export function getArticlePrimaryCategory(a: Article): string {
+  if (a.url && (a.url.includes('this-week-in-astronomy') || a.url.includes('tags/this-week-in-astronomy'))) {
+    return 'this-week-in-astronomy'
+  }
+  if (a.url && (a.url.includes('today-in-the-history') || a.url.includes('today-in-history'))) {
+    return 'today-in-the-history-of-astronomy'
+  }
   const raw = (a.categories && a.categories[0]) || ''
   if (raw && raw !== 'news' && raw !== 'general' && raw !== 'astronomy') {
     return normalizeCategorySlug(raw)

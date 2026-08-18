@@ -9,6 +9,11 @@ const RSS_FEEDS = [
   },
   {
     name: 'Astronomy.com',
+    url: 'https://www.astronomy.com/tags/this-week-in-astronomy/feed/',
+    defaultCategory: 'this-week-in-astronomy',
+  },
+  {
+    name: 'Astronomy.com',
     url: 'https://www.astronomy.com/today-in-the-history-of-astronomy/feed/',
     defaultCategory: 'today-in-the-history-of-astronomy',
   },
@@ -93,6 +98,12 @@ const CATEGORY_IMAGE_POOLS: Record<string, string[]> = {
     'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=1200&q=80', // Historic telescope
     'https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?auto=format&fit=crop&w=1200&q=80', // Historical observatory
     'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=80', // Radio dish
+  ],
+  'this-week-in-astronomy': [
+    'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80', // Night sky
+    'https://images.unsplash.com/photo-1502134249126-9f3755a50d78?auto=format&fit=crop&w=1200&q=80', // Stargazing telescope
+    'https://images.unsplash.com/photo-1538370965046-79c0d6907d47?auto=format&fit=crop&w=1200&q=80', // Star cluster night
+    'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=1200&q=80', // Moon alignment
   ],
 }
 
@@ -285,30 +296,52 @@ export function areArticlesDuplicateTopic(title1: string, title2: string): boole
 
 export function classifyArticleCategory(title: string, desc: string, defaultCat: string = 'solar-system'): string {
   const text = `${title} ${desc}`.toLowerCase()
+  const d = (defaultCat || '').toLowerCase()
 
-  // 1. Exoplanetary Science (Exoplanets, alien worlds, habitable zones)
+  // 0. High priority check for This Week in Astronomy & Observing Guides
   if (
+    d.includes('this-week') ||
+    /\b(this week in astronomy|welcome to this week in astronomy|night sky guide|skywatching|skywatcher|stargazing|constellation|celestial conjunction|celestial alignment|in the eyepiece|naked-eye view|what to see in the sky|sky this week|look to the sky|binoculars? and telescope|observing guide|sky event|meteor shower peak|ring nebula in the constellation|eta aquariid|lyrid meteor|spring'?s best galaxies|virgo cluster|whirlpool galaxy|greatest elongation)\b/i.test(text) ||
+    text.includes('this week in astronomy')
+  ) {
+    return 'this-week-in-astronomy'
+  }
+
+  // 1. History of Astronomy & Retrospectives
+  if (
+    d.includes('history') ||
+    /\b(anniversary|apollo 11|sputnik|yuri gagarin|neil armstrong|galileo|copernicus|newton|edwin hubble|historical milestone|years ago today|today in history|on this day in space|on this day in astronomy|wow! signal|wow signal)\b/i.test(text)
+  ) {
+    return 'today-in-the-history-of-astronomy'
+  }
+
+  // 2. Exoplanetary Science (Exoplanets, alien worlds, habitable zones)
+  if (
+    d.includes('exo') ||
     /\b(exoplanet|exoplanets|super-earth|habitable zone|alien world|protoplanetary|transit light curve|tess|kepler|hot jupiter|radial velocity|transit method|trappist-1|planet-forming)\b/i.test(text)
   ) {
     return 'exoplanets'
   }
 
-  // 2. Galaxies & Extragalactic (Andromeda, Milky Way, Spiral/Elliptical galaxies, Galactic Halo)
+  // 3. Galaxies & Extragalactic (Andromeda, Milky Way, Spiral/Elliptical galaxies, Galactic Halo)
   if (
+    d.includes('galaxy') || d.includes('galaxies') ||
     /\b(galaxy|galaxies|andromeda|milky way|spiral galaxy|elliptical galaxy|intergalactic|m31|m87|ngc\s*\d+|extragalactic|galactic halo|galactic disc|magellanic|stellar stream|cluster of galaxies)\b/i.test(text)
   ) {
     return 'galaxies'
   }
 
-  // 3. Cosmology & Black Holes (Dark matter, Dark energy, Big Bang, Quasars, General Relativity)
+  // 4. Cosmology & Black Holes (Dark matter, Dark energy, Big Bang, Quasars, General Relativity)
   if (
+    d.includes('cosmo') ||
     /\b(dark matter|dark energy|big bang|cosmological|cosmology|expansion of the universe|cmb|early universe|gravitational wave|black hole|black holes|event horizon|quasar|quasars|general relativity|singularity)\b/i.test(text)
   ) {
     return 'cosmology'
   }
 
-  // 4. Stars & Stellar Phenomena (Supernovae, magnetars, white dwarfs, neutron stars, stellar evolution, pulsars)
+  // 5. Stars & Stellar Phenomena (Supernovae, magnetars, white dwarfs, neutron stars, stellar evolution, pulsars)
   if (
+    d.includes('star') ||
     /\b(stellar|supernova|supernovae|pulsar|pulsars|magnetar|magnetars|neutron star|white dwarf|red giant|betelgeuse|binary star|star formation|protostar|flare star|tarantula)\b/i.test(text) ||
     /\bstars\b/i.test(text) ||
     /\bstar\b/i.test(title)
@@ -316,43 +349,41 @@ export function classifyArticleCategory(title: string, desc: string, defaultCat:
     return 'stars'
   }
 
-  // 5. Rocket Launches & Commercial Spaceflight (SpaceX, Starship, Falcon 9, Rocket Lab, launch countdowns)
+  // 6. Rocket Launches & Commercial Spaceflight (SpaceX, Starship, Falcon 9, Rocket Lab, launch countdowns)
   if (
+    d.includes('launch') ||
     /\b(starlink|falcon 9|falcon heavy|rocket launch|liftoff|orbital launch|spacex|rocket lab|arianespace|isro launch|pslv|gslv|sls|starship|booster|first stage|pad 39a|slc-40|vandenberg|spaceport)\b/i.test(text)
   ) {
     return 'launches'
   }
 
-  // 6. Human Spaceflight & Space Stations (ISS, Artemis, Astronauts, Crew Dragon)
+  // 7. Human Spaceflight & Space Stations (ISS, Artemis, Astronauts, Crew Dragon)
   if (
+    d.includes('human') ||
     /\b(astronaut|astronauts|cosmonaut|taikonaut|iss|international space station|spacewalk|crew dragon|artemis ii|artemis iii|artemis mission|starliner|lunar gateway|space station|human spaceflight|expedition \d+)\b/i.test(text)
   ) {
     return 'human-spaceflight'
   }
 
-  // 7. Telescopes, Rovers & Robotic Probes (JWST, Hubble, Rovers, Probes)
+  // 8. Telescopes, Rovers & Robotic Probes (JWST, Hubble, Rovers, Probes)
   if (
+    d.includes('robotic') ||
     /\b(jwst|james webb|hubble|perseverance|curiosity rover|voyager|parker solar probe|new horizons|osiris-rex|dart mission|bepicolombo|juice mission|chandrayaan|solar orbiter|space telescope|space probe|lander|rover)\b/i.test(text)
   ) {
     return 'robotic-spaceflight'
   }
 
-  // 8. History of Astronomy & Retrospectives
-  if (
-    /\b(anniversary|apollo 11|sputnik|yuri gagarin|neil armstrong|galileo|copernicus|newton|edwin hubble|historical milestone|years ago today|today in history|on this day in space|on this day in astronomy|wow! signal|wow signal)\b/i.test(text)
-  ) {
-    return 'today-in-the-history-of-astronomy'
-  }
-
   // 9. Solar System & Planetary Bodies (Mars, Moon, Jupiter, Saturn, Asteroids, Comets, Sun)
   if (
+    d.includes('solar') ||
     /\b(mars|jupiter|saturn|venus|mercury|uranus|neptune|pluto|moon|lunar|asteroid|asteroids|meteor|meteorite|comet|comets|kuiper belt|oort cloud|solar system|solar flare|coronal mass ejection|sunspot|sunspots)\b/i.test(text) ||
     /\bsun\b/i.test(title)
   ) {
     return 'solar-system'
   }
 
-  const d = (defaultCat || '').toLowerCase()
+  if (d.includes('this-week')) return 'this-week-in-astronomy'
+  if (d.includes('history')) return 'today-in-the-history-of-astronomy'
   if (d.includes('star')) return 'stars'
   if (d.includes('galaxy') || d.includes('galaxies')) return 'galaxies'
   if (d.includes('exo')) return 'exoplanets'
@@ -360,7 +391,6 @@ export function classifyArticleCategory(title: string, desc: string, defaultCat:
   if (d.includes('launch')) return 'launches'
   if (d.includes('human')) return 'human-spaceflight'
   if (d.includes('robotic')) return 'robotic-spaceflight'
-  if (d.includes('history')) return 'today-in-the-history-of-astronomy'
   return 'solar-system'
 }
 

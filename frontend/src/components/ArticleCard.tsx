@@ -30,6 +30,8 @@ export default function ArticleCard({
   const formattedCategory =
     primaryCategory === 'today-in-the-history-of-astronomy'
       ? 'History of Astronomy'
+      : primaryCategory === 'this-week-in-astronomy'
+      ? 'This Week in Astronomy'
       : primaryCategory.replace(/-/g, ' ')
 
   let displaySourceName = article.sourceName || ''

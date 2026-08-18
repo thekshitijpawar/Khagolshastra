@@ -20,25 +20,24 @@ interface WebbData {
 }
 
 const DEFAULT_WEBB: WebbData = {
-  target: 'HIP11161B',
-  target_category: 'Star / Brown Dwarf',
-  instruments: ['NIRSpec', 'MIRI'],
-  proposal_id: '8140',
-  proposal_title: 'Empirically anchoring the physics of silicate clouds using L0- T9 benchmark brown dwarfs',
-  pi_name: 'Dr. Zhoujian Zhang',
+  target: 'P330E',
+  target_category: 'Stars And Stellar Populations',
+  instruments: ['NIRSpec'],
+  proposal_id: '11441',
+  proposal_title: 'The JWST Spectral Library for Cool Stars',
+  pi_name: 'Dr. Mark S. Giampapa',
   category: 'Stars And Stellar Populations',
-  duration: '30m31s',
-  ra: '35.90°',
-  dec: '52.67°',
+  duration: '1h 30m 4s',
+  ra: '247.89°',
+  dec: '30.15°',
   status: 'LIVE OBSERVATION',
   telescope: 'James Webb Space Telescope (JWST)',
   location: 'Sun-Earth L2 Lagrange Point (1.5M km)',
-  source_url: 'https://spacetelescopelive.org/webb',
+  source_url: 'https://spacetelescopelive.org/webb?obsId=01M040JJSZARZ35VYT37YGY0JQ',
 }
 
 export default function WebbLiveTracker() {
   const [data, setData] = useState<WebbData>(DEFAULT_WEBB)
-  const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
   const fetchLiveWebb = async () => {
@@ -51,7 +50,7 @@ export default function WebbLiveTracker() {
         }
       }
     } catch {
-      // Handled silently with zero unhandled runtime rejections
+      // Handled silently
     }
   }
 
@@ -86,11 +85,11 @@ export default function WebbLiveTracker() {
           </div>
         </div>
 
-        {/* Telemetry Labels without the live badge */}
+        {/* Telemetry Labels */}
         <div className="text-[11px] font-sans-editorial text-[#555555] leading-[1.3]">
           {/* Top Label */}
           <div className="font-bold tracking-wider uppercase text-[10px] text-[#111111]">
-            JWST LIVE TARGET
+            WEBB LIVE TARGET
           </div>
 
           {/* Current Target */}
@@ -204,7 +203,7 @@ export default function WebbLiveTracker() {
                 SCIENCE INVESTIGATION • PROPOSAL #{data.proposal_id}
               </div>
               <p className="text-[#333333] leading-snug italic">
-                "{data.proposal_title}"
+                &ldquo;{data.proposal_title}&rdquo;
               </p>
             </div>
 

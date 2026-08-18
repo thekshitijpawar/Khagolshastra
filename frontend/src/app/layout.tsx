@@ -18,8 +18,8 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'KHAGOLSHASTRA — International Journal of Astronomy & Spaceflight',
-  description: 'A global editorial newspaper and intelligence digest covering astrophysics, planetary science, rocket launches, and cosmology.',
+  title: 'KHAGOLSHASTRA — Astronomy News & Scientific Research Papers',
+  description: 'A premier broadsheet news platform and research paper repository covering astrophysics, planetary science, rocket launches, and cosmology.',
 }
 
 export default function RootLayout({

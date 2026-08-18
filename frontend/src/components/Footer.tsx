@@ -48,7 +48,7 @@ export default function Footer() {
                   KHAGOLSHASTRA
                 </h2>
                 <div className="text-[10px] font-sans-editorial font-bold tracking-widest text-[#ffc500] uppercase mt-1">
-                  International Journal of Astronomy & Spaceflight
+                  Astronomy News & Scientific Research Papers
                 </div>
               </div>
             </div>
