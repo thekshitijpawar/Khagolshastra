@@ -17,12 +17,16 @@ export interface OfficialRelease {
   category?: string
 }
 
+export type AgencyType = 'Government Agency' | 'Indian Private Startup'
+
 export interface SpaceAgency {
   slug: string
   acronym: string
   name: string
   country: string
   region: Region
+  agencyType?: AgencyType
+  focus?: string
   flag: string
   headquarters?: string
   established?: string
@@ -2368,6 +2372,542 @@ export const SPACE_AGENCIES: SpaceAgency[] = [
       },
     ],
   },
+
+  // =========================================================================
+  // INDIAN PRIVATE STARTUPS (NEWSPACE INDIA)
+  // =========================================================================
+  {
+    slug: 'skyroot-aerospace',
+    acronym: 'Skyroot Aerospace',
+    name: 'Skyroot Aerospace Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Orbital launch vehicles',
+    flag: '🇮🇳',
+    headquarters: 'Hyderabad, Telangana, India',
+    established: '2018',
+    website: 'https://www.skyroot.in/',
+    newsUrl: 'https://www.skyroot.in/newsroom',
+    description:
+      'India’s leading private aerospace manufacturer and launch service provider, pioneer of Vikram-S (first privately developed Indian rocket launched to space) and developing the Vikram-1 orbital launch vehicle for dedicated small satellite deployments.',
+    searchTerms: ['Skyroot Aerospace', 'Skyroot', 'Vikram-S', 'Vikram-1', 'Pawan Kumar Chandana', 'Naga Bharath Daka', 'Dhawan-II', 'Kalam-1200'],
+    keyMissions: ['Vikram-1 Dedicated Orbital Launch Vehicle', 'Vikram-S Suborbital Mission (Prarambh)', 'Dhawan-II Cryogenic Engine', 'MAX-Q Rocket Manufacturing Facility'],
+    officialReleases: [
+      {
+        id: 'skyroot-1',
+        title: 'Skyroot Aerospace Unveils Vikram-1 Orbital Rocket Launch Vehicle and High-Rate Manufacturing Facility in Hyderabad',
+        date: '2024',
+        summary: 'Skyroot Aerospace inaugurated its MAX-Q manufacturing facility for Vikram-1, capable of building and assembling up to 10 orbital space launch vehicles annually.',
+        url: 'https://www.skyroot.in/newsroom',
+        category: 'Launch Vehicles',
+      },
+      {
+        id: 'skyroot-2',
+        title: 'Successful Test Firing of Raman-II Multi-Engine Liquid Stage and Stage-2 Carbon Composite Structures',
+        date: '2024',
+        summary: 'Skyroot completed full-duration hot fire qualification of upper stage propulsion systems for dedicated small satellite deployments.',
+        url: 'https://www.skyroot.in/newsroom',
+        category: 'Propulsion Testing',
+      },
+    ],
+  },
+  {
+    slug: 'agnikul-cosmos',
+    acronym: 'Agnikul Cosmos',
+    name: 'Agnikul Cosmos Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Small launch vehicles, 3D-printed engines',
+    flag: '🇮🇳',
+    headquarters: 'Chennai, Tamil Nadu, India (IIT Madras)',
+    established: '2017',
+    website: 'https://agnikul.in/',
+    newsUrl: 'https://agnikul.in/media/',
+    description:
+      'IIT Madras-incubated newspace launch company that made history with Agnibaan SOrTeD, powered by the world’s first single-piece 3D-printed semi-cryogenic engine (Agnilet), launched from India’s first private launchpad at Sriharikota.',
+    searchTerms: ['Agnikul Cosmos', 'Agnikul', 'Agnibaan', 'Agnilet', 'SOrTeD', 'Dhanush', 'Srinath Ravichandran', 'Moin SPM'],
+    keyMissions: ['Agnibaan Customizable Orbital Launch Vehicle', 'Agnibaan SOrTeD Sub-Orbital Flight', 'Agnilet 3D-Printed Semi-Cryo Engine', 'Dhanush Private Launchpad (Sriharikota)'],
+    officialReleases: [
+      {
+        id: 'agnikul-1',
+        title: 'Historic Launch of Agnibaan SOrTeD from India’s First Private Launchpad at Satish Dhawan Space Centre',
+        date: '2024',
+        summary: 'Agnikul Cosmos accomplished the historic maiden flight of Agnibaan SOrTeD, validating the world’s first single-piece 3D-printed semi-cryogenic engine running on sub-cooled kerosene and liquid oxygen.',
+        url: 'https://agnikul.in/media/',
+        category: 'Launch Milestones',
+      },
+      {
+        id: 'agnikul-2',
+        title: 'Agnikul Sets Up India’s First Dedicated Rocket Engine 3D Printing Facility ‘Rocket Factory-1’ in Chennai',
+        date: '2024',
+        summary: 'Inauguration of a state-of-the-art additive manufacturing facility producing two rocket engines per week.',
+        url: 'https://agnikul.in/media/',
+        category: 'Manufacturing',
+      },
+    ],
+  },
+  {
+    slug: 'pixxel-space',
+    acronym: 'Pixxel',
+    name: 'Pixxel (Sygyzy Mobility Pvt. Ltd.)',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Hyperspectral Earth observation',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2019',
+    website: 'https://www.pixxel.space/',
+    newsUrl: 'https://www.pixxel.space/newsroom',
+    description:
+      'Building the world’s highest-resolution hyperspectral satellite constellation (Fireflies) and Aurora platform, capturing unseen electromagnetic spectrum data to detect gas leaks, crop diseases, and climate anomalies.',
+    searchTerms: ['Pixxel', 'Pixxel Space', 'Awais Ahmed', 'Kshitij Khandelwal', 'Shakuntala satellite', 'Anand satellite', 'Fireflies hyperspectral', 'Aurora analytics'],
+    keyMissions: ['Fireflies Commercial Hyperspectral Constellation', 'Shakuntala (TD-2) Satellite', 'Anand (PSLV C54) Spacecraft', 'Aurora Planetary Health Platform'],
+    officialReleases: [
+      {
+        id: 'pixxel-1',
+        title: 'Pixxel Launches First Batch of Fireflies High-Resolution Hyperspectral Satellites',
+        date: '2024',
+        summary: 'Official Pixxel announcement on deploying the Fireflies constellation, offering 5-meter resolution hyperspectral imaging across 250+ spectral bands for global climate and mineral exploration.',
+        url: 'https://www.pixxel.space/newsroom',
+        category: 'Constellation Deployment',
+      },
+      {
+        id: 'pixxel-2',
+        title: 'Pixxel Secures NASA and Ministry of Defence Strategic Contracts for Advanced Earth Observation Datasets',
+        date: '2024',
+        summary: 'Pixxel awarded major remote sensing partnerships to deliver commercial hyperspectral insights.',
+        url: 'https://www.pixxel.space/newsroom',
+        category: 'Commercial Partnerships',
+      },
+    ],
+  },
+  {
+    slug: 'dhruva-space',
+    acronym: 'Dhruva Space',
+    name: 'Dhruva Space Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Satellites, launch & ground systems',
+    flag: '🇮🇳',
+    headquarters: 'Hyderabad, Telangana, India',
+    established: '2012',
+    website: 'https://www.dhruvaspace.com/',
+    newsUrl: 'https://www.dhruvaspace.com/press-releases',
+    description:
+      'Full-stack space engineering company providing satellite platforms, indigenously developed satellite deployers (DSOD), ground stations, and orbital launch integration.',
+    searchTerms: ['Dhruva Space', 'Thybolt', 'DSOD Deployer', 'Sanjay Nekkanti', 'P-30 satellite', 'P-90 platform'],
+    keyMissions: ['Thybolt-1 & Thybolt-2 Satellites', 'Dhruva Satellite Orbital Deployer (DSOD-1U/3U)', 'LEAP-1 Hosted Payload Mission', 'Spacecraft Manufacturing Facility in Hyderabad'],
+    officialReleases: [
+      {
+        id: 'dhruva-1',
+        title: 'Dhruva Space Successfully Qualifies DSOD Satellite Deployers and Payloads on ISRO PSLV Missions',
+        date: '2024',
+        summary: 'Official press release detailing orbital qualification of Dhruva’s separation systems and radio payload operations on PSLV POEM platform.',
+        url: 'https://www.dhruvaspace.com/press-releases',
+        category: 'Spacecraft Systems',
+      },
+      {
+        id: 'dhruva-2',
+        title: 'Dhruva Space Announces 280,000 Sq Ft Spacecraft Assembly and Testing Mega-Facility in Hyderabad',
+        date: '2024',
+        summary: 'Dhruva Space broke ground on one of India’s largest private satellite design, manufacturing, and payload testing complexes.',
+        url: 'https://www.dhruvaspace.com/press-releases',
+        category: 'Infrastructure',
+      },
+    ],
+  },
+  {
+    slug: 'bellatrix-aerospace',
+    acronym: 'Bellatrix Aerospace',
+    name: 'Bellatrix Aerospace Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'In-space propulsion, orbital transfer',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2015',
+    website: 'https://bellatrix.aero/',
+    newsUrl: 'https://bellatrix.aero/updates',
+    description:
+      'Pioneering in-space satellite propulsion technologies, developing green chemical monopropellant thrusters (Rudra), electric Hall-effect thrusters (Arka), and the Pushpak Space Taxi / Orbital Transfer Vehicle.',
+    searchTerms: ['Bellatrix Aerospace', 'Bellatrix', 'Arka thruster', 'Rudra thruster', 'Pushpak space taxi', 'Rohan M Ganapathy', 'Yashas Karanam'],
+    keyMissions: ['Arka Hall Effect Electric Thruster', 'Rudra Green Monopropellant Propulsion System', 'Pushpak Orbital Transfer Vehicle (OTV)', 'ISRO POEM-3 In-Orbit Propulsion Trials'],
+    officialReleases: [
+      {
+        id: 'bellatrix-1',
+        title: 'Bellatrix Successfully Validates Arka Electric Thruster and Rudra Green Propulsion on ISRO POEM-3',
+        date: '2024',
+        summary: 'Official Bellatrix release: Successfully test-fired both electric and non-toxic green chemical thrusters in Low Earth Orbit aboard ISRO’s PSLV-C58 POEM stage.',
+        url: 'https://bellatrix.aero/updates',
+        category: 'In-Orbit Testing',
+      },
+      {
+        id: 'bellatrix-2',
+        title: 'Bellatrix Inaugurates Advanced Propulsion Testing and Clean Room Facility in Bengaluru',
+        date: '2024',
+        summary: 'Expansion of vacuum chamber testing facilities for commercial satellite constellation propulsion units.',
+        url: 'https://bellatrix.aero/updates',
+        category: 'Propulsion Facilities',
+      },
+    ],
+  },
+  {
+    slug: 'digantara',
+    acronym: 'Digantara',
+    name: 'Digantara Research and Technologies Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Space situational awareness / orbital intelligence',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2018',
+    website: 'https://www.digantara.co.in/',
+    newsUrl: 'https://www.digantara.co.in/newsroom',
+    description:
+      'Building the "Google Maps of Space" with the Space-Mission Assurance Platform (Space MAP) and space-based optical surveillance sensors (ROBIE) to track space debris down to 1 cm.',
+    searchTerms: ['Digantara', 'Space MAP', 'ROBIE sensor', 'Anirudh Sharma', 'Rahul Rawat', 'Space Situational Awareness', 'Space Debris Tracking'],
+    keyMissions: ['ROBIE-1 Space-Based Optical SSA Sensor', 'Space MAP Orbital Intelligence Platform', 'Global Optical Telescope Network', 'LEO Space Debris Mitigation Architecture'],
+    officialReleases: [
+      {
+        id: 'digantara-1',
+        title: 'Digantara Launches Space MAP 2.0: Real-Time Orbital Tracking and Space Traffic Management Engine',
+        date: '2024',
+        summary: 'Digantara released its next-generation Space Situational Awareness platform integrating space-based optical telemetry and ground-based tracking.',
+        url: 'https://www.digantara.co.in/newsroom',
+        category: 'Space Situational Awareness',
+      },
+      {
+        id: 'digantara-2',
+        title: 'Digantara Establishes India’s First Commercial Space Domain Awareness Optical Observatory in Uttarakhand',
+        date: '2024',
+        summary: 'Commissioning of high-altitude optical sensors for deep space and geostationary object surveillance.',
+        url: 'https://www.digantara.co.in/newsroom',
+        category: 'Observatory Systems',
+      },
+    ],
+  },
+  {
+    slug: 'galaxeye-space',
+    acronym: 'GalaxEye',
+    name: 'GalaxEye Space Solutions Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Optical + SAR Earth observation',
+    flag: '🇮🇳',
+    headquarters: 'Chennai, Tamil Nadu, India (IIT Madras)',
+    established: '2020',
+    website: 'https://galaxeye.space/',
+    newsUrl: 'https://galaxeye.space/',
+    description:
+      'Developing the world’s first synchronized multi-sensor Earth observation satellite system (Drishti Mission), fusing Synthetic Aperture Radar (SAR) and high-resolution Optical imaging on a single platform.',
+    searchTerms: ['GalaxEye', 'GalaxEye Space', 'Drishti satellite', 'Suyash Singh', 'SAR and Optical fusion', 'IIT Madras space'],
+    keyMissions: ['Drishti Multi-Sensor Satellite Mission', 'Airborne SAR/Optical Synchronous Proof-of-Concept', 'All-Weather Maritime & Defense Surveillance'],
+    officialReleases: [
+      {
+        id: 'galaxeye-1',
+        title: 'GalaxEye Successfully Completes Airborne Drone Flight Tests for Synchronized SAR and Optical Sensor Fusion',
+        date: '2024',
+        summary: 'Official GalaxEye announcement demonstrating all-weather high-definition Earth imaging combining radar and optical datasets.',
+        url: 'https://galaxeye.space/',
+        category: 'Sensor Fusion',
+      },
+      {
+        id: 'galaxeye-2',
+        title: 'GalaxEye Advances Flight Model Integration for Maiden Drishti Satellite Launch',
+        date: '2024',
+        summary: 'GalaxEye finalized space-grade payload environmental testing ahead of orbital launch deployment.',
+        url: 'https://galaxeye.space/',
+        category: 'Satellite Assembly',
+      },
+    ],
+  },
+  {
+    slug: 'manastu-space',
+    acronym: 'Manastu Space',
+    name: 'Manastu Space Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Green propulsion, debris avoidance, servicing',
+    flag: '🇮🇳',
+    headquarters: 'Mumbai, Maharashtra, India (IIT Bombay)',
+    established: '2017',
+    website: 'https://manastuspace.com/',
+    newsUrl: 'https://manastuspace.com/',
+    description:
+      'IIT Bombay-incubated aerospace startup pioneering hydrogen peroxide-based non-toxic green propulsion systems (MS-100), autonomous satellite collision avoidance, and in-orbit refuelling.',
+    searchTerms: ['Manastu Space', 'Manastu', 'Green Propulsion', 'Tushar Jadhav', 'Ashtesh Kumar', 'MS-100 thruster'],
+    keyMissions: ['MS-100 Green Monopropellant Thruster', 'Autonomous Collision Avoidance System (CAS)', 'In-Orbit Refuelling Docking Mechanism'],
+    officialReleases: [
+      {
+        id: 'manastu-1',
+        title: 'Manastu Space Validates Green Hydrogen Peroxide Propulsion Flight Hardware on Orbit',
+        date: '2024',
+        summary: 'Official briefing on high-performance non-carcinogenic satellite propulsion systems achieving commercial space qualification.',
+        url: 'https://manastuspace.com/',
+        category: 'Green Propulsion',
+      },
+    ],
+  },
+  {
+    slug: 'piersight',
+    acronym: 'PierSight',
+    name: 'PierSight Space Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'SAR/AIS satellites, maritime surveillance',
+    flag: '🇮🇳',
+    headquarters: 'Ahmedabad & Bengaluru, India',
+    established: '2023',
+    website: 'https://piersight.space/',
+    newsUrl: 'https://piersight.space/blog',
+    description:
+      'Creating the Varuna constellation of Synthetic Aperture Radar (SAR) and Automatic Identification System (AIS) micro-satellites for 24/7 continuous maritime tracking, illegal fishing detection, and ocean surveillance.',
+    searchTerms: ['PierSight', 'Varuna constellation', 'Gaurav Seth', 'Vinit Bansal', 'Maritime SAR', 'Ocean Intelligence'],
+    keyMissions: ['Varuna-1 Prototype SAR/AIS Spacecraft', '24/7 Persistent Ocean Surveillance Constellation', 'Maritime Illegal Fishing Detection Engine'],
+    officialReleases: [
+      {
+        id: 'piersight-1',
+        title: 'PierSight Advances Varuna SAR/AIS Constellation for 30-Minute Revisit Maritime Intelligence',
+        date: '2024',
+        summary: 'PierSight revealed progress on its sovereign synthetic aperture radar satellite architecture tailored for Indo-Pacific maritime security.',
+        url: 'https://piersight.space/blog',
+        category: 'Maritime Intelligence',
+      },
+    ],
+  },
+  {
+    slug: 'satsure',
+    acronym: 'SatSure',
+    name: 'SatSure Analytics India Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Earth observation + geospatial intelligence',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2017',
+    website: 'https://www.satsure.co/',
+    newsUrl: 'https://www.satsure.co/newsroom/',
+    description:
+      'Deep-tech geospatial intelligence firm leveraging multi-spectral satellite data and AI algorithms for agriculture, banking, climate infrastructure, and operating subsidiary KaleidEO for Earth observation payloads.',
+    searchTerms: ['SatSure', 'KaleidEO', 'Prateep Basu', 'Rashmit Singh Sukhmani', 'Geospatial AI', 'SatSure SAGE'],
+    keyMissions: ['KaleidEO Optical Payload Mission', 'SatSure SAGE Agriculture Analytics', 'Infrastructure Risk Earth Observation Suite'],
+    officialReleases: [
+      {
+        id: 'satsure-1',
+        title: 'SatSure and KaleidEO Demonstrate Edge-Processed Earth Imagery for Precision Agriculture and Climate Risk',
+        date: '2024',
+        summary: 'Official news release on SatSure’s satellite AI engines providing sub-meter risk analytics for banking and insurance.',
+        url: 'https://www.satsure.co/newsroom/',
+        category: 'Geospatial AI',
+      },
+    ],
+  },
+  {
+    slug: 'skyserve',
+    acronym: 'SkyServe',
+    name: 'SkyServe (Crux Intelligence Pvt. Ltd.)',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'AI/edge computing onboard satellites',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2022',
+    website: 'https://www.skyserve.ai/',
+    newsUrl: 'https://www.skyserve.ai/updates',
+    description:
+      'Space-tech edge computing pioneer providing satellite edge compute hardware and APIs (Storm platform) to process raw Earth imagery directly on orbit in real-time before downlink.',
+    searchTerms: ['SkyServe', 'Storm Platform', 'Vinay Simha', 'Satellite Edge Computing', 'Onboard AI Space'],
+    keyMissions: ['Storm Edge-Compute Payload on ISRO POEM', 'Real-Time Wildfire & Disaster Analytics in Orbit', 'In-Space Computer Vision Micro-Platform'],
+    officialReleases: [
+      {
+        id: 'skyserve-1',
+        title: 'SkyServe Successfully Deploys Storm AI Processing Engine in Orbit on ISRO PSLV Platform',
+        date: '2024',
+        summary: 'SkyServe announced successful real-time in-orbit image processing, reducing latency from hours to seconds.',
+        url: 'https://www.skyserve.ai/updates',
+        category: 'Edge Computing',
+      },
+    ],
+  },
+  {
+    slug: 'orbitaid-aerospace',
+    acronym: 'OrbitAID',
+    name: 'OrbitAID Aerospace Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'In-orbit refuelling / satellite servicing',
+    flag: '🇮🇳',
+    headquarters: 'Chennai, Tamil Nadu, India',
+    established: '2021',
+    website: 'https://orbitaid.com/',
+    newsUrl: 'https://orbitaid.com/newsroom',
+    description:
+      'Building on-orbit refuelling, satellite life extension, and orbital fuel depot infrastructure with standardized docking interfaces (SID) for sustainable space economies.',
+    searchTerms: ['OrbitAID', 'OrbitAID Aerospace', 'In-orbit refueling', 'Satellite Servicing', 'Sakthivel R'],
+    keyMissions: ['Standardized In-Orbit Docking Interface (SID)', 'Orbital Fuel Depot Architecture', 'Satellite Life Extension Servicer'],
+    officialReleases: [
+      {
+        id: 'orbitaid-1',
+        title: 'OrbitAID Advances Space Refuelling Interface and Rendezvous Proximity Operations Protocols',
+        date: '2024',
+        summary: 'Official OrbitAID update on robotic docking mechanisms designed to replenish propellant in Low Earth and Geostationary orbits.',
+        url: 'https://orbitaid.com/newsroom',
+        category: 'In-Orbit Servicing',
+      },
+    ],
+  },
+  {
+    slug: 'astrome-technologies',
+    acronym: 'Astrome',
+    name: 'Astrome Technologies Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Satellite communications / space connectivity',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India (IISc)',
+    established: '2015',
+    website: 'https://astrome.co/',
+    newsUrl: 'https://astrome.co/newsroom/',
+    description:
+      'IISc-incubated deep-tech communications enterprise pioneering millimeter-wave multi-beam satellite transceivers and GigaMesh wireless optical platforms for high-throughput space connectivity.',
+    searchTerms: ['Astrome', 'Astrome Technologies', 'GigaMesh', 'Neha Satak', 'Prasad HL', 'Millimeter wave satellite'],
+    keyMissions: ['GigaMesh E-band Multi-Beam Wireless Platform', 'Flat-Panel Satellite Phased Array Transceivers', 'SpaceMesh High-Throughput Satellite Backhaul'],
+    officialReleases: [
+      {
+        id: 'astrome-1',
+        title: 'Astrome Deploys E-Band Multi-Beam Communications for Remote Telecommunications Backhaul',
+        date: '2024',
+        summary: 'Astrome announced commercial rollouts of GigaMesh providing multi-gigabit wireless backhaul across rural and defense sectors.',
+        url: 'https://astrome.co/newsroom/',
+        category: 'Space Connectivity',
+      },
+    ],
+  },
+  {
+    slug: 'etherealx',
+    acronym: 'EtherealX',
+    name: 'EtherealX Space Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Reusable medium-lift launch vehicles',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '2022',
+    website: 'https://www.etherealx.space/',
+    newsUrl: 'https://www.etherealx.space/',
+    description:
+      'Developing the world’s first fully reusable medium-lift launch vehicle (Razor Crest Mk-1) designed to drastically lower orbital launch costs with methane-oxygen staged combustion engines.',
+    searchTerms: ['EtherealX', 'Razor Crest Mk-1', 'Manu J Nair', 'Subash Selvaraj', 'Reusable Rocket India'],
+    keyMissions: ['Razor Crest Mk-1 Reusable Medium-Lift Launcher', 'Methane-Oxygen Staged Combustion Engine Development', 'Vertical Takeoff Vertical Landing (VTVL) Testbed'],
+    officialReleases: [
+      {
+        id: 'etherealx-1',
+        title: 'EtherealX Accelerates Reusable Medium-Lift Rocket Engine Testing for Razor Crest Mk-1',
+        date: '2024',
+        summary: 'EtherealX announced progress on full-scale regenerative thrust chamber injector testing for deep-space payloads.',
+        url: 'https://www.etherealx.space/',
+        category: 'Reusable Launchers',
+      },
+    ],
+  },
+  {
+    slug: 'takeme2space',
+    acronym: 'TM2Space',
+    name: 'TakeMe2Space Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Orbital data centres / onboard AI',
+    flag: '🇮🇳',
+    headquarters: 'Hyderabad, Telangana, India',
+    established: '2022',
+    website: 'https://www.tm2.space/',
+    newsUrl: 'https://www.tm2.space/blogs',
+    description:
+      'Building orbital edge computing platforms and space data centres (MOI constellation) enabling developers to deploy AI apps, containerized microservices, and neural networks directly on satellites in orbit.',
+    searchTerms: ['TakeMe2Space', 'TM2Space', 'MOI satellite', 'Ronak Kumar Samantray', 'Space Data Center', 'Orbital AI Cloud'],
+    keyMissions: ['MOI-TD (Modular Orbital Infrastructure Test Demonstrator)', 'Orbital AI Container Runtime', 'Open Space Cloud APIs'],
+    officialReleases: [
+      {
+        id: 'tm2-1',
+        title: 'TakeMe2Space Demonstrates In-Orbit AI Computing and Satellite App Deployment Platform',
+        date: '2024',
+        summary: 'TM2Space conducted orbital testbed operations validating containerized software execution directly on Low Earth Orbit hardware.',
+        url: 'https://www.tm2.space/blogs',
+        category: 'Space Cloud',
+      },
+    ],
+  },
+  {
+    slug: 'ananth-technologies',
+    acronym: 'Ananth Technologies',
+    name: 'Ananth Technologies Ltd. (ATL)',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Space electronics, satellite/launch-vehicle integration',
+    flag: '🇮🇳',
+    headquarters: 'Hyderabad & Bengaluru, India',
+    established: '1992',
+    website: 'https://www.ananthtech.com/',
+    newsUrl: 'https://www.ananthtech.com/media/',
+    description:
+      'Veteran Indian aerospace and defense engineering powerhouse with 10,000+ sqm satellite assembly cleanrooms, contributing avionics, telemetry, and payload integration for 70+ ISRO launch vehicles and 90+ satellites.',
+    searchTerms: ['Ananth Technologies', 'ATL', 'Dr. Subba Rao Pavuluri', 'Spacecraft Integration', 'ISRO avionics'],
+    keyMissions: ['Sovereign Satellite Assembly and Integration (AIT) Complex', 'PSLV & GSLV Avionics Packages', 'Navigation and Communication Satellite Subsystems'],
+    officialReleases: [
+      {
+        id: 'ananth-1',
+        title: 'Ananth Technologies Delivers Integrated Avionics Packages for ISRO Launch Vehicles',
+        date: '2024',
+        summary: 'ATL confirmed completion of precision navigation and harness assemblies supporting national space launch manifests.',
+        url: 'https://www.ananthtech.com/media/',
+        category: 'Aerospace Electronics',
+      },
+    ],
+  },
+  {
+    slug: 'hical-technologies',
+    acronym: 'HICAL',
+    name: 'HICAL Technologies Pvt. Ltd.',
+    country: 'India',
+    region: 'Asia',
+    agencyType: 'Indian Private Startup',
+    focus: 'Aerospace components, actuators & systems',
+    flag: '🇮🇳',
+    headquarters: 'Bengaluru, Karnataka, India',
+    established: '1988',
+    website: 'https://www.hical.com/',
+    newsUrl: 'https://www.hical.com/news/',
+    description:
+      'High-reliability aerospace systems manufacturer supplying precision electro-magnetic components, motors, flight actuators, and sensors for space missions, satellites, and deep-space probes.',
+    searchTerms: ['HICAL Technologies', 'HICAL', 'Aerospace Actuators', 'High-Rel Space Components', 'Bengaluru Aerospace'],
+    keyMissions: ['Space-Grade Electromagnetic Solenoids & Actuators', 'Satellite Power Management Magnetics', 'Deep-Space Telemetry Flight Electronics'],
+    officialReleases: [
+      {
+        id: 'hical-1',
+        title: 'HICAL Technologies Expands Cleanroom Facilities for Space-Grade Flight Actuators and Power Magnetics',
+        date: '2024',
+        summary: 'HICAL announced expanded manufacturing and qualification lines for global satellite constellation components.',
+        url: 'https://www.hical.com/news/',
+        category: 'Aerospace Manufacturing',
+      },
+    ],
+  },
 ]
 
 export const REGIONS: Region[] = [
@@ -2385,6 +2925,14 @@ export function getAllAgencies(): SpaceAgency[] {
   return SPACE_AGENCIES
 }
 
+export function getGovernmentAgencies(): SpaceAgency[] {
+  return SPACE_AGENCIES.filter((a) => (a.agencyType || 'Government Agency') === 'Government Agency')
+}
+
+export function getIndianStartups(): SpaceAgency[] {
+  return SPACE_AGENCIES.filter((a) => a.agencyType === 'Indian Private Startup')
+}
+
 export function getAgencyBySlug(slug: string): SpaceAgency | undefined {
   const normalized = (slug || '').toLowerCase().trim()
   return SPACE_AGENCIES.find(
@@ -2393,5 +2941,6 @@ export function getAgencyBySlug(slug: string): SpaceAgency | undefined {
 }
 
 export function getAgenciesByRegion(region: Region): SpaceAgency[] {
-  return SPACE_AGENCIES.filter((a) => a.region === region)
+  return SPACE_AGENCIES.filter((a) => a.region === region && (a.agencyType || 'Government Agency') === 'Government Agency')
 }
+

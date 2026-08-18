@@ -249,36 +249,60 @@ export default function Header() {
             >
               <span className="flex items-center gap-2">
                 <span>🛰️</span>
-                <span>SPACE AGENCIES (GOVERNMENT)</span>
+                <span>SPACE AGENCIES & STARTUPS ({SPACE_AGENCIES.length})</span>
               </span>
               <span className="text-xs">{mobileAgenciesOpen ? '▲' : '▼'}</span>
             </button>
 
             {mobileAgenciesOpen && (
-              <div className="mt-3 pt-3 border-t border-[#e2e0d8] space-y-2">
-                <div className="text-[9.5px] font-sans-editorial font-bold text-[#888884] uppercase">
-                  53 NATIONAL AGENCIES BY REGION:
+              <div className="mt-3 pt-3 border-t border-[#e2e0d8] space-y-3">
+                {/* Indian Startups Section */}
+                <div>
+                  <div className="text-[9.5px] font-sans-editorial font-bold text-[#111111] bg-[#ffc500] px-2 py-0.5 uppercase tracking-wider inline-block mb-1.5">
+                    🇮🇳 INDIAN PRIVATE STARTUPS (17):
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-sans-editorial max-h-36 overflow-y-auto pr-1">
+                    {SPACE_AGENCIES.filter((a) => a.agencyType === 'Indian Private Startup').map((agency) => (
+                      <Link
+                        key={agency.slug}
+                        href={`/agency/${agency.slug}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="p-1.5 bg-[#fdfcf4] border border-[#dcd8cb] hover:border-[#111111] flex items-center gap-1.5 truncate"
+                      >
+                        <span className="shrink-0">{agency.flag}</span>
+                        <span className="font-bold truncate">{agency.acronym}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-1.5 text-[11px] font-sans-editorial max-h-48 overflow-y-auto pr-1">
-                  {SPACE_AGENCIES.map((agency) => (
-                    <Link
-                      key={agency.slug}
-                      href={`/agency/${agency.slug}`}
-                      onClick={() => setMobileOpen(false)}
-                      className="p-1.5 bg-[#fdfcf4] border border-[#dcd8cb] hover:border-[#111111] flex items-center gap-1.5 truncate"
-                    >
-                      <span className="shrink-0">{agency.flag}</span>
-                      <span className="font-bold truncate">{agency.acronym}</span>
-                    </Link>
-                  ))}
+
+                {/* Government Agencies Section */}
+                <div>
+                  <div className="text-[9.5px] font-sans-editorial font-bold text-[#888884] uppercase tracking-wider mb-1.5">
+                    🏛️ GOVERNMENT SPACE AGENCIES (78):
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5 text-[11px] font-sans-editorial max-h-40 overflow-y-auto pr-1">
+                    {SPACE_AGENCIES.filter((a) => (a.agencyType || 'Government Agency') === 'Government Agency').map((agency) => (
+                      <Link
+                        key={agency.slug}
+                        href={`/agency/${agency.slug}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="p-1.5 bg-[#fdfcf4] border border-[#dcd8cb] hover:border-[#111111] flex items-center gap-1.5 truncate"
+                      >
+                        <span className="shrink-0">{agency.flag}</span>
+                        <span className="font-bold truncate">{agency.acronym}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="pt-2 text-center">
+
+                <div className="pt-2 text-center border-t border-[#eae8dc]">
                   <Link
                     href="/agencies"
                     onClick={() => setMobileOpen(false)}
                     className="text-[10px] font-sans-editorial font-bold text-[#111111] hover:underline uppercase tracking-wider"
                   >
-                    View All 53 Space Agencies →
+                    View All {SPACE_AGENCIES.length} Space Organizations →
                   </Link>
                 </div>
               </div>
