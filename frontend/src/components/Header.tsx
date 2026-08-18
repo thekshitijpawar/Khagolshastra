@@ -3,9 +3,13 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import WebbLiveTracker from './WebbLiveTracker'
+import SpaceAgenciesDropdown from './SpaceAgenciesDropdown'
+import { SPACE_AGENCIES } from '@/lib/agencies'
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileAgenciesOpen, setMobileAgenciesOpen] = useState(false)
+  const [agenciesOpen, setAgenciesOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -51,7 +55,7 @@ export default function Header() {
               <span>MENU</span>
             </button>
 
-            <nav className="hidden lg:flex items-center gap-6">
+            <nav className="hidden lg:flex items-center gap-5">
               {utilityNav.map((item) => (
                 <Link
                   key={item.label}
@@ -61,6 +65,34 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+
+              {/* SPACE AGENCY MEGA DROPDOWN BUTTON */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setAgenciesOpen(!agenciesOpen)}
+                  className={`flex items-center gap-1 transition-all py-1 px-1.5 uppercase tracking-[0.12em] font-bold ${
+                    agenciesOpen
+                      ? 'bg-[#111111] text-[#ffc500]'
+                      : 'hover:text-[#555555]'
+                  }`}
+                >
+                  <span>SPACE AGENCIES</span>
+                  <svg
+                    className={`w-3 h-3 transition-transform duration-200 ${agenciesOpen ? 'rotate-180 text-[#ffc500]' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <SpaceAgenciesDropdown
+                  isOpen={agenciesOpen}
+                  onClose={() => setAgenciesOpen(false)}
+                />
+              </div>
             </nav>
           </div>
 
@@ -208,6 +240,51 @@ export default function Header() {
             <WebbLiveTracker variant="masthead" />
           </div>
 
+          {/* Space Agencies Mobile Section */}
+          <div className="border border-[#111111] bg-white p-3.5">
+            <button
+              type="button"
+              onClick={() => setMobileAgenciesOpen(!mobileAgenciesOpen)}
+              className="w-full flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-[#111111]"
+            >
+              <span className="flex items-center gap-2">
+                <span>🛰️</span>
+                <span>SPACE AGENCIES (GOVERNMENT)</span>
+              </span>
+              <span className="text-xs">{mobileAgenciesOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {mobileAgenciesOpen && (
+              <div className="mt-3 pt-3 border-t border-[#e2e0d8] space-y-2">
+                <div className="text-[9.5px] font-sans-editorial font-bold text-[#888884] uppercase">
+                  53 NATIONAL AGENCIES BY REGION:
+                </div>
+                <div className="grid grid-cols-2 gap-1.5 text-[11px] font-sans-editorial max-h-48 overflow-y-auto pr-1">
+                  {SPACE_AGENCIES.map((agency) => (
+                    <Link
+                      key={agency.slug}
+                      href={`/agency/${agency.slug}`}
+                      onClick={() => setMobileOpen(false)}
+                      className="p-1.5 bg-[#fdfcf4] border border-[#dcd8cb] hover:border-[#111111] flex items-center gap-1.5 truncate"
+                    >
+                      <span className="shrink-0">{agency.flag}</span>
+                      <span className="font-bold truncate">{agency.acronym}</span>
+                    </Link>
+                  ))}
+                </div>
+                <div className="pt-2 text-center">
+                  <Link
+                    href="/agencies"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-[10px] font-sans-editorial font-bold text-[#111111] hover:underline uppercase tracking-wider"
+                  >
+                    View All 53 Space Agencies →
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-2 text-[12px] font-sans-editorial font-bold tracking-wider uppercase">
             {sectionsNav.map((sec) => (
               <Link
@@ -221,6 +298,7 @@ export default function Header() {
             ))}
           </div>
           <div className="pt-3 border-t border-[#111111] flex items-center justify-between text-[11px] font-bold">
+            <Link href="/agencies" onClick={() => setMobileOpen(false)}>SPACE AGENCIES</Link>
             <Link href="/research" onClick={() => setMobileOpen(false)}>RESEARCH</Link>
             <Link href="/articles" onClick={() => setMobileOpen(false)}>ALL HEADLINES</Link>
           </div>

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import ArticleCard from '@/components/ArticleCard'
 import ArticleModal from '@/components/ArticleModal'
@@ -19,13 +20,17 @@ const CATEGORY_TABS = [
   { id: 'today-in-the-history-of-astronomy', label: 'HISTORY' },
 ]
 
-export default function ArticlesPage() {
+function ArticlesContent() {
+  const searchParams = useSearchParams()
+  const initialQuery = searchParams.get('query') || searchParams.get('q') || ''
+  const initialCategory = searchParams.get('category') || ''
+
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [query, setQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
+  const [query, setQuery] = useState(initialQuery)
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory)
   const [selectedSource, setSelectedSource] = useState<number | null>(null)
   const [sources, setSources] = useState<Source[]>([])
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null)
@@ -33,6 +38,12 @@ export default function ArticlesPage() {
   useEffect(() => {
     loadSources()
   }, [])
+
+  useEffect(() => {
+    if (initialQuery && initialQuery !== query) {
+      setQuery(initialQuery)
+    }
+  }, [initialQuery])
 
   useEffect(() => {
     loadArticles()
@@ -87,7 +98,7 @@ export default function ArticlesPage() {
               All Headlines & Dispatches
             </h1>
             <p className="text-[14px] font-serif-editorial text-[#666] max-w-2xl mt-1">
-              Real-time aggregation from Astronomy.com, Universe Today, Space.com, and international observatories.
+              Real-time aggregation from international space agencies, Astronomy.com, Universe Today, Space.com, and world observatories.
             </p>
           </div>
 
@@ -159,55 +170,63 @@ export default function ArticlesPage() {
               setSelectedCategory('')
               setSelectedSource(null)
             }}
-            className="px-4 py-2 bg-[#111] text-white text-xs font-sans-editorial font-bold uppercase tracking-widest hover:bg-[#333]"
+            className="px-4 py-2 bg-[#111111] text-white text-xs font-bold uppercase tracking-widest font-sans-editorial hover:bg-[#333]"
           >
             Clear Filters
           </button>
         </div>
       ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map((article, i) => (
-              <ArticleCard
-                key={article.id || i}
-                article={article}
-                index={i}
-                variant="bento"
-                onClick={() => setSelectedArticle(article)}
-              />
-            ))}
-          </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-4 mt-12 pt-8 border-t-2 border-[#111111]">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="px-6 py-2.5 bg-white border border-[#111111] text-[#111111] text-[11px] font-sans-editorial font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-[#111111] hover:text-white transition-colors"
-              >
-                ← Previous
-              </button>
-              <span className="text-[12px] font-mono text-[#555555]">
-                PAGE {page} OF {totalPages} ({total} ARTICLES)
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="px-6 py-2.5 bg-white border border-[#111111] text-[#111111] text-[11px] font-sans-editorial font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-[#111111] hover:text-white transition-colors"
-              >
-                Next →
-              </button>
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {articles.map((article, idx) => (
+            <ArticleCard
+              key={article.id || idx}
+              article={article}
+              index={idx}
+              variant="compact"
+              onClick={() => setSelectedArticle(article)}
+            />
+          ))}
+        </div>
       )}
 
-      {/* Reader Modal */}
-      <ArticleModal
-        article={selectedArticle}
-        onClose={() => setSelectedArticle(null)}
-      />
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-12 pt-8 border-t border-[#dcd8cb]">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-4 py-2 border border-[#111111] text-xs font-bold font-sans-editorial uppercase tracking-wider disabled:opacity-30 hover:bg-[#111] hover:text-white transition-colors"
+          >
+            Previous
+          </button>
+          <span className="text-xs font-sans-editorial px-4 text-[#666]">
+            Page {page} of {totalPages} ({total} articles)
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-4 py-2 border border-[#111111] text-xs font-bold font-sans-editorial uppercase tracking-wider disabled:opacity-30 hover:bg-[#111] hover:text-white transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* Modal */}
+      {selectedArticle && (
+        <ArticleModal
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)}
+        />
+      )}
     </div>
+  )
+}
+
+export default function ArticlesPage() {
+  return (
+    <Suspense fallback={<div className="p-12 text-center font-serif-editorial">Loading dispatches...</div>}>
+      <ArticlesContent />
+    </Suspense>
   )
 }
