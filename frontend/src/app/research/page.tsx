@@ -158,16 +158,11 @@ export default function ResearchPage() {
       {/* 1. ACADEMIC JOURNAL MASTHEAD WITH DAILY TICKER */}
       <section className="px-4 sm:px-6 lg:px-10 py-8 border-b-2 border-[#111111] bg-[#fbfaf0]">
         <div className="max-w-[1340px] mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b-2 border-[#111111] pb-6 mb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="bg-[#111111] text-[#ffc500] text-[10px] font-sans-editorial font-bold uppercase tracking-widest px-2 py-0.5">
                   DAILY ACADEMIC REPOSITORY
-                </span>
-                <span className="text-[#888884]">•</span>
-                <span className="text-[10.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#990000] flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#990000] animate-pulse"></span>
-                  <span>UPDATED DAILY FROM ARXIV & NASA ADS</span>
                 </span>
               </div>
               <h1 className="text-[32px] sm:text-[46px] lg:text-[52px] font-serif-editorial font-normal leading-[1.02] text-[#111111]">
@@ -197,38 +192,6 @@ export default function ResearchPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Sub-Discipline Live Counters Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {categories.filter((c) => c.key !== 'all').map((cat) => {
-              const isSelected = selectedCategory === cat.key
-              const count = categoryCounts[cat.key] || 0
-              return (
-                <button
-                  key={cat.key}
-                  type="button"
-                  onClick={() => setSelectedCategory(isSelected ? 'all' : cat.key)}
-                  className={`p-2.5 border text-left transition-all flex flex-col justify-between ${
-                    isSelected
-                      ? 'bg-[#111111] text-[#ffc500] border-[#111111] shadow-[3px_3px_0px_#ffc500]'
-                      : 'bg-white border-[#dcd8cb] hover:border-[#111111] text-[#111111] shadow-2xs'
-                  }`}
-                >
-                  <div className="flex items-center justify-between text-[11px] mb-1">
-                    <span>{cat.icon}</span>
-                    <span className={`text-[10px] font-sans-editorial font-bold px-1.5 py-0.2 ${
-                      isSelected ? 'bg-[#ffc500] text-[#111111]' : 'bg-[#f0eee0] text-[#555]'
-                    }`}>
-                      {count}
-                    </span>
-                  </div>
-                  <div className="text-[11.5px] font-sans-editorial font-bold uppercase tracking-wider leading-tight truncate">
-                    {cat.label.split('&')[0]}
-                  </div>
-                </button>
-              )
-            })}
           </div>
         </div>
       </section>
