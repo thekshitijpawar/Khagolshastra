@@ -27,6 +27,31 @@ const RSS_FEEDS = [
     url: 'https://www.space.com/feeds/all',
     defaultCategory: 'launches',
   },
+  {
+    name: 'Space.com Human Spaceflight',
+    url: 'https://news.google.com/rss/search?q=site:space.com/space-exploration/human-spaceflight+OR+site:space.com+%22human+spaceflight%22&hl=en-US&gl=US&ceid=US:en',
+    defaultCategory: 'human-spaceflight',
+  },
+  {
+    name: 'Space.com Private Spaceflight',
+    url: 'https://news.google.com/rss/search?q=site:space.com/space-exploration/private-spaceflight+OR+site:space.com+%22private+spaceflight%22+OR+site:space.com+%22commercial+spaceflight%22&hl=en-US&gl=US&ceid=US:en',
+    defaultCategory: 'launches',
+  },
+  {
+    name: 'SpaceNews',
+    url: 'https://spacenews.com/feed/',
+    defaultCategory: 'launches',
+  },
+  {
+    name: 'NASA Space Station',
+    url: 'https://blogs.nasa.gov/spacestation/feed/',
+    defaultCategory: 'human-spaceflight',
+  },
+  {
+    name: 'NASA Artemis',
+    url: 'https://blogs.nasa.gov/artemis/feed/',
+    defaultCategory: 'human-spaceflight',
+  },
 ]
 
 function cleanText(text: string): string {
@@ -200,7 +225,7 @@ export function isCommercialOrAdvertorial(title: string, desc: string = '', url:
 
   // 5. Entertainment, Sci-Fi Movies, TV recaps & streaming guides (not real astronomy/spaceflight)
   if (
-    /\b(where to stream|where to watch|streaming guide|movie review|tv review|season \d+ recap|episode \d+ review|trailer breakdown|box office|star trek:? discovery recap|star wars:? acolyte recap|alien:? romulus review)\b/i.test(text)
+    /\b(where to stream|where to watch|streaming guide|movie review|tv review|season \d+ recap|episode \d+ review|trailer breakdown|box office|star trek:? discovery recap|star wars:? acolyte recap|alien:? romulus review|futurama|doctor who|the expanse recap|mandalorian|marvel|disney\+|netflix|hulu|paramount\+|video game review|playstation|xbox|nintendo|steam deck|gaming|cosplay|anime review)\b/i.test(text)
   ) {
     return true
   }
@@ -449,6 +474,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
         rawDesc: string
         pubDate: string
         xmlImg?: string
+        sourceName?: string
       }> = []
 
       for (let i = 0; i < Math.min(itemMatches.length, 25); i++) {
@@ -458,9 +484,21 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
         const descMatch = itemXml.match(/<(?:description|content:encoded)>([\s\S]*?)<\/(?:description|content:encoded)>/i)
         const dateMatch = itemXml.match(/<pubDate>([\s\S]*?)<\/pubDate>/i)
 
-        const title = cleanText(titleMatch ? titleMatch[1] : '')
+        let title = cleanText(titleMatch ? titleMatch[1] : '')
         const link = cleanText(linkMatch ? linkMatch[1] : '')
-        const rawDesc = descMatch ? descMatch[1] : ''
+        let rawDesc = descMatch ? cleanText(descMatch[1]) : ''
+        rawDesc = rawDesc.replace(/<[^>]*>/g, '').trim()
+
+        let feedSourceName = feed.name
+        const titleParts = title.split(' - ')
+        if (titleParts.length > 1) {
+          const suffix = titleParts.pop()?.trim()
+          title = titleParts.join(' - ').trim()
+          if (suffix && (suffix.toLowerCase() === 'space' || suffix.toLowerCase() === 'space.com')) {
+            feedSourceName = 'Space.com'
+          }
+        }
+
         const pubDate = dateMatch ? new Date(dateMatch[1]).toISOString() : new Date().toISOString()
         const xmlImg = extractImageFromXml(itemXml)
 
@@ -471,7 +509,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
 
         if (title && link && !seenTitles.has(title.toLowerCase())) {
           seenTitles.add(title.toLowerCase())
-          rawParsed.push({ title, link, rawDesc, pubDate, xmlImg })
+          rawParsed.push({ title, link, rawDesc, pubDate, xmlImg, sourceName: feedSourceName })
         }
       }
 
@@ -495,7 +533,7 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
             summary: richSummary,
             content: richSummary,
             url: item.link,
-            sourceName: feed.name,
+            sourceName: item.sourceName || feed.name,
             sourceUrl: feed.url,
             publishedAt: item.pubDate,
             categories: [exactCategory],
