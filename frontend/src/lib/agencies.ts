@@ -15,6 +15,8 @@ export interface OfficialRelease {
   summary: string
   url: string
   category?: string
+  source?: string
+  isLive?: boolean
 }
 
 export type AgencyType = 'Government Agency' | 'Indian Private Startup'
