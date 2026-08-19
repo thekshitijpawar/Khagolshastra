@@ -52,6 +52,26 @@ const RSS_FEEDS = [
     url: 'https://blogs.nasa.gov/artemis/feed/',
     defaultCategory: 'human-spaceflight',
   },
+  {
+    name: 'NASA Humans in Space',
+    url: 'https://www.nasa.gov/humans-in-space/feed/',
+    defaultCategory: 'human-spaceflight',
+  },
+  {
+    name: 'Spaceflight Now',
+    url: 'https://spaceflightnow.com/feed/',
+    defaultCategory: 'launches',
+  },
+  {
+    name: 'Spaceflight Now Mission Reports',
+    url: 'https://spaceflightnow.com/category/mission-reports/feed/',
+    defaultCategory: 'launches',
+  },
+  {
+    name: 'Spaceflight Now Launch Manifests',
+    url: 'https://news.google.com/rss/search?q=site:spaceflightnow.com+OR+site:spaceflightnow.com/category/mission-reports/+OR+site:spaceflightnow.com/launch-schedule/&hl=en-US&gl=US&ceid=US:en',
+    defaultCategory: 'launches',
+  },
 ]
 
 function cleanText(text: string): string {
@@ -492,10 +512,20 @@ export async function fetchLiveRssArticles(): Promise<Article[]> {
         let feedSourceName = feed.name
         const titleParts = title.split(' - ')
         if (titleParts.length > 1) {
-          const suffix = titleParts.pop()?.trim()
-          title = titleParts.join(' - ').trim()
-          if (suffix && (suffix.toLowerCase() === 'space' || suffix.toLowerCase() === 'space.com')) {
+          const suffix = titleParts.pop()?.trim() || ''
+          const lowSuff = suffix.toLowerCase()
+          if (lowSuff.includes('space.com') || lowSuff === 'space') {
             feedSourceName = 'Space.com'
+            title = titleParts.join(' - ').trim()
+          } else if (lowSuff.includes('spaceflight now')) {
+            feedSourceName = 'Spaceflight Now'
+            title = titleParts.join(' - ').trim()
+          } else if (lowSuff.includes('nasa')) {
+            feedSourceName = 'NASA'
+            title = titleParts.join(' - ').trim()
+          } else if (lowSuff.includes('spacenews')) {
+            feedSourceName = 'SpaceNews'
+            title = titleParts.join(' - ').trim()
           }
         }
 
