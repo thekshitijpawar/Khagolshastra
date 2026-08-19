@@ -377,14 +377,15 @@ export default function AgencyClient({ agency }: AgencyClientProps) {
                     {rel.title}
                   </h3>
 
-                  <p className="text-[13.5px] font-serif-editorial text-[#444444] leading-relaxed mb-4 line-clamp-3">
-                    {rel.summary}
+                  <p className="text-[13.5px] font-serif-editorial text-[#333333] leading-relaxed mb-4 line-clamp-3">
+                    {rel.summary?.replace(/<[^>]*>/g, '')}
                   </p>
                 </div>
 
                 <div className="pt-3 border-t border-[#e5e1d3] flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-sans-editorial text-[#666666] uppercase font-bold truncate max-w-[180px]">
-                    VIA {rel.source || hostname}
+                  <span className="text-[10px] font-sans-editorial text-[#111111] uppercase font-bold truncate max-w-[200px] bg-[#f5f4ea] px-2 py-0.5 border border-[#dcd8cb] inline-flex items-center gap-1">
+                    <span className="text-[#059669]">✓</span>
+                    <span>{rel.source || hostname}</span>
                   </span>
                   <a
                     href={rel.url || agency.newsUrl || agency.website}
