@@ -19,9 +19,12 @@ class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./khagolshastra.db")
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
+    ADMIN_API_KEY: str = os.getenv("ADMIN_API_KEY", os.getenv("SECRET_KEY", "dev-secret-key-change-in-production"))
     MEILI_URL: str = os.getenv("MEILI_URL", "http://localhost:7700")
     MEILI_KEY: str = os.getenv("MEILI_KEY", "")
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000")
+    TRUSTED_PROXIES: str = os.getenv("TRUSTED_PROXIES", "127.0.0.1,::1")
+    ENABLE_DOCS: bool = os.getenv("ENABLE_DOCS", "false").lower() in ("true", "1", "yes")
     INGESTION_INTERVAL_MINUTES: int = int(os.getenv("INGESTION_INTERVAL_MINUTES", "30"))
 
     # Rate Limiting configuration
@@ -42,6 +45,10 @@ class Settings(BaseSettings):
         if self.is_production and "*" in origins:
             raise ValueError("CORS wildcard '*' is strictly prohibited in production mode.")
         return origins
+
+    @property
+    def trusted_proxies_list(self) -> set[str]:
+        return {ip.strip() for ip in self.TRUSTED_PROXIES.split(",") if ip.strip()}
 
     def validate_production_readiness(self) -> None:
         """

@@ -213,19 +213,48 @@ if (fs.existsSync(privacyRouteFile) && fs.existsSync(apiLibFile)) {
   privacyPassed =
     pyContent.includes('/delete-data') &&
     pyContent.includes('mask_email') &&
+    pyContent.includes('If this email address is on file') &&
     apiContent.includes('deletePersonalData');
 }
 
 reportCheck(
-  'User Personal Data Protection & GDPR Erasure Flow',
+  'User Personal Data Protection & Anti-Enumeration Privacy Flow',
   privacyPassed,
   privacyPassed
-    ? 'Zero-trace account deletion, server log email masking, and privacy summaries active.'
-    : 'Privacy erasure flow incomplete.'
+    ? 'Zero-trace account deletion, server log email masking, and uniform anti-enumeration responses active.'
+    : 'Privacy erasure flow incomplete or exposes enumeration oracle.'
 );
 
 // ------------------------------------------------------------------------------
-// CHECK 7: Git History Warning in README
+// CHECK 7: Administrative Auth & Security Middleware Verification (C1, H1, H3)
+// ------------------------------------------------------------------------------
+const adminAuthFile = path.join(ROOT_DIR, 'backend', 'app', 'admin', '__init__.py');
+const securityMiddlewareFile = path.join(ROOT_DIR, 'backend', 'app', 'middleware', 'security.py');
+const mainAppFile = path.join(ROOT_DIR, 'backend', 'app', 'main.py');
+
+let securityHardeningPassed = false;
+if (fs.existsSync(adminAuthFile) && fs.existsSync(securityMiddlewareFile) && fs.existsSync(mainAppFile)) {
+  const adminContent = fs.readFileSync(adminAuthFile, 'utf-8');
+  const middlewareContent = fs.readFileSync(securityMiddlewareFile, 'utf-8');
+  const mainContent = fs.readFileSync(mainAppFile, 'utf-8');
+
+  const c1Fixed = !adminContent.includes('if expected_key == "dev-secret-key-change-in-production":') && adminContent.includes('secrets.compare_digest');
+  const h1Fixed = middlewareContent.includes('trusted_proxies_list') && middlewareContent.includes('_cleanup_stale_keys');
+  const h3Fixed = mainContent.includes('ENABLE_DOCS');
+
+  securityHardeningPassed = c1Fixed && h1Fixed && h3Fixed;
+}
+
+reportCheck(
+  'Strict Admin Auth, Rate Limiter Proxy Validation & Docs Gating',
+  securityHardeningPassed,
+  securityHardeningPassed
+    ? 'Zero admin bypasses, trusted proxy XFF verification, memory bounds, and gated API docs enforced.'
+    : 'Security hardening checks failed for admin auth, rate limiter, or API docs.'
+);
+
+// ------------------------------------------------------------------------------
+// CHECK 8: Git History Warning in README
 // ------------------------------------------------------------------------------
 const readmeFile = path.join(ROOT_DIR, 'README.md');
 let readmeWarningPassed = false;

@@ -51,24 +51,20 @@ def subscribe_newsletter(payload: EmailPayload, db: Session = Depends(get_db)):
             existing.unsubscribed_at = None
             db.commit()
             logger.info("Subscriber reactivated", email=masked)
-        return {
-            "status": "success",
-            "message": "You are subscribed to Khagolshastra Daily Cosmic Intelligence.",
-            "email_masked": masked,
-        }
+    else:
+        new_sub = Subscriber(
+            email=clean_email,
+            is_active=True,
+            subscribed_at=datetime.now(timezone.utc),
+        )
+        db.add(new_sub)
+        db.commit()
+        logger.info("New subscriber enrolled", email=masked)
 
-    new_sub = Subscriber(
-        email=clean_email,
-        is_active=True,
-        subscribed_at=datetime.now(timezone.utc),
-    )
-    db.add(new_sub)
-    db.commit()
-    logger.info("New subscriber enrolled", email=masked)
-
+    # Privacy-Preserving Uniform Response: Eliminates subscriber enumeration oracle
     return {
         "status": "success",
-        "message": "Thank you for subscribing to Khagolshastra Daily Cosmic Intelligence.",
+        "message": "Thank you. Your subscription preferences have been updated for Khagolshastra Cosmic Intelligence.",
         "email_masked": masked,
     }
 
@@ -79,21 +75,16 @@ def unsubscribe_newsletter(payload: EmailPayload, db: Session = Depends(get_db))
     masked = mask_email(clean_email)
 
     sub = db.query(Subscriber).filter(Subscriber.email == clean_email).first()
-    if not sub or not sub.is_active:
-        return {
-            "status": "success",
-            "message": "Email is unsubscribed.",
-            "email_masked": masked,
-        }
+    if sub and sub.is_active:
+        sub.is_active = False
+        sub.unsubscribed_at = datetime.now(timezone.utc)
+        db.commit()
+        logger.info("Subscriber opted out", email=masked)
 
-    sub.is_active = False
-    sub.unsubscribed_at = datetime.now(timezone.utc)
-    db.commit()
-    logger.info("Subscriber opted out", email=masked)
-
+    # Privacy-Preserving Uniform Response
     return {
         "status": "success",
-        "message": "You have been successfully unsubscribed.",
+        "message": "If this email address was subscribed, it has been successfully unsubscribed.",
         "email_masked": masked,
     }
 
@@ -102,7 +93,7 @@ def unsubscribe_newsletter(payload: EmailPayload, db: Session = Depends(get_db))
 def delete_personal_data(payload: EmailPayload, db: Session = Depends(get_db)):
     """
     GDPR Article 17 / CCPA Right to Erasure
-    Permanently purges the user's email and all subscriber records from the database.
+    Executes erasure and outputs uniform, privacy-preserving confirmation.
     """
     clean_email = payload.email.lower().strip()
     masked = mask_email(clean_email)
@@ -112,15 +103,11 @@ def delete_personal_data(payload: EmailPayload, db: Session = Depends(get_db)):
         db.delete(sub)
         db.commit()
         logger.info("GDPR Right to Erasure executed: Data permanently purged", email=masked)
-        return {
-            "status": "success",
-            "message": "All personal records associated with this address have been permanently deleted.",
-            "email_masked": masked,
-        }
 
+    # Privacy-Preserving Uniform Response: Eliminates account enumeration oracle
     return {
         "status": "success",
-        "message": "No active personal records found for this address. Zero data retained.",
+        "message": "If this email address is on file, your erasure request has been processed and all associated records permanently purged.",
         "email_masked": masked,
     }
 

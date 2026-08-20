@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, or_
+from sqlalchemy import desc, or_, String
 from app.database import get_db
 from app.models.article import Article
 from app.schemas.article import ArticleListResponse
@@ -20,8 +20,17 @@ def list_articles(
     db_query = db.query(Article).filter(Article.is_published == True)
     if source_id:
         db_query = db_query.filter(Article.source_id == source_id)
-    if query:
-        search = f"%{query}%"
+    if category and category.lower() != "all":
+        cat_lower = category.lower()
+        db_query = db_query.filter(
+            or_(
+                Article.categories.cast(String).ilike(f"%{cat_lower}%"),
+                Article.tags.cast(String).ilike(f"%{cat_lower}%"),
+                Article.title.ilike(f"%{cat_lower}%"),
+            )
+        )
+    if query and query.strip():
+        search = f"%{query.strip()}%"
         db_query = db_query.filter(
             or_(
                 Article.title.ilike(search),
@@ -30,20 +39,8 @@ def list_articles(
             )
         )
 
-    all_items = db_query.order_by(desc(Article.published_at)).all()
-    if category and category.lower() != "all":
-        cat_lower = category.lower()
-        filtered = []
-        for article in all_items:
-            cats = [c.lower() for c in (article.categories or [])]
-            tags = [t.lower() for t in (article.tags or [])]
-            if cat_lower in cats or cat_lower in tags or cat_lower in article.title.lower():
-                filtered.append(article)
-        all_items = filtered
-
-    total = len(all_items)
-    start = (page - 1) * size
-    items = all_items[start : start + size]
+    total = db_query.count()
+    items = db_query.order_by(desc(Article.published_at)).offset((page - 1) * size).limit(size).all()
 
     # Sanitize any null or placeholder strings
     for item in items:

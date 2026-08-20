@@ -22,9 +22,9 @@ app = FastAPI(
     title="Khagolshastra API",
     description="Khagolshastra — Astronomy News & Scientific Research Papers API",
     version="0.1.0",
-    docs_url="/docs" if not settings.is_production else None,
-    redoc_url="/redoc" if not settings.is_production else None,
-    openapi_url="/openapi.json" if not settings.is_production else None,
+    docs_url="/docs" if (settings.ENABLE_DOCS and not settings.is_production) else None,
+    redoc_url="/redoc" if (settings.ENABLE_DOCS and not settings.is_production) else None,
+    openapi_url="/openapi.json" if (settings.ENABLE_DOCS and not settings.is_production) else None,
 )
 
 # 1. Mount Security Middleware Stack (Order matters: Outer to Inner)

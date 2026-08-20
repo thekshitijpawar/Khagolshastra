@@ -111,8 +111,12 @@ def get_research_papers(
 
 
 @router.post("/research/search")
-async def research_search(query: str, max_results: int = 10):
-    if not query.strip():
+async def research_search(
+    query: str = Query(..., min_length=1, max_length=200),
+    max_results: int = Query(10, ge=1, le=50),
+):
+    clean_query = query.strip()
+    if not clean_query:
         raise HTTPException(status_code=400, detail="Query is required")
-    results = await search_research(query, max_results=max_results)
-    return {"query": query, "results": results}
+    results = await search_research(clean_query, max_results=max_results)
+    return {"query": clean_query, "results": results}

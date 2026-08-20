@@ -17,14 +17,22 @@ def verify_admin(
     x_admin_key: Optional[str] = Header(None),
 ):
     """
-    Constant-time authentication verification for admin routes.
+    Strict constant-time authentication verification for all administrative routes.
+    No unauthenticated bypass is permitted in any environment.
     """
-    expected_key = settings.SECRET_KEY
-    # Allow development bypass only when default dev key is active
-    if expected_key == "dev-secret-key-change-in-production":
-        return True
+    expected_key = getattr(settings, "ADMIN_API_KEY", None) or settings.SECRET_KEY
+    if not expected_key:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Administrative key configuration is missing on server.",
+        )
 
-    provided = x_admin_key or (authorization.replace("Bearer ", "").strip() if authorization else "")
+    provided = ""
+    if x_admin_key and x_admin_key.strip():
+        provided = x_admin_key.strip()
+    elif authorization and authorization.lower().startswith("bearer "):
+        provided = authorization[7:].strip()
+
     if not provided or not secrets.compare_digest(provided, expected_key):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
