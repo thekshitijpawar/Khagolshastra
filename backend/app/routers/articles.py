@@ -21,14 +21,39 @@ def list_articles(
     if source_id:
         db_query = db_query.filter(Article.source_id == source_id)
     if category and category.lower() != "all":
-        cat_lower = category.lower()
-        db_query = db_query.filter(
-            or_(
-                Article.categories.cast(String).ilike(f"%{cat_lower}%"),
-                Article.tags.cast(String).ilike(f"%{cat_lower}%"),
-                Article.title.ilike(f"%{cat_lower}%"),
+        cat_lower = category.lower().strip()
+        if cat_lower in ("milky-way", "milky way", "milkyway"):
+            db_query = db_query.filter(
+                or_(
+                    Article.categories.cast(String).ilike("%milky%"),
+                    Article.tags.cast(String).ilike("%milky%"),
+                    Article.title.ilike("%milky way%"),
+                    Article.title.ilike("%sagittarius a%"),
+                    Article.title.ilike("%galactic center%"),
+                    Article.summary.ilike("%milky way%"),
+                )
             )
-        )
+        elif cat_lower in ("galaxies", "galaxy"):
+            db_query = db_query.filter(
+                or_(
+                    Article.categories.cast(String).ilike("%galaxies%"),
+                    Article.categories.cast(String).ilike("%galaxy%"),
+                    Article.tags.cast(String).ilike("%galaxies%"),
+                    Article.tags.cast(String).ilike("%galaxy%"),
+                    Article.title.ilike("%galaxies%"),
+                    Article.title.ilike("%galaxy%"),
+                )
+            ).filter(
+                ~Article.title.ilike("%milky way%")
+            )
+        else:
+            db_query = db_query.filter(
+                or_(
+                    Article.categories.cast(String).ilike(f"%{cat_lower}%"),
+                    Article.tags.cast(String).ilike(f"%{cat_lower}%"),
+                    Article.title.ilike(f"%{cat_lower}%"),
+                )
+            )
     if query and query.strip():
         search = f"%{query.strip()}%"
         db_query = db_query.filter(

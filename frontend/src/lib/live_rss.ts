@@ -365,10 +365,18 @@ export function classifyArticleCategory(title: string, desc: string, defaultCat:
     return 'exoplanets'
   }
 
-  // 3. Galaxies & Extragalactic (Andromeda, Milky Way, Spiral/Elliptical galaxies, Galactic Halo)
+  // 3a. The Milky Way (Strictly our home galaxy, Sagittarius A*, Galactic Center, Milky Way stellar streams)
+  if (
+    d.includes('milky') ||
+    /\b(milky way|sagittarius a\*|sgr a\*|our galaxy|galactic center|galactic centre)\b/i.test(text)
+  ) {
+    return 'milky-way'
+  }
+
+  // 3b. Galaxies & Extragalactic (Andromeda, Spiral/Elliptical galaxies, Deep Sky Galaxy Surveys)
   if (
     d.includes('galaxy') || d.includes('galaxies') ||
-    /\b(galaxy|galaxies|andromeda|milky way|spiral galaxy|elliptical galaxy|intergalactic|m31|m87|ngc\s*\d+|extragalactic|galactic halo|galactic disc|magellanic|stellar stream|cluster of galaxies)\b/i.test(text)
+    /\b(galaxy|galaxies|andromeda|spiral galaxy|elliptical galaxy|intergalactic|m31|m87|ngc\s*\d+|extragalactic|cluster of galaxies)\b/i.test(text)
   ) {
     return 'galaxies'
   }

@@ -9,7 +9,8 @@ export function normalizeCategorySlug(rawCat: string = ''): string {
   if (c.includes('this-week') || c.includes('observing') || c.includes('skywatching') || c.includes('stargazing')) return 'this-week-in-astronomy'
   if (c.includes('history') || c.includes('historical') || c.includes('today-in-the-history')) return 'today-in-the-history-of-astronomy'
   if (c.includes('exoplanet')) return 'exoplanets'
-  if (c.includes('galaxies') || c.includes('galaxy') || c.includes('milky-way')) return 'galaxies'
+  if (c.includes('milky-way') || c.includes('milky way') || c.includes('milkyway')) return 'milky-way'
+  if (c.includes('galaxies') || c.includes('galaxy')) return 'galaxies'
   if (c.includes('star') && !c.includes('history') && !c.includes('stargazing')) return 'stars'
   if (c.includes('cosmology') || c.includes('black-hole') || c.includes('exotic')) return 'cosmology'
   if (c.includes('launch') || c.includes('rocket')) return 'launches'
@@ -26,6 +27,13 @@ export function getArticlePrimaryCategory(a: Article): string {
   if (a.url && (a.url.includes('today-in-the-history') || a.url.includes('today-in-history'))) {
     return 'today-in-the-history-of-astronomy'
   }
+  const text = `${a.title || ''} ${a.summary || ''} ${a.content || ''}`.toLowerCase()
+  
+  // High priority for Milky Way specific subjects
+  if (/\b(milky way|sagittarius a\*|sgr a\*|our galaxy|galactic center|galactic centre)\b/i.test(text)) {
+    return 'milky-way'
+  }
+
   const raw = (a.categories && a.categories[0]) || ''
   if (raw && raw !== 'news' && raw !== 'general' && raw !== 'astronomy') {
     return normalizeCategorySlug(raw)
@@ -91,6 +99,17 @@ export async function fetchArticles(filters: {
   if (filters.category && filters.category.toLowerCase() !== 'all') {
     const targetCat = normalizeCategorySlug(filters.category)
     list = list.filter((a) => {
+      const text = `${a.title || ''} ${a.summary || ''} ${a.content || ''}`.toLowerCase()
+      if (targetCat === 'milky-way') {
+        const isExplicitMilkyWay = /\b(milky way|sagittarius a\*|sgr a\*|our galaxy|galactic center|galactic centre)\b/i.test(text) || (a.categories || []).some(c => c.toLowerCase().includes('milky'))
+        return isExplicitMilkyWay
+      }
+      if (targetCat === 'galaxies') {
+        const isPureMilkyWay = /\b(milky way|sagittarius a\*|sgr a\*|our galaxy|galactic center)\b/i.test(text) && !/\b(andromeda|m31|m87|ngc|external galax|distant galax|galaxy cluster|extragalactic)\b/i.test(text)
+        if (isPureMilkyWay) return false
+        const artCat = getArticlePrimaryCategory(a)
+        return artCat === 'galaxies' || (a.categories || []).some(c => c.toLowerCase().includes('galax'))
+      }
       const artCat = getArticlePrimaryCategory(a)
       return artCat === targetCat
     })
