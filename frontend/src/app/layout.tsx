@@ -21,6 +21,18 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: 'KHAGOLSHASTRA — Astronomy News & Scientific Research Papers',
   description: 'A premier broadsheet news platform and research paper repository covering astrophysics, planetary science, rocket launches, and cosmology.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
+  appleWebApp: {
+    title: 'KHAGOLSHASTRA',
+  },
 }
 
 export default function RootLayout({
