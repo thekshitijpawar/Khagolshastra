@@ -20,13 +20,22 @@ interface RadioPlayerModalProps {
   onClose: () => void
 }
 
+function getCleanAudioUrl(url: string): string {
+  if (!url) return ''
+  if (url.includes('traffic.libsyn.com')) {
+    const match = url.match(/traffic\.libsyn\.com\/[^\s\?]+/i)
+    if (match) return `https://${match[0]}`
+  }
+  return url
+}
+
 const DEFAULT_EPISODES: PodcastEpisode[] = [
   {
     id: 'ac-1',
     ep_number: 1,
     title: 'Ep. 1: The Moon',
     description: "Fraser Cain and Dr. Pamela Gay explore Earth's closest celestial companion, the Moon — its origin, geology, tidal effects, and human exploration history.",
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-061218.mp3',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-061218.mp3',
     duration: '28:15',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -36,7 +45,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 2,
     title: 'Ep. 2: Getting Around the Solar System',
     description: 'How spacecraft navigate gravity assists, Hohmann transfer orbits, and propulsion physics to travel across the vast distances of our solar system.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-080414.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-080414.mp3',
     duration: '40:21',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -46,7 +55,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 3,
     title: 'Ep. 3: Solar Activity & Space Weather',
     description: 'Exploring sunspots, coronal mass ejections, magnetic reconnection, and how the Sun impacts Earth and satellite constellations.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-111107.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111107.mp3',
     duration: '31:06',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -56,7 +65,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 4,
     title: 'Ep. 4: Astrophotography (Pt. 1: The Gear)',
     description: 'What telescopes, mounts, sensors, filters, and guide cameras are needed to capture deep sky objects from your backyard observatory.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-111114.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111114.mp3',
     duration: '28:53',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -66,7 +75,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 5,
     title: 'Ep. 5: Astrophotography (Pt. 2: Techniques)',
     description: 'Polar alignment, tracking, exposure times, dark frames, bias frames, and calibration methods to maximize signal-to-noise ratio.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-111121.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111121.mp3',
     duration: '36:34',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -76,7 +85,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 6,
     title: 'Ep. 6: Astrophotography (Pt. 3: Image Processing)',
     description: 'Stacking, wavelet processing, color mapping, and stretching raw pixel data to reveal faint emission nebulae and galaxies.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-111128.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111128.mp3',
     duration: '29:38',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -86,7 +95,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 7,
     title: 'Ep. 7: The Torino Scale & Near-Earth Asteroids',
     description: 'Quantifying asteroid impact hazards, assessing orbital trajectories, and planetary defense deflection strategies.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-1111205.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-1111205.mp3',
     duration: '27:42',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -96,7 +105,7 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     ep_number: 8,
     title: 'Ep. 8: The Tunguska Event',
     description: 'Analyzing the 1908 atmospheric airburst in Siberia, shockwave physics, and what it teaches us about comet and asteroid fragment entries.',
-    audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-111212.mp3?dest-id=11189',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111212.mp3',
     duration: '28:53',
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
@@ -112,6 +121,7 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
   const [volume, setVolume] = useState(0.8)
   const [playbackSpeed, setPlaybackSpeed] = useState(1.0)
   const [showArchive, setShowArchive] = useState(false)
+  const [hasFallback, setHasFallback] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -142,14 +152,55 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, isPlaying])
 
+  const startPlayback = (audioSrc: string) => {
+    if (!audioRef.current) return
+    const el = audioRef.current
+    el.src = audioSrc
+    el.playbackRate = playbackSpeed
+    el.volume = volume
+
+    const playPromise = el.play()
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true)
+        })
+        .catch((err) => {
+          console.warn('Direct PC playback error:', err)
+          // If direct CDN fetch fails (e.g. adblocker or strict CORS on desktop PC), try server stream proxy
+          if (!hasFallback) {
+            setHasFallback(true)
+            const clean = getCleanAudioUrl(currentEpisode.audio_url)
+            const proxyUrl = `/api/podcast/stream?url=${encodeURIComponent(clean)}`
+            el.src = proxyUrl
+            el.play()
+              .then(() => setIsPlaying(true))
+              .catch(() => setIsPlaying(false))
+          } else {
+            setIsPlaying(false)
+          }
+        })
+    }
+  }
+
   const togglePlay = () => {
     if (!audioRef.current) return
     if (isPlaying) {
       audioRef.current.pause()
       setIsPlaying(false)
     } else {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {})
+      const cleanUrl = getCleanAudioUrl(currentEpisode.audio_url)
+      startPlayback(cleanUrl)
     }
+  }
+
+  const handleAudioError = () => {
+    if (!audioRef.current || hasFallback) return
+    setHasFallback(true)
+    const clean = getCleanAudioUrl(currentEpisode.audio_url)
+    const proxyUrl = `/api/podcast/stream?url=${encodeURIComponent(clean)}`
+    audioRef.current.src = proxyUrl
+    audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
   }
 
   const handleTimeUpdate = () => {
@@ -185,13 +236,9 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
   const selectEpisode = (ep: PodcastEpisode) => {
     setCurrentEpisode(ep)
     setCurrentTime(0)
-    setIsPlaying(true)
-    if (audioRef.current) {
-      audioRef.current.src = ep.audio_url
-      audioRef.current.playbackRate = playbackSpeed
-      audioRef.current.volume = volume
-      audioRef.current.play().catch(() => {})
-    }
+    setHasFallback(false)
+    const cleanUrl = getCleanAudioUrl(ep.audio_url)
+    startPlayback(cleanUrl)
   }
 
   const formatTime = (secs: number) => {
@@ -203,17 +250,21 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
 
   if (!isOpen) return null
 
+  const activeCleanUrl = getCleanAudioUrl(currentEpisode.audio_url)
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in">
       <div
         className="bg-[#141414] text-white max-w-xl w-full border-2 border-[#ffc500] shadow-2xl p-6 sm:p-8 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Hidden HTML5 Audio Element */}
+        {/* Hidden HTML5 Audio Element with fallback & clean URL */}
         <audio
           ref={audioRef}
-          src={currentEpisode.audio_url}
+          src={activeCleanUrl}
+          preload="metadata"
           onTimeUpdate={handleTimeUpdate}
+          onError={handleAudioError}
           onEnded={() => setIsPlaying(false)}
         />
 
@@ -249,143 +300,114 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
             {currentEpisode.title}
           </h2>
 
-          <div className="text-[12px] font-sans-editorial font-semibold text-[#ffc500] mb-3">
-            Hosts: {currentEpisode.hosts}
+          <div className="text-[11px] font-sans-editorial text-[#ffc500]/80 mb-3">
+            HOSTS: {currentEpisode.hosts}
           </div>
 
-          <p className="text-[13px] font-serif-editorial text-[#cccccc] leading-relaxed mb-4">
+          <p className="text-[13px] font-serif-editorial text-[#ccc] leading-relaxed line-clamp-3">
             {currentEpisode.description}
           </p>
+        </div>
 
-          {/* Sound Wave Visualizer Animation */}
-          <div className="flex items-center justify-center gap-1.5 h-8 bg-[#111111] border border-[#2a2a2a] p-2 mb-4">
-            {[4, 8, 14, 20, 12, 18, 24, 16, 10, 6, 14, 22, 18, 12, 6, 10, 16, 12, 8, 4].map((h, i) => (
-              <span
-                key={i}
-                className="w-1 bg-[#ffc500] rounded-xs transition-all duration-150"
-                style={{
-                  height: isPlaying ? `${Math.max(4, (h * (0.4 + Math.random() * 0.8)))}px` : '4px',
-                  opacity: isPlaying ? 1 : 0.3,
-                }}
-              />
-            ))}
+        {/* Scrub Bar */}
+        <div className="mb-6 space-y-1">
+          <input
+            type="range"
+            min={0}
+            max={duration || 100}
+            value={currentTime}
+            onChange={(e) => handleSeek(Number(e.target.value))}
+            className="w-full h-2 bg-[#333] accent-[#ffc500] cursor-pointer rounded-none"
+          />
+          <div className="flex justify-between text-[10px] font-sans-editorial font-bold text-[#888884] tracking-wider">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
           </div>
+        </div>
 
-          {/* Scrubber Progress Bar */}
-          <div className="space-y-1.5">
+        {/* Controls Row */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+          {/* Main Play/Pause Button */}
+          <button
+            onClick={togglePlay}
+            className="px-6 py-3 bg-[#ffc500] text-[#111111] font-sans-editorial font-bold text-[12px] uppercase tracking-wider hover:bg-white transition-colors cursor-pointer flex items-center gap-2 shadow-lg"
+          >
+            <span>{isPlaying ? '⏸ PAUSE TRANSMISSION' : '▶ PLAY TRANSMISSION'}</span>
+          </button>
+
+          {/* Volume Control */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs">🔊</span>
             <input
               type="range"
               min={0}
-              max={duration || 100}
-              value={currentTime}
-              onChange={(e) => handleSeek(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-[#333] rounded-lg appearance-none cursor-pointer accent-[#ffc500]"
+              max={1}
+              step={0.05}
+              value={volume}
+              onChange={(e) => handleVolumeChange(Number(e.target.value))}
+              className="w-20 h-1.5 bg-[#333] accent-[#ffc500] cursor-pointer"
             />
-            <div className="flex justify-between text-[11px] font-mono text-[#888888]">
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </div>
           </div>
 
-          {/* Playback Controls Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3 border-t border-[#2a2a2a]">
-            {/* Speed Selector */}
-            <div className="flex items-center gap-1 text-[11px] font-mono">
-              {[1.0, 1.25, 1.5].map((speed) => (
-                <button
-                  key={speed}
-                  onClick={() => handleSpeedChange(speed)}
-                  className={`px-2 py-1 border text-xs cursor-pointer ${
-                    playbackSpeed === speed
-                      ? 'bg-[#ffc500] text-[#111] font-bold border-[#ffc500]'
-                      : 'border-[#444] text-[#aaa] hover:text-white'
-                  }`}
-                >
-                  {speed}x
-                </button>
-              ))}
-            </div>
-
-            {/* Play/Pause Main Button */}
-            <button
-              onClick={togglePlay}
-              className="bg-[#ffc500] hover:bg-[#e0ad00] text-[#111] font-sans-editorial font-bold text-[13px] uppercase tracking-widest px-6 py-2.5 flex items-center gap-2 transition-transform transform active:scale-95 shadow-md cursor-pointer"
-            >
-              {isPlaying ? (
-                <>
-                  <span>⏸</span> PAUSE EPISODE
-                </>
-              ) : (
-                <>
-                  <span>▶</span> PLAY EPISODE
-                </>
-              )}
-            </button>
-
-            {/* Volume Slider */}
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-[#888]">🔊</span>
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.05}
-                value={volume}
-                onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                className="w-16 h-1 bg-[#333] accent-[#ffc500] cursor-pointer"
-              />
-            </div>
+          {/* Speed Selector */}
+          <div className="flex items-center gap-1 text-[11px] font-sans-editorial font-bold">
+            <span className="text-[#888] mr-1">SPEED:</span>
+            {[1.0, 1.25, 1.5, 2.0].map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSpeedChange(s)}
+                className={`px-2 py-1 border text-[10px] ${
+                  playbackSpeed === s
+                    ? 'border-[#ffc500] bg-[#ffc500] text-[#111]'
+                    : 'border-[#333] bg-[#222] text-[#ccc] hover:border-[#666]'
+                }`}
+              >
+                {s}x
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Expandable Episode Archive Catalogue */}
-        <div className="border border-[#333] bg-[#1a1a1a]">
+        {/* Archive Toggle Button */}
+        <div className="border-t border-[#2d2d2d] pt-4">
           <button
             onClick={() => setShowArchive(!showArchive)}
-            className="w-full px-4 py-2.5 flex items-center justify-between text-[11px] font-sans-editorial font-bold uppercase tracking-wider text-white hover:text-[#ffc500] transition-colors cursor-pointer"
+            className="w-full py-2 bg-[#222] border border-[#333] text-[11px] font-sans-editorial font-bold uppercase tracking-widest text-[#ccc] hover:text-[#ffc500] hover:border-[#ffc500] transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>BROWSE ASTRONOMY CAST ARCHIVE</span>
-            <span className="text-xs">{showArchive ? '▲' : '▼'}</span>
+            <span>{showArchive ? '▲ HIDE EPISODE ARCHIVE' : '▼ BROWSE EPISODE ARCHIVE'}</span>
           </button>
 
+          {/* Archive List */}
           {showArchive && (
-            <div className="max-h-48 overflow-y-auto divide-y divide-[#262626] border-t border-[#333]">
-              {allEpisodes.map((ep) => (
-                <div
-                  key={ep.id}
-                  onClick={() => selectEpisode(ep)}
-                  className={`p-3 flex items-center justify-between gap-3 hover:bg-[#252525] cursor-pointer transition-colors ${
-                    currentEpisode.id === ep.id ? 'bg-[#222] border-l-2 border-[#ffc500]' : ''
-                  }`}
-                >
-                  <div className="min-w-0">
-                    <div className="text-[12px] font-serif-editorial text-white font-medium truncate">
-                      {ep.title}
+            <div className="mt-3 max-h-48 overflow-y-auto space-y-1.5 border border-[#333] p-2 bg-[#0c0c0c] custom-scrollbar">
+              {allEpisodes.map((ep) => {
+                const isCurrent = ep.id === currentEpisode.id
+                return (
+                  <div
+                    key={ep.id}
+                    onClick={() => selectEpisode(ep)}
+                    className={`p-2.5 text-left border cursor-pointer transition-colors flex items-center justify-between ${
+                      isCurrent
+                        ? 'border-[#ffc500] bg-[#1a180e] text-[#ffc500]'
+                        : 'border-[#222] bg-[#141414] text-[#ccc] hover:border-[#555] hover:text-white'
+                    }`}
+                  >
+                    <div>
+                      <div className="text-[10px] font-sans-editorial font-bold uppercase tracking-wider">
+                        EP #{ep.ep_number} • {ep.duration}
+                      </div>
+                      <div className="text-[13px] font-serif-editorial font-normal leading-snug">
+                        {ep.title}
+                      </div>
                     </div>
-                    <div className="text-[10px] text-[#888] font-sans-editorial">
-                      {ep.duration} • {ep.hosts}
-                    </div>
+                    {isCurrent && isPlaying && (
+                      <span className="text-xs animate-ping">🔊</span>
+                    )}
                   </div>
-                  <button className="text-[10px] uppercase font-bold text-[#ffc500] shrink-0 hover:underline cursor-pointer">
-                    {currentEpisode.id === ep.id && isPlaying ? 'Playing' : 'Listen'}
-                  </button>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
-        </div>
-
-        {/* Source Citation */}
-        <div className="mt-4 flex items-center justify-between text-[11px] font-sans-editorial text-[#888]">
-          <span>Source: Astronomy Cast (Fraser Cain & Dr. Pamela Gay)</span>
-          <a
-            href="https://www.astronomycast.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[#ffc500] hover:underline"
-          >
-            astronomycast.com &rarr;
-          </a>
         </div>
       </div>
     </div>

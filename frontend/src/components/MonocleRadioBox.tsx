@@ -41,7 +41,7 @@ const DEFAULT_PODCAST: PodcastEpisode = {
   ep_number: 1,
   title: 'Ep. 1: The Moon',
   description: "Fraser Cain and Dr. Pamela Gay explore Earth's closest celestial companion, the Moon.",
-  audio_url: 'https://dts.podtrac.com/redirect.mp3/arttrk.com/p/ADCT2/pscrb.fm/rss/p/clrtpod.com/m/traffic.libsyn.com/secure/astronomycast/AstroCast-061218.mp3',
+  audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-061218.mp3',
   duration: '28:15',
   show: 'Astronomy Cast',
   hosts: 'Fraser Cain & Dr. Pamela Gay',
