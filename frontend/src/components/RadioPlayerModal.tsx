@@ -158,6 +158,14 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, isPlaying])
 
+  // Sync volume and playback rate whenever changed
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+      audioRef.current.playbackRate = playbackSpeed
+    }
+  }, [volume, playbackSpeed])
+
   const activeAudioSource = usingDirectFallback
     ? getCleanAudioUrl(currentEpisode.audio_url)
     : getStreamProxyUrl(currentEpisode.audio_url)
@@ -170,36 +178,41 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
       el.pause()
       setIsPlaying(false)
     } else {
-      // Ensure source is loaded if empty or changed
-      if (!el.src || !el.src.includes(encodeURIComponent(getCleanAudioUrl(currentEpisode.audio_url)))) {
-        el.src = activeAudioSource
-      }
       el.playbackRate = playbackSpeed
       el.volume = volume
 
-      el.play()
-        .then(() => setIsPlaying(true))
-        .catch((err) => {
-          console.warn('Playback request error:', err)
-          if (!usingDirectFallback) {
-            setUsingDirectFallback(true)
-            el.src = getCleanAudioUrl(currentEpisode.audio_url)
-            el.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
-          } else {
-            setIsPlaying(false)
-          }
-        })
+      const playPromise = el.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn('Primary audio stream play error:', err)
+            if (!usingDirectFallback) {
+              setUsingDirectFallback(true)
+            } else {
+              setIsPlaying(false)
+            }
+          })
+      }
     }
   }
 
   const handleAudioError = () => {
-    if (!audioRef.current || usingDirectFallback) return
-    console.warn('Audio proxy stream failed, falling back to direct CDN link...')
+    if (usingDirectFallback) {
+      setIsPlaying(false)
+      return
+    }
+    console.warn('Audio proxy stream failed, switching to direct CDN URL fallback...')
     setUsingDirectFallback(true)
-    const el = audioRef.current
-    el.src = getCleanAudioUrl(currentEpisode.audio_url)
-    el.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
   }
+
+  // When switching fallback or episode, auto-trigger play if user intended to play
+  useEffect(() => {
+    if (usingDirectFallback && audioRef.current && isPlaying) {
+      audioRef.current.load()
+      audioRef.current.play().catch(() => setIsPlaying(false))
+    }
+  }, [usingDirectFallback])
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
@@ -219,38 +232,31 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
 
   const handleVolumeChange = (newVol: number) => {
     setVolume(newVol)
-    if (audioRef.current) {
-      audioRef.current.volume = newVol
-    }
   }
 
   const handleSpeedChange = (speed: number) => {
     setPlaybackSpeed(speed)
-    if (audioRef.current) {
-      audioRef.current.playbackRate = speed
-    }
   }
 
   const selectEpisode = (ep: PodcastEpisode) => {
     setCurrentEpisode(ep)
     setCurrentTime(0)
     setUsingDirectFallback(false)
-
-    if (audioRef.current) {
-      const el = audioRef.current
-      const newSource = getStreamProxyUrl(ep.audio_url)
-      el.src = newSource
-      el.playbackRate = playbackSpeed
-      el.volume = volume
-      el.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          setUsingDirectFallback(true)
-          el.src = getCleanAudioUrl(ep.audio_url)
-          el.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
-        })
-    }
+    setIsPlaying(true)
   }
+
+  // When currentEpisode changes, auto-play new episode
+  const isInitialMount = useRef(true)
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+    if (audioRef.current && isPlaying) {
+      audioRef.current.load()
+      audioRef.current.play().catch(() => setIsPlaying(false))
+    }
+  }, [currentEpisode.id])
 
   const formatTime = (secs: number) => {
     if (isNaN(secs)) return '00:00'
@@ -267,8 +273,9 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
         className="bg-[#141414] text-white max-w-xl w-full border-2 border-[#ffc500] shadow-2xl p-6 sm:p-8 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* HTML5 Audio Element */}
+        {/* HTML5 Audio Element - Managed purely via React declarative state & key */}
         <audio
+          key={`${currentEpisode.id}-${usingDirectFallback ? 'direct' : 'proxy'}`}
           ref={audioRef}
           src={activeAudioSource}
           preload="metadata"
