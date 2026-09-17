@@ -46,6 +46,8 @@ export async function GET(request: NextRequest) {
     const responseHeaders = new Headers()
     responseHeaders.set('Content-Type', res.headers.get('content-type') || 'audio/mpeg')
     responseHeaders.set('Accept-Ranges', 'bytes')
+    responseHeaders.set('Access-Control-Allow-Origin', '*')
+    responseHeaders.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS')
     responseHeaders.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800')
 
     const contentLength = res.headers.get('content-length')
