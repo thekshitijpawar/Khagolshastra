@@ -16,17 +16,6 @@ export interface PodcastEpisode {
   image?: string
 }
 
-export function cleanAudioUrl(rawUrl: string): string {
-  if (!rawUrl) return ''
-  if (rawUrl.includes('traffic.libsyn.com')) {
-    const match = rawUrl.match(/traffic\.libsyn\.com\/[^\s\?]+/i)
-    if (match) {
-      return `https://${match[0]}`
-    }
-  }
-  return rawUrl
-}
-
 // Sequential catalogue of Astronomy Cast episodes starting from Episode 1 (Direct Libsyn CDN URLs)
 const ASTRONOMY_CAST_EPISODES: PodcastEpisode[] = [
   {
