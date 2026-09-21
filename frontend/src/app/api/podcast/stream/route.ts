@@ -10,7 +10,13 @@ function cleanUrl(rawUrl: string): string {
       return `https://${match[0]}`
     }
   }
-  return rawUrl
+  if (rawUrl.includes('redirect.mp3/')) {
+    const lastHttp = rawUrl.lastIndexOf('http')
+    if (lastHttp > 0) {
+      return rawUrl.substring(lastHttp).split('?')[0]
+    }
+  }
+  return rawUrl.split('?')[0]
 }
 
 export async function GET(request: NextRequest) {
@@ -21,20 +27,36 @@ export async function GET(request: NextRequest) {
     return new NextResponse('Missing url parameter', { status: 400 })
   }
 
-  const targetUrl = cleanUrl(rawTargetUrl)
+  const initialUrl = cleanUrl(rawTargetUrl)
 
   try {
+    // 1. Resolve redirect to edge CDN URL first so node fetch does not strip Range header on cross-domain 302
+    let finalUrl = initialUrl
+    try {
+      const headRes = await fetch(initialUrl, {
+        method: 'HEAD',
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
+      })
+      if (headRes.url) {
+        finalUrl = headRes.url
+      }
+    } catch {}
+
+    // 2. Fetch final edge URL with client Range header preserved
     const range = request.headers.get('range')
-    const headers: Record<string, string> = {
+    const fetchHeaders: Record<string, string> = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       'Accept': 'audio/mpeg, audio/*;q=0.9, */*;q=0.8',
     }
     if (range) {
-      headers['Range'] = range
+      fetchHeaders['Range'] = range
     }
 
-    const res = await fetch(targetUrl, {
-      headers,
+    const res = await fetch(finalUrl, {
+      headers: fetchHeaders,
       redirect: 'follow',
       cache: 'no-store',
     })

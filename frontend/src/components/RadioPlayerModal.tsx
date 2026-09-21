@@ -116,6 +116,26 @@ const DEFAULT_EPISODES: PodcastEpisode[] = [
     show: 'Astronomy Cast',
     hosts: 'Fraser Cain & Dr. Pamela Gay',
   },
+  {
+    id: 'ac-9',
+    ep_number: 9,
+    title: "Ep. 9: Jupiter's Volcanic Moon Io",
+    description: 'Tidal heating, sulfur volcanoes, and the intense radiation environment of the most volcanically active body in the Solar System.',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111219.mp3',
+    duration: '30:25',
+    show: 'Astronomy Cast',
+    hosts: 'Fraser Cain & Dr. Pamela Gay',
+  },
+  {
+    id: 'ac-10',
+    ep_number: 10,
+    title: 'Ep. 10: The Lifecycle of Stars',
+    description: 'From molecular gas cloud collapse to main sequence, red giant phases, planetary nebulae, white dwarfs, neutron stars, and black holes.',
+    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-120109.mp3',
+    duration: '33:10',
+    show: 'Astronomy Cast',
+    hosts: 'Fraser Cain & Dr. Pamela Gay',
+  },
 ]
 
 export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalProps) {
@@ -265,15 +285,13 @@ export default function RadioPlayerModal({ isOpen, onClose }: RadioPlayerModalPr
     return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in">
+    <div className={`fixed inset-0 z-50 items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in ${isOpen ? 'flex' : 'hidden'}`}>
       <div
         className="bg-[#141414] text-white max-w-xl w-full border-2 border-[#ffc500] shadow-2xl p-6 sm:p-8 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* HTML5 Audio Element - Managed purely via React declarative state & key */}
+        {/* HTML5 Audio Element - Kept mounted in DOM for instant iOS/Android/Windows audio readiness */}
         <audio
           key={`${currentEpisode.id}-${usingDirectFallback ? 'direct' : 'proxy'}`}
           ref={audioRef}
