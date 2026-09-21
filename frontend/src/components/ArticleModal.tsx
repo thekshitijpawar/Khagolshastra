@@ -48,6 +48,14 @@ export default function ArticleModal({ article, onClose }: ArticleModalProps) {
   const readMins = Math.max(3, Math.min(15, Math.round(wordCount / 40) + 2))
   const imageUrl = article.imageUrl || 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget
+    const fallback = 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+    if (target.src !== fallback) {
+      target.src = fallback
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-xs animate-in">
       <div
@@ -91,6 +99,8 @@ export default function ArticleModal({ article, onClose }: ArticleModalProps) {
               src={imageUrl}
               alt={article.title}
               className="w-full max-h-[440px] object-cover"
+              referrerPolicy="no-referrer"
+              onError={handleImageError}
             />
             <div className="p-2.5 bg-[#f7f6ec] border-t border-[#dcd8cb] text-[11px] font-sans-editorial text-[#666666] flex items-center justify-between">
               <span>Source: {sourceName}</span>

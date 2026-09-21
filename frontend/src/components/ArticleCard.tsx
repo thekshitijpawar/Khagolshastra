@@ -1,46 +1,51 @@
 'use client'
 
 import { Article } from '@/types'
-import { getArticlePrimaryCategory } from '@/lib/api'
+import React from 'react'
 
 interface ArticleCardProps {
   article: Article
-  index?: number
   variant?: 'lead' | 'stacked' | 'quote' | 'bento' | 'compact' | 'launch' | 'history'
+  index?: number
   onClick?: () => void
+}
+
+export function normalizeCategoryLabel(cat?: string): string {
+  if (!cat) return 'SOLAR SYSTEM'
+  const c = cat.toLowerCase().trim()
+  if (c.includes('this-week')) return 'THIS WEEK IN ASTRONOMY'
+  if (c.includes('history')) return 'TODAY IN HISTORY'
+  if (c.includes('exoplanet')) return 'EXOPLANETS'
+  if (c.includes('milky-way') || c.includes('milky way')) return 'THE MILKY WAY'
+  if (c.includes('galaxies') || c.includes('galaxy')) return 'GALAXIES & EXTRAGALACTIC'
+  if (c.includes('star')) return 'STARS & STELLAR SCIENCE'
+  if (c.includes('cosmology') || c.includes('black-hole')) return 'COSMOLOGY & EXOTICS'
+  if (c.includes('launch') || c.includes('rocket')) return 'ROCKET LAUNCHES'
+  if (c.includes('human') || c.includes('spaceflight') || c.includes('station')) return 'HUMAN SPACEFLIGHT'
+  if (c.includes('robotic') || c.includes('probe') || c.includes('telescope') || c.includes('rover')) return 'ROBOTIC EXPLORATION'
+  if (c.includes('solar') || c.includes('planet') || c.includes('moon') || c.includes('asteroid')) return 'SOLAR SYSTEM'
+  return cat.toUpperCase().replace(/-/g, ' ')
 }
 
 export default function ArticleCard({
   article,
-  index = 0,
   variant = 'bento',
+  index = 0,
   onClick,
 }: ArticleCardProps) {
-  if (!article) return null
+  const primaryCategory = (article.categories && article.categories[0]) || 'solar-system'
+  const formattedCategory = normalizeCategoryLabel(primaryCategory)
 
-  const dateStr = article.publishedAt
-    ? new Date(article.publishedAt).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
-    : ''
-
-  const primaryCategory = getArticlePrimaryCategory(article)
-  const formattedCategory =
-    primaryCategory === 'today-in-the-history-of-astronomy'
-      ? 'History of Astronomy'
-      : primaryCategory === 'this-week-in-astronomy'
-      ? 'This Week in Astronomy'
-      : primaryCategory.replace(/-/g, ' ')
-
+  // Clean source name string
   let displaySourceName = article.sourceName || ''
   if (
-    !displaySourceName ||
+    displaySourceName.toLowerCase().includes('today in the history') ||
     displaySourceName.toLowerCase().includes('history') ||
     article.url?.includes('astronomy.com')
   ) {
     displaySourceName = 'Astronomy.com'
+  } else if (article.url?.includes('spaceflightnow.com')) {
+    displaySourceName = 'Spaceflight Now'
   } else if (article.url?.includes('universetoday.com')) {
     displaySourceName = 'Universe Today'
   } else if (article.url?.includes('space.com')) {
@@ -53,10 +58,37 @@ export default function ArticleCard({
   const wordCount = (article.content || article.summary || article.title || '').split(/\s+/).length
   const readMins = Math.max(3, Math.min(12, Math.round(wordCount / 40) + 2))
 
-  // Fallback image if missing
+  // Reliable high-res category fallback images
+  const getCategoryFallbackImage = (category: string) => {
+    const c = (category || '').toLowerCase()
+    if (c.includes('launch') || c.includes('rocket') || c.includes('human') || c.includes('robotic')) {
+      return 'https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80'
+    }
+    if (c.includes('exoplanet')) {
+      return 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80'
+    }
+    if (c.includes('galaxy') || c.includes('milky')) {
+      return 'https://images.unsplash.com/photo-1538370965046-79c0d6907d47?auto=format&fit=crop&w=1200&q=80'
+    }
+    if (c.includes('solar') || c.includes('sun') || c.includes('planet') || c.includes('mars')) {
+      return 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80'
+    }
+    return 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget
+    const fallback = getCategoryFallbackImage(primaryCategory)
+    if (target.src !== fallback) {
+      target.src = fallback
+    }
+  }
+
+  // Fallback image if missing or empty
   const imageUrl =
-    article.imageUrl ||
-    'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80'
+    article.imageUrl && article.imageUrl.trim().length > 5
+      ? article.imageUrl
+      : getCategoryFallbackImage(primaryCategory)
 
   // Helper to sanitize summary & content
   const sanitize = (text?: string | null) => {
@@ -70,7 +102,7 @@ export default function ArticleCard({
       .trim()
   }
 
-  // Balanced 2-paragraph generator for the Lead Story to perfectly fit the layout area
+  // Balanced 2-paragraph generator for the Lead Story
   const getLeadDetailedSummary = () => {
     const rawContent = sanitize(article.content) || ''
     const rawSummary = sanitize(article.summary) || ''
@@ -118,75 +150,80 @@ export default function ArticleCard({
       'human-spaceflight': {
         technical: 'Flight operations controllers oversee closed-loop environmental control and life support systems during orbital and translunar phases.',
         impact: 'Long-duration spaceflight data is continuously gathered on crew physiological adaptation, cosmic radiation dosimetry, and spacecraft structural fatigue.',
-        future: 'Mission architectures continue progressing through integrated systems test milestones and astronaut simulations.',
+        future: 'Orbital laboratory investigations and EVA mission architectures continue to refine operational safety protocols for long-duration crewed exploration.',
       },
       'robotic-spaceflight': {
-        technical: 'Autonomous deep-space navigation algorithms and radiation-hardened computing platforms execute instrument calibration sequences and low-latency data compression.',
-        impact: 'The scientific yield from autonomous platforms expands our understanding of extreme extraterrestrial environments without continuous ground intervention.',
-        future: 'Engineers are reviewing telemetry downlinks to optimize onboard instrument duty cycles and trajectory correction maneuvers.',
+        technical: 'Autonomous rover navigation algorithms and radiation-hardened instruments enable robotic explorers to analyze extraterrestrial rock structures.',
+        impact: 'Sample analysis protocols and orbital remote sensing datasets continue to transform our understanding of planetary habitability.',
+        future: 'Sample return architectures and autonomous probes are undergoing system testing for future planetary target deployments.',
       },
     }
 
-    const defaultDomain = {
-      technical: 'Observatory researchers and mission specialists are processing raw CCD photometry and spectral telemetry to extract calibrated signal-to-noise ratios.',
-      impact: 'The resulting empirical datasets provide indispensable benchmarks for evaluating theoretical models and astrophysical simulations.',
-      future: 'Collaborative observing networks across multiple continents are coordinating synchronized multi-wavelength campaigns.',
-    }
+    const domain = domainContext[cat] || domainContext['solar-system']
 
-    const domain = domainContext[cat] || defaultDomain
-
-    let para1 = ''
-    let para2 = ''
-
+    let p1 = ''
     if (sentences.length >= 2) {
-      para1 = sentences.slice(0, 2).join(' ')
-      para2 = `${domain.technical} ${domain.impact}`
+      p1 = `${sentences[0]} ${sentences[1]}`
     } else if (sentences.length === 1) {
-      para1 = sentences[0]
-      para2 = `Observational data recorded across international astronomy networks regarding ${title} highlights significant astrophysical phenomena. ${domain.technical}`
+      p1 = `${sentences[0]} ${domain.technical}`
     } else {
-      para1 = `A major astronomical investigation concerning ${title} has released comprehensive observational findings and scientific telemetry through ${source}.`
-      para2 = `${domain.technical} ${domain.impact}`
+      p1 = `In a major development regarding ${title}, ${source} reports significant observational progress. ${domain.technical}`
     }
 
-    return { para1, para2, domain }
+    let p2 = ''
+    if (sentences.length >= 4) {
+      p2 = `${sentences[2]} ${sentences[3]} ${domain.impact}`
+    } else if (sentences.length === 3) {
+      p2 = `${sentences[2]} ${domain.impact} ${domain.future}`
+    } else {
+      p2 = `${domain.impact} ${domain.future}`
+    }
+
+    if (p1.length > 360) p1 = p1.slice(0, 355) + '…'
+    if (p2.length > 380) p2 = p2.slice(0, 375) + '…'
+
+    return { para1: p1, para2: p2, domain }
   }
 
-  const getCleanSummary = (maxLen = 160) => {
-    const s = sanitize(article.summary)
-    if (s.length >= 20) return s.length > maxLen ? s.slice(0, maxLen) + '…' : s
-
-    const c = sanitize(article.content)
-    if (c.length >= 20) return c.length > maxLen ? c.slice(0, maxLen) + '…' : c
-
-    return `Observatory report and dispatch analysis on ${article.title}.`
+  const getCleanSummary = (maxLen = 180) => {
+    const s = sanitize(article.summary || article.content)
+    if (!s) return 'Observatory dispatch reporting live astronomical data and mission telemetry.'
+    if (s.length <= maxLen) return s
+    return s.slice(0, maxLen - 5) + '…'
   }
 
-  // Variant 1: Hero Lead Card (Column 1 of Monocle grid)
+  const dateStr = article.publishedAt
+    ? new Date(article.publishedAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+    : 'Recent'
+
+  // Variant 1: Lead Story (Main Column 1 Feature)
   if (variant === 'lead') {
     const { para1, para2, domain } = getLeadDetailedSummary()
-
     return (
       <article
         onClick={onClick}
-        className="group cursor-pointer flex flex-col bg-white border border-[#dcd8cb] p-5 hover:border-[#111111] hover:-translate-y-1.5 hover:shadow-[0_14px_30px_rgba(0,0,0,0.10)] transition-all duration-300 ease-out transform animate-in shadow-2xs"
-        style={{ animationDelay: `${index * 60}ms` }}
+        className="group cursor-pointer bg-white border-2 border-[#111111] p-5 sm:p-6 shadow-md hover:shadow-xl transition-all duration-300 ease-out transform flex flex-col mb-6"
       >
-        {/* Top Meta Bar */}
-        <div className="flex items-center gap-2.5 mb-2">
-          <span className="eyebrow text-[#111111]">{formattedCategory}</span>
-          <span className="text-[#888884] text-xs">•</span>
-          <span className="text-[10px] font-sans-editorial tracking-wider text-[#666666] uppercase">
-            {displaySourceName}
+        {/* Category Header Ribbon */}
+        <div className="flex items-center justify-between border-b-2 border-[#111111] pb-3 mb-4">
+          <span className="bg-[#111111] text-[#ffc500] text-[10.5px] font-sans-editorial font-bold tracking-[0.16em] uppercase px-2.5 py-1">
+            {formattedCategory}
+          </span>
+          <span className="text-[10.5px] font-sans-editorial font-bold uppercase tracking-wider text-[#0f4c81]">
+            VIA {displaySourceName.toUpperCase()}
           </span>
         </div>
 
-        {/* Grand Headline (stays solid black) */}
-        <h2 className="text-[26px] sm:text-[30px] lg:text-[34px] font-normal font-serif-editorial text-[#111111] leading-[1.12] tracking-[-0.01em] mb-2.5">
+        {/* Lead Headline */}
+        <h2 className="text-[26px] sm:text-[32px] font-serif-editorial font-bold text-[#111111] leading-[1.12] tracking-tight mb-3 group-hover:text-[#0f4c81] transition-colors">
           {article.title}
         </h2>
 
-        {/* Reading Time & Date Badge */}
+        {/* Metadata Line */}
         <div
           suppressHydrationWarning
           className="flex items-center gap-2 text-[10px] font-sans-editorial font-bold uppercase tracking-wider text-[#777777] pb-2.5 mb-3 border-b border-[#e2ded2]"
@@ -204,6 +241,8 @@ export default function ArticleCard({
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            referrerPolicy="no-referrer"
+            onError={handleImageError}
             loading="eager"
           />
           <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-2 text-white text-[9.5px] font-sans-editorial tracking-wider flex items-center justify-between">
@@ -250,7 +289,7 @@ export default function ArticleCard({
     )
   }
 
-  // Variant 2: Stacked Secondary Card (Column 2 Top of Monocle grid)
+  // Variant 2: Stacked Secondary Card
   if (variant === 'stacked') {
     return (
       <article
@@ -263,6 +302,8 @@ export default function ArticleCard({
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            referrerPolicy="no-referrer"
+            onError={handleImageError}
             loading="lazy"
           />
         </div>
@@ -289,7 +330,7 @@ export default function ArticleCard({
     )
   }
 
-  // Variant 3: Quote / Secondary Stacked Card with Full Authentic Image
+  // Variant 3: Quote / Secondary Stacked Card
   if (variant === 'quote') {
     return (
       <article
@@ -302,6 +343,8 @@ export default function ArticleCard({
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+            referrerPolicy="no-referrer"
+            onError={handleImageError}
             loading="lazy"
           />
         </div>
@@ -341,6 +384,8 @@ export default function ArticleCard({
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            referrerPolicy="no-referrer"
+            onError={handleImageError}
             loading="lazy"
           />
           <div className="absolute top-2 left-2 bg-[#111111] text-[#ffc500] text-[9px] font-sans-editorial font-bold tracking-widest uppercase px-2 py-0.5">
@@ -393,7 +438,14 @@ export default function ArticleCard({
         </div>
         {article.imageUrl && (
           <div className="w-16 h-12 bg-[#eae8dc] border border-[#dcd8cb] shrink-0 overflow-hidden">
-            <img src={imageUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
+            <img
+              src={imageUrl}
+              alt=""
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+              onError={handleImageError}
+              loading="lazy"
+            />
           </div>
         )}
       </div>
@@ -420,6 +472,9 @@ export default function ArticleCard({
             src={imageUrl}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            referrerPolicy="no-referrer"
+            onError={handleImageError}
+            loading="lazy"
           />
         </div>
         <h3 className="text-[17px] font-serif-editorial font-bold text-[#111111] leading-tight mb-2">
@@ -452,6 +507,9 @@ export default function ArticleCard({
           src={imageUrl}
           alt={article.title}
           className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+          referrerPolicy="no-referrer"
+          onError={handleImageError}
+          loading="lazy"
         />
       </div>
       <h3 className="text-[16px] font-serif-editorial text-[#111111] font-bold leading-snug mb-2">

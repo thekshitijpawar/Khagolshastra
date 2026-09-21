@@ -148,7 +148,16 @@ export default function BreakingTicker({ articles = [], onOpenArticle }: Breakin
                     </div>
 
                     <div className="w-20 h-16 bg-[#eae8dc] border border-[#dcd8cb] shrink-0 overflow-hidden">
-                      <img src={img} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                      <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80'
+                        }}
+                        loading="lazy"
+                      />
                     </div>
                   </div>
 

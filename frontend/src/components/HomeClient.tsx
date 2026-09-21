@@ -297,6 +297,10 @@ export default function HomeClient({
                       src={exoplanetArticles[0].imageUrl || 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80'}
                       alt={exoplanetArticles[0].title}
                       className="w-full h-full object-cover hover:scale-102 transition-transform duration-500 cursor-pointer"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=1200&q=80'
+                      }}
                       onClick={() => setSelectedArticle(exoplanetArticles[0])}
                     />
                   </div>
@@ -409,6 +413,10 @@ export default function HomeClient({
                       src={art.imageUrl || 'https://images.unsplash.com/photo-1538370965046-79c0d6907d47?auto=format&fit=crop&w=800&q=80'}
                       alt=""
                       className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1538370965046-79c0d6907d47?auto=format&fit=crop&w=800&q=80'
+                      }}
                       loading="lazy"
                     />
                   </div>
@@ -465,6 +473,10 @@ export default function HomeClient({
                       src={art.imageUrl || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80'}
                       alt=""
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80'
+                      }}
                       loading="lazy"
                     />
                   </div>
