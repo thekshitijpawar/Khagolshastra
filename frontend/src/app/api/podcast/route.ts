@@ -24,11 +24,17 @@ export function cleanAudioUrl(rawUrl: string): string {
       return `https://${match[0]}`
     }
   }
-  return rawUrl
+  if (rawUrl.includes('redirect.mp3/')) {
+    const lastHttp = rawUrl.lastIndexOf('http')
+    if (lastHttp > 0) {
+      return rawUrl.substring(lastHttp).split('?')[0]
+    }
+  }
+  return rawUrl.split('?')[0]
 }
 
-// Sequential catalogue of Astronomy Cast episodes starting from Episode 1 (Direct Libsyn CDN URLs)
-const ASTRONOMY_CAST_EPISODES: PodcastEpisode[] = [
+// Fallback curated catalogue if live RSS feed is unreachable
+const FALLBACK_EPISODES: PodcastEpisode[] = [
   {
     id: 'ac-1',
     ep_number: 1,
@@ -89,83 +95,82 @@ const ASTRONOMY_CAST_EPISODES: PodcastEpisode[] = [
     published: 'Sun, 27 Nov 2011',
     image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
   },
-  {
-    id: 'ac-6',
-    ep_number: 6,
-    title: 'Ep. 6: Astrophotography (Pt. 3: Image Processing)',
-    description: 'Stacking, wavelet processing, color mapping, and stretching raw pixel data to reveal faint emission nebulae and galaxies.',
-    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111128.mp3',
-    duration: '29:38',
-    show: 'Astronomy Cast',
-    hosts: 'Fraser Cain & Dr. Pamela Gay',
-    published: 'Thu, 01 Dec 2011',
-    image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
-  },
-  {
-    id: 'ac-7',
-    ep_number: 7,
-    title: 'Ep. 7: The Torino Scale & Near-Earth Asteroids',
-    description: 'Quantifying asteroid impact hazards, assessing orbital trajectories, and planetary defense deflection strategies.',
-    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-1111205.mp3',
-    duration: '27:42',
-    show: 'Astronomy Cast',
-    hosts: 'Fraser Cain & Dr. Pamela Gay',
-    published: 'Sun, 04 Dec 2011',
-    image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
-  },
-  {
-    id: 'ac-8',
-    ep_number: 8,
-    title: 'Ep. 8: The Tunguska Event',
-    description: 'Analyzing the 1908 atmospheric airburst in Siberia, shockwave physics, and what it teaches us about comet and asteroid fragment entries.',
-    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111212.mp3',
-    duration: '28:53',
-    show: 'Astronomy Cast',
-    hosts: 'Fraser Cain & Dr. Pamela Gay',
-    published: 'Mon, 19 Dec 2011',
-    image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
-  },
-  {
-    id: 'ac-9',
-    ep_number: 9,
-    title: "Ep. 9: Jupiter's Volcanic Moon Io",
-    description: 'Tidal heating, sulfur volcanoes, and the intense radiation environment of the most volcanically active body in the Solar System.',
-    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-111219.mp3',
-    duration: '30:25',
-    show: 'Astronomy Cast',
-    hosts: 'Fraser Cain & Dr. Pamela Gay',
-    published: 'Tue, 20 Dec 2011',
-    image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
-  },
-  {
-    id: 'ac-10',
-    ep_number: 10,
-    title: 'Ep. 10: The Lifecycle of Stars',
-    description: 'From molecular gas cloud collapse to main sequence, red giant phases, planetary nebulae, white dwarfs, neutron stars, and black holes.',
-    audio_url: 'https://traffic.libsyn.com/secure/astronomycast/AstroCast-120109.mp3',
-    duration: '33:10',
-    show: 'Astronomy Cast',
-    hosts: 'Fraser Cain & Dr. Pamela Gay',
-    published: 'Mon, 09 Jan 2012',
-    image: 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
-  },
 ]
 
-// 2-Day Rotation Math: Starts at Ep. 1 on base epoch, advancing every 2 days to Ep. 2, Ep. 3, Ep. 4, etc.
-function getActiveRotatingPodcast(): PodcastEpisode {
-  // Epoch: Current anchor date (August 18, 2026 UTC)
-  const EPOCH_MS = new Date('2026-08-18T00:00:00Z').getTime()
-  const nowMs = Date.now()
-  const periodMs = 2 * 24 * 60 * 60 * 1000 // 48 hours
-  const index = Math.max(0, Math.floor((nowMs - EPOCH_MS) / periodMs)) % ASTRONOMY_CAST_EPISODES.length
-  return ASTRONOMY_CAST_EPISODES[index]
+async function fetchLivePodcastEpisodes(): Promise<PodcastEpisode[]> {
+  const rssUrl = 'https://astronomycast.libsyn.com/rss'
+  const res = await fetch(rssUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Khagolshastra/1.0',
+    },
+    cache: 'no-store',
+  })
+  if (!res.ok) throw new Error(`RSS fetch HTTP ${res.status}`)
+
+  const xml = await res.text()
+  const items = xml.split('<item>').slice(1)
+  const episodes: PodcastEpisode[] = []
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]
+    const titleMatch = item.match(/<title>(.*?)<\/title>/s)
+    const encMatch = item.match(/enclosure url=["']([^"']+)["']/i) || item.match(/url=["'](https?:\/\/[^"']+\.mp3[^"']*)["']/i)
+    const durMatch = item.match(/<itunes:duration>(.*?)<\/itunes:duration>/s)
+    const descMatch = item.match(/<description>(.*?)<\/description>/s) || item.match(/<itunes:summary>(.*?)<\/itunes:summary>/s)
+    const pubMatch = item.match(/<pubDate>(.*?)<\/pubDate>/s)
+    const imgMatch = item.match(/<itunes:image[^>]+href=["']([^"']+)["']/i)
+
+    if (encMatch && encMatch[1]) {
+      const rawTitle = titleMatch ? titleMatch[1].replace(/<!\[CDATA\[/g, '').replace(/\]\]>/g, '').trim() : `Episode ${items.length - i}`
+      const cleanTitle = rawTitle.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#8217;/g, "'")
+      
+      let epNum = items.length - i
+      const numMatch = cleanTitle.match(/(?:Ep\.|Episode)\s*(\d+)/i)
+      if (numMatch) {
+        epNum = parseInt(numMatch[1], 10)
+      }
+
+      const rawDesc = descMatch ? descMatch[1].replace(/<!\[CDATA\[/g, '').replace(/\]\]>/g, '').replace(/<[^>]+>/g, '').trim() : ''
+      const duration = durMatch ? durMatch[1].trim() : '30:00'
+      const cleanUrl = cleanAudioUrl(encMatch[1])
+
+      episodes.push({
+        id: `ac-live-${i}-${epNum}`,
+        ep_number: epNum,
+        title: cleanTitle,
+        description: rawDesc.substring(0, 300) || "Fraser Cain and Dr. Pamela Gay explore the cosmos on Astronomy Cast.",
+        audio_url: cleanUrl,
+        duration,
+        show: 'Astronomy Cast',
+        hosts: 'Fraser Cain & Dr. Pamela Gay',
+        published: pubMatch ? pubMatch[1].trim() : undefined,
+        image: imgMatch ? imgMatch[1] : 'https://astronomycast.com/wp-content/uploads/2021/04/AstronomyCastLogo_1400x1400.jpg',
+      })
+    }
+  }
+
+  return episodes
 }
 
 export async function GET() {
-  const current = getActiveRotatingPodcast()
+  try {
+    const liveEpisodes = await fetchLivePodcastEpisodes()
+    if (liveEpisodes.length > 0) {
+      // Latest episode is index 0
+      const current = liveEpisodes[0]
+      return NextResponse.json({
+        current,
+        episodes: liveEpisodes.slice(0, 50), // Return top 50 live episodes
+        source: 'https://astronomycast.libsyn.com/rss',
+      })
+    }
+  } catch (err: any) {
+    console.warn('Live podcast RSS sync failed, falling back to static catalogue:', err?.message)
+  }
+
   return NextResponse.json({
-    current,
-    episodes: ASTRONOMY_CAST_EPISODES,
+    current: FALLBACK_EPISODES[0],
+    episodes: FALLBACK_EPISODES,
     source: 'https://www.astronomycast.com/',
   })
 }
